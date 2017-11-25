@@ -1,0 +1,23 @@
+{
+  "runset_requests_folder_path": "[RAW_ROOT]/data/runset_requests/",
+  "runset_archival_folder_path": "[RAW_ROOT]/data/runset_archival/",
+  
+  "initcond_directory":          "[RAW_ROOT]/anci/init_cond_repo/",
+  "web_service_url":             "[URL_PAGE]/index_3_1/requester/ws_date_availability_updater.php",
+  "all_asynch_versions":         ["1.2", "1.3"],
+  
+  "runset_temp_folder_path":     "[RAW_ROOT]/data/runset_tmp/",
+  
+  "ws_api_root_url":             "[URL_PAGE]/api_3_2/public/",
+  "ws_api_waitingroom":          "sc_runset_requests",
+  
+  "waitingroom_files_root_url":  "[URL_WAIT]/",
+  
+  "proc_server_addr":            "[ADD_SERV]",
+  "proc_server_user":            "[USR_SERV]",
+  "proc_server_password":        "KeepWaitingBaby!NotHere!:*",
+  "proc_server_runset_folder":   "[TODO]/",
+  "proc_server_log_folder":      "[TODO]",
+  "proc_server_fdgen_script":    "[TODO]",
+  "proc_server_rpgen_script":    "[TODO]"
+}

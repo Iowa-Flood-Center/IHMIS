@@ -1,0 +1,3 @@
+datelog_get() {
+    printf -- `date +%Y_%m%d_%H%M`
+}

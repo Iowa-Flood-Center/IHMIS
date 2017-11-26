@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="user-scalable=no, width=960" />
+		<meta charset="UTF-8" />
+		<title>IFC MODEL PLUS - IFIS SPECIAL CASE</title>
+		
+		<script type="text/javascript" src="jquery-3.1.1.min.js"></script>
+		<script type="text/javascript" src="libs/jquery-ui.js"></script>
+		<script type="text/javascript" src="scripts/modelplus.url.js"></script>
+		<script type="text/javascript" src="../common/scripts/modelplus.url.js"></script>
+		<script type="text/javascript" src="base_lib.js"></script>
+		<script type="text/javascript" src="requester.js"></script>
+		
+		<link rel="stylesheet" href="main.css" media="screen" />
+		<link rel="stylesheet" href="libs/jquery-ui.css">
+		<link rel="stylesheet" href="requester.css" media="screen" />
+		
+		<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+	</head>
+	<body id="central">
+		<div id="wrapper">
+			<div id="doc">
+				<div id="header">
+					<!-- keep empty -->
+				</div>
+				<div id="main-feature">
+					<div id="subheader" >
+						Requester
+						<span style="float:right">
+							&nbsp;<a href="../" >Back</a>&nbsp;
+						</span>
+					</div>
+					<div id="left_column" >
+						&nbsp;
+					</div>
+					<div id="middle_column" >
+						<div class="middle_column_division">
+							<div class="simple_line">
+								<div class="simple_line_left">
+									Runset ID:
+								</div>
+								<div class="simple_line_right">
+									<input type="text" id="runset_id"  />
+									&nbsp;(<a onclick="modelplus.requester.show_help('runset_id')" class="help_show" >?</a>)&nbsp;
+									&nbsp;(<a onclick="modelplus.requester.fill_auto_runset_id()">auto</a>)&nbsp;
+								</div>
+							</div>
+							<div class="simple_line">
+								<div class="simple_line_left">
+									Runset Title:
+								</div>
+								<div class="simple_line_right">
+									<input type="text" id="runset_title"  />
+									&nbsp;(<a onclick="show_help('runset_title')" class="help_show" >?</a>)&nbsp;
+								</div>
+							</div>
+						</div>
+						<div class="middle_column_division">
+							<div class="simple_line">
+								<div class="simple_line_left">
+									Date:
+								</div>
+								<div class="simple_line_right">
+									<input type="text" id="datetime_mid" onchange="on_date_select()" />
+									&nbsp;(<a onclick="show_help('datetime_mid')" class="help_show" >?</a>)&nbsp;
+								</div>
+							</div>
+							<div class="simple_line">
+								<div class="simple_line_left_shift">
+									From:
+								</div>
+								<div class="simple_line_right_shift">
+									<input type="text" id="datetime_ini" style="width:130px" disabled />
+								</div>
+							</div>
+							<div class="simple_line">
+								<div class="simple_line_left_shift">
+									To:
+								</div>
+								<div class="simple_line_right_shift">
+									<input type="text" id="datetime_end" style="width:130px" disabled />
+								</div>
+							</div>
+						</div>
+						<div class="middle_column_division">
+							<div class="simple_line">
+								<div class="simple_line_left">
+									Run:
+								</div>
+								<div class="simple_line_right">
+									<input type="radio" name="what_run" id="what_run_20dseq_onlygen" value="20dseq_onlygen" checked="checked" disabled="disabled" onchange="on_date_select();" />
+									Generate glb files.
+									<br />
+									<input type="radio" name="what_run" id="what_run_gencall04" value="gencall04days" disabled="disabled" onchange="on_date_select();" />
+									Run for 04 days - test.
+									<br />
+									<input type="radio" name="what_run" id="what_run_gencall" value="20dseq_loginless" disabled="disabled" onchange="on_date_select();" />
+									Run for 20 days.
+									<br />
+									<input type="radio" name="what_run" id="what_run_loginless" value="06hseq_loginless" disabled="disabled" onchange="on_date_select();" />
+									Run for 06 hours - Loginless.
+									<br />
+									<input type="radio" name="what_run" id="what_run_06p06f_loginless" value="06p06f_loginless" disabled="disabled" onchange="on_date_select();" />
+									Run 06hrs past, 06hrs fore.
+									<br />
+									<input type="radio" name="what_run" id="what_run_10p10f_loginless" value="10p10f_loginless" disabled="disabled" onchange="on_date_select();" />
+									Gen 10d past, 10d fore.
+								</div>
+							</div>
+						</div>
+						<div class="middle_column_division">
+							<div class="simple_line">
+								<div id='model_def_refs' class='simple_line'>
+									<div class='simple_line_left'>
+										References:
+									</div>
+									<div class='simple_line_right' id='model_def_refs_right'>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="middle_column_division">
+							<div id="models_def" class="simple_line"></div>
+							<div class="simple_line">
+								<input type="button" value="Include model" onclick="include_model_definition(GLB_vars_requester.prototype.models_count);" />
+							</div>
+						</div>
+						<div class="middle_column_division">
+							<div id="model_def_refs" class="simple_line">
+								<div class="simple_line_left">
+									Comparisons:
+								</div>
+								<div class="simple_line_right" id="model_def_refs_right">
+									<input type="button" value="Refresh" onclick="modelplus.requester.update_model_comparison_ref(GLB_vars_requester.prototype.models_count);" />
+								</div>
+							</div>
+							<div id="comparisons_def" class="simple_line"></div>
+						</div>
+						<div class="middle_column_division">
+							<div class="simple_line">
+								<div class="simple_line_left">
+									Model composition:
+								</div>
+								<div class="simple_line_right">
+									<input type="button" value="Refresh" id="model_def_modelcomb_button"
+									  onclick="modelplus.requester.update_model_combination_ref(GLB_vars_requester.prototype.models_count);" />
+								</div>
+							</div>
+							<div id="modelcombinations_def" class="simple_line"></div>
+						</div>
+						<div id="asynch_version_div" class="middle_column_division">
+							<div class="simple_line">
+								<div class="simple_line_left">
+									Asynch vers.:
+								</div>
+								<div class="simple_line_right">
+									<select id="asynch_ver" disabled>
+										<option value="1.3" selected="selected">1.3</option>
+										<option value="1.2">1.2</option>
+										<option value="1.1">1.1</option>
+									</select>
+								</div>
+							</div>
+							<div class="simple_line">
+								<div class="simple_line_left">
+									Server:
+								</div>
+								<div class="simple_line_right">
+									<select id="server_addr" disabled>
+										<option value="argon.hpc.uiowa.edu">Argon</option>
+										<!-- <option value="neon.hpc.uiowa.edu">Neon</option> -->
+									</select>
+									&nbsp;(<a onclick="show_help('server_addr')" class="help_show" >?</a>)&nbsp;
+								</div>
+							</div>
+							<div class="simple_line">
+								<div class="simple_line_left">
+									E-mail:
+								</div>
+								<div class="simple_line_right">
+									<input type="text" id="email" style="width:80%" />
+									&nbsp;(<a onclick="show_help('email')" class="help_show" >?</a>)&nbsp;
+								</div>
+							</div>
+						</div>
+						<!-- <div class="simple_line" style="padding-top:25px; padding-bottom:25px;" > -->
+						<div class="simple_line" style="padding-top:10px; padding-bottom:25px;" >
+							<a class="btnmain btnwht" onclick="on_submit_click(GLB_vars_requester.prototype.models_count)" style="margin-right:130px; margin-top:10px">
+								Launch
+							</a>
+						</div>
+					</div>
+					<div id="right_column" >
+						<div id="field_help" >
+							..
+						</div>
+					</div>
+				</div>
+				<div id="footer">
+					<!-- keep empty -->
+				</div>
+			</div> <!-- doc -->
+		</div>   <!-- wrapper -->
+	</body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<script src="jquery-3.1.1.min.js"></script>
+		<script>
+			// loading script function
+			jQuery.loadScript = function (url, callback) {
+					jQuery.ajax({
+					url: url,
+					dataType: 'script',
+					success: callback,
+					async: true
+				});
+			}
+			
+			/*
+			// load external javascript file and call my_display as callback
+			function on_load_page(){
+				$.loadScript(
+					'http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/modelplus_3_0/custom_js/hydroforecast.js',
+					function(){my_display();}
+				);
+			}
+			
+			document.onload = on_load_page();
+			*/
+		</script>
+	</head>
+	<body>
+		<h1>Loaded page 0.1</h1>
+		<a onclick="$.loadScript(
+						'http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/modelplus_3_0/custom_js/hydroforecast.js',
+						function(){my_display();}
+					);"> H1 </a>
+		<a onclick="$.loadScript(
+						'http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/modelplus_3_0/custom_js/hydropast.js',
+						function(){my_display();}
+					);"> H2 </a>
+		<a onclick="my_display();"> H3 </a>
+	</body>
+</html>

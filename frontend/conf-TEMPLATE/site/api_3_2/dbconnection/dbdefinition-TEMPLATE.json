@@ -1,0 +1,9 @@
+{
+    "driver": "pgsql",
+    "host": "",
+    "port": 5432,
+    "database": "",
+    "username": "",
+    "password": "",
+    "charset": "utf8"
+}

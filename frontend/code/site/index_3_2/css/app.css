@@ -1,0 +1,110 @@
+/**********************************************************************************/
+/************************************ COMMENT *************************************/
+/**********************************************************************************/
+
+*.begins_hidden{
+  display:none;
+}
+
+div.header{
+  padding-left:10px;
+  padding-top:7px;
+}
+
+div.left_div{
+  text-align:left;
+}
+
+div.right_div{
+  text-align:right;
+}
+
+h2{
+  font-size: 14px;
+  text-decoration: bold;
+  width: 100%;
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+  padding-top: 5px;
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+span.hidden_label{
+  display:none;
+}
+
+div.filling_form{
+  border-radius: 11px;
+  background: #EFEFEF;
+}
+
+a.button{
+  margin:2px;
+}
+
+div.help_button_div{
+  text-align: center;
+}
+
+a.help_button{
+  display:block;
+}
+
+div.help_message{
+  text-align:left
+}
+
+div.set_models_add_div{
+  border-width:1px;
+  border-style:dashed;
+  border-color:#AAAAAA;
+  width:100%;
+  margin-bottom: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+div.model_def,
+div.comparison_def{
+  border-width:1px;
+  border-style:dashed;
+  border-color:#AABBFF;
+  width:100%;
+  margin-top:2px;
+  margin-bottom:2px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#references_include_label{
+  display: none;
+}
+
+#references_include_names{
+  display: none;
+}
+
+#submit_success_div{
+  border-radius: 11px;
+  border-width:1px;
+  border-color:#1A8226;
+  border-style:solid;
+  background: #89E894;
+  padding:5px
+}
+
+#submit_failure_div{
+  border-radius: 11px;
+  border-width:1px;
+  border-color:#821A26;
+  border-style:solid;
+  background: #E88994;
+  padding:5px
+}
+
+/*
+ul.menu{
+	background-color: #777777
+}
+*/

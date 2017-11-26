@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+</head>
+
+<body>
+    <!-- Prepare a Dom with size (width and height) for ECharts -->
+    <div id="main" style="height:400px"></div>
+	
+	<!-- ECharts import -->
+    <script src="dist/echarts.js"></script>
+	<script src="../../../jquery-3.1.1.min.js"></script>
+	
+	<script type="text/javascript">
+	
+		var url_form, url_rset, url_mdl, url_ref, url_lnk, url_tms, url_final;
+		var sc_runset_id = "cedarrapids2016";
+		var sc_model_id = "cedarrapds2016ifc254";
+		var sc_reference_id = "usgsgagesdischarge";
+		var link_id = 522855;
+		var timestamp = 1476075600;
+		
+		link_form = "http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/modelplus_3_1/custom_ws/hydrographsd_readjson.php?";
+		url_rset = "sc_runset_id="+sc_runset_id;
+		url_mdl = "&sc_model_id="+sc_model_id;
+		url_ref = "&sc_reference_id="+sc_reference_id;
+		url_lnk = "&link_id="+link_id;
+		url_tms = "&timestamp="+timestamp;
+		
+		url_final = link_form + url_rset + url_mdl + url_ref + url_lnk + url_tms;
+	
+        // configure for module loader
+        require.config({
+            paths: {
+                echarts: './dist'
+            }
+        });
+		
+		// use
+        require(
+            [
+                'echarts',
+				'echarts/chart/line',    // require the specific chart type 'line'
+				'echarts/chart/scatter' // require the specific chart type 'scatter'
+            ],
+			
+            function (ec) {
+			
+				$.ajax({
+					url: url_final
+				}).done(function(data){
+				
+					// read and parse data
+					var json_data = JSON.parse(data);
+				
+					// prepare data objects
+					var myDataObs = [];
+					var myDataMdl = [];
+					var myDataThrAct = [];
+					var myDataThrFld = [];
+					var myDataThrMod = [];
+					var myDataThrMaj = [];
+					var cur_element, count;
+					var min_timestamp = null;
+					var max_timestamp = null;
+					
+					var max_mdl_val, max_mdl_idx;
+					
+					// fill model list object
+					max_mdl_val = 0;
+					max_mdl_idx = null;
+					for(count = 0; count < json_data.stage_mdl.length; count++){
+						cur_element = [new Date(json_data.stage_mdl[count][0] * 1000), json_data.stage_mdl[count][1]];
+						myDataMdl.push(cur_element);
+						
+						// check max value
+						if (json_data.stage_mdl[count][1] > max_mdl_val){
+							max_mdl_val = json_data.stage_mdl[count][1];
+							max_mdl_idx = count;
+						}
+						
+						// check min/max timestamps
+						if ((min_timestamp == null) || (min_timestamp > json_data.stage_mdl[count][0])){
+							min_timestamp = json_data.stage_mdl[count][0];
+						}
+						if ((max_timestamp == null) || (max_timestamp < json_data.stage_mdl[count][0])){
+							max_timestamp = json_data.stage_mdl[count][0];
+						}
+					}
+					
+					// set highlighted model value
+					if (max_mdl_idx != null){
+						var old_el;
+						myDataMdl[max_mdl_idx] = [myDataMdl[max_mdl_idx][0], myDataMdl[max_mdl_idx][1], 20];
+						// old_el = myDataMdl[max_mdl_idx]
+					}
+					
+					// fill observed list object
+					for(count = 0; count < json_data.stage_obs.length; count++){
+						cur_element = [new Date(json_data.stage_obs[count][0] * 1000), json_data.stage_obs[count][1], 20];
+						myDataObs.push(cur_element);
+						
+						if ((min_timestamp == null) || (min_timestamp > json_data.stage_obs[count][0])){
+							min_timestamp = json_data.stage_obs[count][0];
+						}
+						if ((max_timestamp == null) || (max_timestamp < json_data.stage_obs[count][0])){
+							max_timestamp = json_data.stage_obs[count][0];
+						}
+					}
+					
+					// fill thresholds
+					if (json_data.stage_threshold_act != null){
+						myDataThrAct = [[new Date(min_timestamp * 1000), json_data.stage_threshold_act],
+										[new Date(max_timestamp * 1000), json_data.stage_threshold_act]];
+					}
+					if (json_data.stage_threshold_fld != null){
+						myDataThrFld = [[new Date(min_timestamp * 1000), json_data.stage_threshold_fld],
+										[new Date(max_timestamp * 1000), json_data.stage_threshold_fld]];
+					}
+					if (json_data.stage_threshold_mod != null){
+						myDataThrMod = [[new Date(min_timestamp * 1000), json_data.stage_threshold_mod],
+										[new Date(max_timestamp * 1000), json_data.stage_threshold_mod]];
+					}
+					if (json_data.stage_threshold_maj != null){
+						myDataThrMaj = [[new Date(min_timestamp * 1000), json_data.stage_threshold_maj],
+										[new Date(max_timestamp * 1000), json_data.stage_threshold_maj]];
+					}
+			
+					// Initialize after dom ready
+					var myChart = ec.init(document.getElementById('main'));
+					
+					/*
+					var myDataObs = [
+						[new Date(1474347600 * 1000), 2, 20],
+						[new Date(1474351200 * 1000), 3, 20],
+						[new Date(1474354800 * 1000), 2, 20],
+						[new Date(1474358400 * 1000), 2.5, 20]
+					];
+					var myDataMdl = [
+						[new Date(1474347600 * 1000), 1],
+						[new Date(1474351200 * 1000), 5],
+						[new Date(1474354800 * 1000), 3],
+						[new Date(1474360200 * 1000), 4]
+					];
+					*/
+					
+					var option = {
+						title:{
+							text:"Hidrograph for station XYZ"
+						},
+						tooltip: {
+							show: true
+						},
+						legend: {
+							data:['Modeled', 'Observed', 'Action', 'Flood', 'Moderate', 'Major']
+						},
+						xAxis : [
+							{
+								type : 'time',
+								name : 'Time',
+								axisLabel: {
+									formatter: "HH:mm \n MM/dd/yyyy"
+								}
+							}
+						],
+						yAxis : [
+							{
+								type : 'value',
+								name : 'Stage [ft]'
+							}
+						],
+						toolbox: {
+							show : true,
+							feature : {
+								saveAsImage : {show: true, title: 'Save image'},
+								dataZoom : {show: true, title: 'Zoom'}
+							}
+						},
+						series : [
+							{
+								name:"Modeled",
+								type:"line",
+								showAllSymbol: true,
+								symbolSize: function (value){
+									return Math.round(value[2]/10) + 2;
+								},
+								data: myDataMdl,
+								itemStyle:{
+									normal:{
+										color: "#5588ff"
+									}
+								}
+							},
+							{
+								name:"Observed",
+								type:"scatter",
+								showAllSymbol: true,
+								symbolSize: function (value){
+									return Math.round(value[2]/10) + 2;
+								},
+								data: myDataObs,
+								itemStyle:{
+									normal:{
+										color: "#000000"
+									}
+								}
+							},
+							{
+								name:"Action",
+								type:"line",
+								showAllSymbol: true,
+								symbolSize: function (value){
+									return Math.round(value[2]/10) + 2;
+								},
+								data: myDataThrAct,
+								itemStyle:{
+									normal:{
+										color: "#ffff55"
+									}
+								}
+							},
+							{
+								name:"Flood",
+								type:"line",
+								showAllSymbol: true,
+								symbolSize: function (value){
+									return Math.round(value[2]/10) + 2;
+								},
+								data: myDataThrFld,
+								itemStyle:{
+									normal:{
+										color: "#ff9933"
+									}
+								}
+							},
+							{
+								name:"Moderate",
+								type:"line",
+								showAllSymbol: true,
+								symbolSize: function (value){
+									return Math.round(value[2]/10) + 2;
+								},
+								data: myDataThrMod,
+								itemStyle:{
+									normal:{
+										color: "#ff0000"
+									}
+								}
+							},
+							{
+								name:"Major",
+								type:"line",
+								showAllSymbol: true,
+								symbolSize: function (value){
+									return Math.round(value[2]/10) + 2;
+								},
+								data: myDataThrMaj,
+								itemStyle:{
+									normal:{
+										color: "#ff77ff"
+									}
+								}
+							}
+						]
+					};
+			
+					// Load data into the ECharts instance 
+					myChart.setOption(option);
+				
+				});
+            }
+		);
+    </script>
+</body>

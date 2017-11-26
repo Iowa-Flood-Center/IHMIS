@@ -1,0 +1,24 @@
+{
+	"initialstates_hdf5_list_filepath": "",
+	
+	"temp_folderpath":                  "",
+	
+	"dbconnection_folder_path":         "",
+	
+	"dest_folder_path":                 "",
+	"dest_initcond_repo_folder_path":   "",
+	
+	"dest_central_folder_path":         "",
+	
+	"waiting_room_folder_path":         "",
+	
+	"template_files_folder_path":       "",
+	"job_template_filepath":            "",
+	"metamodel_template_filepath":      "",
+	"glb_template_filepath":            "",
+	"metaevaluation_template_filepath": "",
+	"metacomparison_template_filepath": "",
+	"metarunset_template_filepath":     "",
+	
+	"runsets_result_folder_path":       ""
+}

@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <meta charset="UTF-8"> 
+    <title>
+	  Done
+	</title>
+    <script src="../echarts/dist/echarts.3_7.min.js"></script>
+	<script src="jquery-3.2.1.js"></script>
+	<script src="richhydroforecast01.js"></script>
+	<script>
+	  window.onload = function(){
+	    richhydroforecast01.runsetid = "realtime";           // 
+        richhydroforecast01.modelcomb_id = "richforecasts";  // 
+        richhydroforecast01.link_id = 434514;                // 
+		
+        var cb_func = function(data){
+		  
+		  richhydroforecast01.init('main_chart', 
+		                           'theSlid', 
+		                           'lead_time_span', 
+									data);
+          richhydroforecast01.buildHydroforecast();
+          richhydroforecast01.onSlide();
+		}
+	    richhydroforecast01.ajaxCall(1506000100, false, cb_func);
+	  }
+    </script>
+    <style>
+      #theSlid {
+        padding-top: 0px;
+		margin-top: 0px;
+		border-top: 0px;
+      }
+    </style>
+  </head>
+  <body>
+	<!-- preparing a DOM with width and height for ECharts -->
+    <div id="main_chart" style="width:1000px; height:400px;"></div>
+	<br >
+	<input id="theSlid" type="range" step="3600" style="width:800px; margin-left:100px" onchange="richhydroforecast01.onSlide()">
+	<br >
+	<p style="margin-left:100px">
+	  Lead time:<span id="lead_time_span"></span>
+	</p>
+  </body>
+</html>

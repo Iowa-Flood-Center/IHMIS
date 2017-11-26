@@ -1,0 +1,15 @@
+{
+	"autoload":{
+		"psr-4":{
+			"DbModels\\":"app/dbmodels_modelbacktime",
+			"DbPrecipitations\\":"app/dbmodels_precipitation",
+			"DbArtefacts\\":"app/dbmodels_artefacts",
+			"Requester\\":"app/requester",
+			"Results\\":"app/runset_results"
+		}
+	},
+    "require": {
+        "slim/slim": "2.*",
+        "illuminate/database": "^4.1"
+    }
+}

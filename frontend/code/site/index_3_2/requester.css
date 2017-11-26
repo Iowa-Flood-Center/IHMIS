@@ -1,0 +1,131 @@
+#subheader{
+	display:inline-block;
+	width:100%;
+	float:left;
+	border-top:0px dotted #000000;
+	border-bottom:0px dotted #000000;
+	text-align:left;
+}
+#left_column{
+	display:inline-block;
+	width:250px;
+	float:left;
+}
+#middle_column{
+	display:inline-block;
+	width:410px;
+	float:left;
+	margin-top:10px;
+	margin-bottom:10px;
+	font-family:Roboto,PFDinTextCompProMedium,Helvetica,Arial,sans-serif;
+	font-size:13px;
+	
+	background:#EFEFEF;
+	-moz-border-radius:11px;
+	-webkit-border-radius:11px;
+	border-radius:11px
+}
+#right_column{
+	display:inline-block;
+	width:250px;
+	float:left;
+	font-family:Roboto,PFDinTextCompProMedium,Helvetica,Arial,sans-serif;
+	font-size:13px;
+	text-align:left;
+}
+.simple_line{
+	display:inline-block;
+	width:410px;
+	text-align:center;
+}
+.middle_column_division{
+	display:inline-block;
+	width:100%;
+	text-align:center;
+	border-bottom:1px dotted #ffffff;
+	border-width:5px;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-left:5px;
+	padding-right:5px;
+}
+.simple_line_left{
+	display:inline-block;
+	width:95px;
+	float:left;
+	text-align:right;
+	font-family:Roboto,PFDinTextCompProMedium,Helvetica,Arial,sans-serif;
+	font-size:13px;
+	padding-top:5px;
+	vertical-align:middle;
+}
+.simple_line_right{
+	display:inline-block;
+	width:310px;
+	float:left;
+	text-align:left;
+	vertical-align:middle;
+}
+.simple_line_left_shift{
+	display:inline-block;
+	width:140px;
+	float:left;
+	text-align:right;
+	font-family:Roboto,PFDinTextCompProMedium,Helvetica,Arial,sans-serif;
+	font-size:13px;
+}
+.simple_line_right_shift{
+	display:inline-block;
+	width:165px;
+	float:left;
+	text-align:left;
+}
+.simple_line_left_half{
+	display:inline-block;
+	width:173px;
+	float:left;
+	text-align:right;
+	font-family:Roboto,PFDinTextCompProMedium,Helvetica,Arial,sans-serif;
+	font-size:13px;
+}
+.simple_line_right_half{
+	display:inline-block;
+	width:233px;
+	float:left;
+	text-align:left;
+}
+hr.model_division{
+	width:90%;
+	color:#888888;
+	border-style:dotted;
+}
+a.help_show{
+	cursor: pointer;
+}
+div.help_hide{
+	width:100%;
+	text-align:right;
+}
+div.help_hide a{
+	cursor: pointer;
+}
+#field_help{
+	width:220px;
+	background-color:#ffff50;
+	border-color:#e1e100;
+	border-width:1px;
+	border-style:solid;
+	margin:15px;
+	padding:5px;
+	display:none;
+}
+
+span.param_name_span{
+	display:inline-block;
+	width:150px;
+	text-align:right;
+}
+
+input.param_name_input{
+	width:120px;
+}

@@ -1,0 +1,8 @@
+{
+  "raw_data_folder_path":"[RAW_FOLDER_PATH]",
+  "data_subfolder":"dev/",
+  "anci_subfolder":"dev/",
+  "logs_subfolder":"dev/",
+  "proxy_address":"tcp://[PROXY_ADDR]:[PROXY_PORT]",
+  "host_address":"[HOST_ADDRESS]"
+}

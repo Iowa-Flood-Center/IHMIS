@@ -1,0 +1,12 @@
+{"sc_modelcombination":{
+    "id":"hydrogcomb",
+    "title":"Hydrographs (past)",
+    "sc_represcomb_set":{
+        "hydrographmultiplespast":{
+			"mdla":"modelpaststg","mdlb":"modelpaststg",
+			"":"dischref"
+            }
+        }
+    },
+    "description":"Comparison between past hydrographs"
+}

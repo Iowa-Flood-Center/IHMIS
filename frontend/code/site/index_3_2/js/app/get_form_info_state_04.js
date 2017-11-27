@@ -317,9 +317,9 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
                                       sm.post_dict["timestamp_end"])
       .then(function(all_forc_opts){
         $("#" + div_id).append(create_forcing_select_object(forcing_title,
-                                                            forc_idx,
+                                                            forc_idx + 1,
                                                             all_forc_opts, 
-	                                                     mdl_num));
+	                                                        mdl_num));
         if(forc_idx < (hlm_forcings.length-1)){
           load_forcings(hlm_id, hlm_forcings, mdl_num, forc_idx+1);
         }

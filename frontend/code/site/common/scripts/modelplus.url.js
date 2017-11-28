@@ -11,8 +11,10 @@ var modelplus = modelplus || {};
   
   modelplus.url = modelplus.url || {};
   
+  // TODO - load the following lines from a config file somehow
   modelplus.url.base_frontend_sandbox = 'http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/ihmis/dev/frontend/code/site/';
   modelplus.url.base_frontend_deploy = 'http://ifis.iowafloodcenter.org/ifis/sc/modelplus/';
+  modelplus.url.base_realtime_folder = 'http://s-iihr50.iihr.uiowa.edu/andre/model_3_1/';
   
   // define basic URL address
   modelplus.url.base_frontend = () => {
@@ -30,6 +32,9 @@ var modelplus = modelplus || {};
   modelplus.url.base_frontend_viewer = modelplus.url.base_frontend + 'viewer_3_2/';
   modelplus.url.base_frontend_common = modelplus.url.base_frontend + 'common/';
   modelplus.url.api = modelplus.url.base_frontend + 'api_3_2/public/';
+  
+  modelplus.url.base_frontend_webservices = modelplus.url.base_frontend_viewer;     // TODO - remove it
+  modelplus.url.proxy = modelplus.url.base_frontend_viewer + 'the_proxy.php?url=';  // TODO - review it
   
   modelplus.url.proxy = modelplus.url.base_frontend_common + 'libs/proxy.php?url=';
 })();

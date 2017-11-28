@@ -59,6 +59,13 @@ var modelplus = modelplus || {};
 	return ($.getJSON(ws_url));
   }
   
+  // Retrieves basic information from available Runset Results
+  modelplus.api.get_runset_results = function(){
+    var ws_url;
+	ws_url = api_url + "sc_runset_results";
+	return ($.getJSON(ws_url));
+  }
+  
   // Tries to reserve a runset id
   modelplus.api.reserve_runset_id = function(runset_id){
     var post_url;
@@ -83,7 +90,6 @@ var modelplus = modelplus || {};
 		  max_num_cnt = max_num_str.length;
 		  max_num_int = parseInt(max_num_str) + 1;
 		  max_num_str = max_num_int.toString();
-		  //console.log("Adding until " + max_num_str.length + " < " + max_num_cnt + ".");
 		  while(max_num_str.length < max_num_cnt){
             max_num_str = "0" + max_num_str;
           }

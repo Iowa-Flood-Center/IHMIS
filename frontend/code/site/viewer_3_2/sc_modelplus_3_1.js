@@ -70,7 +70,7 @@ function onchange_runset_main_sbox(){
 	}
 	
 	// load all models related to selected runset
-	the_url = GLB_webservices.prototype.metainfo_load_runset + main_runset_id;
+	the_url = modelplus.viewer.ws_load_runset + main_runset_id;
 	
 	$.ajax({
 		url: the_url,
@@ -169,7 +169,7 @@ function onchange_model_main_sbox(){
 	}
 	
 	// load all single representations, comparison representations and evaluations of a model
-	the_url = GLB_webservices.prototype.get_metainfo_load_model(runset_id, main_model_id);
+	the_url = modelplus.viewer.ws_get_metainfo_load_model(runset_id, main_model_id);
 	
 	$.ajax({
 		url: the_url,
@@ -253,7 +253,7 @@ function onchange_model_main_sbox(){
 						}
 						cur_html += "</select>";
 						
-						cur_html += '<img src="' + GLB_urls.prototype.base_image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(' + cur_menu_item["id"] + ', $(this))" />';
+						cur_html += '<img src="' + modelplus.viewer.image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(' + cur_menu_item["id"] + ', $(this))" />';
 							
 						// cur_html += '<input type="hidden" id="npmono'+i+'_sel" value="'+cur_parameter_id+'" />';
 						cur_html += '</div>';
@@ -326,7 +326,7 @@ function onchange_model_main_sbox(){
 							cur_html += '<a href="#" id="'+cur_a_id+'" class="tabrain" style="width:220px">';
 							cur_html += cur_menu_item.call_radio + " (" + cur_ref_title + ")";
 							cur_html += '</a >';
-							cur_html += '<img src="' + GLB_urls.prototype.base_image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'' + cur_menu_item.id + '\', $(this))" />';
+							cur_html += '<img src="' + modelplus.viewer.image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'' + cur_menu_item.id + '\', $(this))" />';
 							cur_html += '</div>';
 							
 							div_eval_obj.append(cur_html);
@@ -420,7 +420,7 @@ function onchange_model_main_sbox(){
 						cur_html += '</select>';
 						
 						// build link
-						cur_html += '<img src="' + GLB_urls.prototype.base_image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'' + cur_menu_item.id + '\', $(this))" />';
+						cur_html += '<img src="' + modelplus.viewer.image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'' + cur_menu_item.id + '\', $(this))" />';
 						cur_html += '</div>';
 						
 						// add to HTML
@@ -466,7 +466,7 @@ function onchange_model_main_sbox(){
 								cur_html += '<a href="#" id="'+cur_a_id+'" class="tabrain" style="width:220px">';
 								cur_html += cur_menu_item.call_radio;
 								cur_html += '</a >';
-								cur_html += '<img src="' + GLB_urls.prototype.base_image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'' + cur_menu_item.id + '\', $(this))" />';
+								cur_html += '<img src="' + modelplus.viewer.image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'' + cur_menu_item.id + '\', $(this))" />';
 								cur_html += '</div>';
 								
 								// add to menu and count
@@ -661,7 +661,7 @@ function onchange_model_comp_sbox(){
 				}
 				cur_html += "</select>";
 						
-				cur_html += '<img src="' + GLB_urls.prototype.base_image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(' + cur_menu_item["id"] + ', $(this))" />';
+				cur_html += '<img src="' + modelplus.viewer.image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(' + cur_menu_item["id"] + ', $(this))" />';
 							
 				// cur_html += '<input type="hidden" id="npmono'+i+'_sel" value="'+cur_parameter_id+'" />';
 				cur_html += '</div>';
@@ -1081,7 +1081,7 @@ function read_reference_timestamp0_map(sc_runset_id, sc_model1_id, sc_model2_id,
 	} else {
 		sc_model_id = sc_model1_id + "_" + sc_model2_id;
 	}
-	ws_url = GLB_webservices.prototype.get_representations_ref0_timestamp_url(sc_runset_id, sc_model_id, sc_representation_id);
+	ws_url = modelplus.viewer.ws_get_representations_ref0_timestamp_url(sc_runset_id, sc_model_id, sc_representation_id);
 	
 	// 
 	$.ajax({
@@ -1227,6 +1227,15 @@ function populate_model_main_sbox(){
  * RETURN - None. Changes are performed in GLB_vars prototype
  */
 function load_init_data(func_to_run){
+  modelplus.api.get_runset_results()
+    .then(function(data){
+      console.log("LOADED PROMISE!");
+      GLB_vars.prototype.sc_runsets = data;
+      if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
+        func_to_run();
+      }
+	});
+	/*
 	$.ajax({
 		url: GLB_webservices.prototype.metainfo_list_runsets
 	}).success(function(data) {
@@ -1242,8 +1251,8 @@ function load_init_data(func_to_run){
 			// alert("Unable to parse: " + data);
 			// alert("Error: " + err)
 		}
-		
 	})
+	*/
 }
 
 /**
@@ -1257,9 +1266,8 @@ function load_model_data(){
 	runset_id = $('#'+modelplus.ids.MENU_RUNSET_SBOX).val();
 	model_id = $('#'+modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 	
-	// alert("From: " + GLB_webservices.prototype.get_metainfo_load_model(runset_id, model_id));
 	$.ajax({
-		url: GLB_webservices.prototype.get_metainfo_load_model(runset_id, model_id)
+		url: modelplus.viewer.ws_get_metainfo_load_model(runset_id, model_id)
 	}).success(function(data) {
 		// parse data and build message
 		var parsed_json;

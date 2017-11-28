@@ -10,21 +10,6 @@ var modelplus = modelplus || {};
   // TODO: try to move it into modelplus.url.js
   modelplus.url = modelplus.url || {};
   
-  modelplus.url.base_frontend_sandbox = 'http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/modelplus_3_1_git_develop/frontend/';
-  modelplus.url.base_frontend_deploy = 'http://ifis.iowafloodcenter.org/ifis/sc/modelplus/';
-  
-  modelplus.url.base_frontend = () => {
-    if(window.location.href.indexOf('s-iihr50') != -1)
-      return(modelplus.url.base_frontend_sandbox);
-    else
-      return(modelplus.url.base_frontend_deploy); };
-  modelplus.url.base_frontend = modelplus.url.base_frontend();
-  modelplus.url.base_frontend_index = modelplus.url.base_frontend + 'index_3_1/';
-  modelplus.url.base_frontend_viewer = modelplus.url.base_frontend + 'viewer_3_1/';
-  modelplus.url.base_realtime_folder = 'http://s-iihr50.iihr.uiowa.edu/andre/model_3_1/';
-  modelplus.url.base_frontend_webservices = modelplus.url.base_frontend_sandbox + 'viewer_3_1/';  // TODO - move to API
-  modelplus.url.proxy = modelplus.url.base_frontend_viewer + 'the_proxy.php?url=';
-  
   // container for Key Codes
   modelplus.keyCodes = modelplus.keyCodes || {};
   
@@ -35,53 +20,83 @@ var modelplus = modelplus || {};
   // define other scripts
   modelplus.scripts = modelplus.scripts || {};
   
-  // "../../common/scripts/modelplus.url.js",
-  modelplus.scripts.queue = ["../../common/scripts/modelplus.url.js",
-                             "modelplus.constants.js", 
-                             "modelplus.main.js",
-                             "modelplus.hydrograph.js"];
+  // TODO - review the following dirty solution
+  (function(){
+    const view_folder = "viewer_3_2";
+    var scripts = document.getElementsByTagName('script');
+    var index = scripts.length - 1;
+    var myScript = scripts[index];
+	modelplus.scripts.ubase = myScript.src.split("/"+view_folder+"/")[0]+"/";
+	modelplus.scripts.uview = modelplus.scripts.ubase + view_folder + "/";
+  })();
   
+  // define additional scripts to be loaded
+  modelplus.scripts.queue = [modelplus.scripts.ubase + "common/scripts/modelplus.url.js",
+                             modelplus.scripts.ubase + "common/scripts/modelplus.api.js",
+                             modelplus.scripts.uview + "scripts/modelplus.constants.js", 
+                             modelplus.scripts.uview + "scripts/modelplus.main.js",
+                             modelplus.scripts.uview + "scripts/modelplus.hydrograph.js"];
+  modelplus.scripts.uview_main = modelplus.scripts.uview + "sc_modelplus_3_1.js";
 })();
 
 /*************************************** GLOBAL VARS ****************************************/
+
+// Define global variables (in modelplus.viewer workspace)
+// Should be called after external scripts are loaded
+(function () {
+  "use strict";
+  
+  modelplus.viewer = modelplus.viewer || {};
+  
+  modelplus.viewer.define_global_variables = function(){
+    var vw = modelplus.viewer;
+    vw.image_folder = modelplus.url.base_frontend_viewer + 'imgs/';
+	vw.image_legend_folder = vw.image_folder + 'legends/';
+	
+	vw.map_objects = vw.map_objects || {};
+	vw.map_objects.domain_kml = modelplus.url.base_frontend_viewer + 
+	                                          "kmls/iowa_water_domain_03_large_truncated.kml";
+	
+    // TODO - send the following to the API - ON
+	// TODO - all modelplus.viewer.ws_* must vanish
+    vw.ws = modelplus.url.proxy + modelplus.url.base_frontend_webservices;
+	vw.ws_load_runset = vw.ws + "ws_load_runset.php?runsetid=";
+    vw.ws_get_metainfo_load_model = function(runset_id, model_id){
+      return(vw.ws + "ws_load_model.php%i%runsetid="+runset_id+"%e%modelid="+model_id);
+	}
+	vw.ws_representations_ref0_timestamp = vw.ws + "ws_load_timestamp_ref0_map.php";
+	vw.ws_get_representations_ref0_timestamp_url = (runset_id, model_id, representation_id)=>{
+      var args, url, arg;
+      url = vw.ws_representations_ref0_timestamp;
+      arg =  "%i%sc_runset_id="+runset_id;
+	  arg += "%e%sc_model_id="+model_id;
+	  arg += "%e%sc_representation_id="+representation_id;
+      return(url + arg);
+    }
+	// TODO - send the following to the API - OFF
+  }
+})();
 
 // 3.0 - all menu groups - TODO: send it somewhere else
 function GLB_menugroup_ids(){};
 
 // 3.0 - all local URLS
 function GLB_urls(){};
-GLB_urls.prototype.base_image_folder = modelplus.url.base_frontend_viewer + 'imgs/';
 GLB_urls.prototype.base_legend_image_folder = GLB_urls.prototype.base_image_folder + 'legends/';        
 GLB_urls.prototype.custom_display_folder = modelplus.url.base_frontend_viewer + 'custom_js/';
 modelplus.url.custom_display_css_folder = modelplus.url.base_frontend_viewer + 'custom_css/';
-GLB_urls.prototype.script_lib_file = modelplus.url.base_frontend_viewer + 'sc_modelplus_3_1.js';
 
 // 3.0 - all web services
 function GLB_webservices(){};
 
-GLB_webservices.prototype.http = modelplus.url.proxy + modelplus.url.base_frontend_webservices;
-
 GLB_webservices.prototype.metainfo_list_runsets = GLB_webservices.prototype.http + "ws_list_runsets.php";
-GLB_webservices.prototype.metainfo_load_runset = GLB_webservices.prototype.http + "ws_load_runset.php?runsetid=";
 
 GLB_webservices.prototype.metainfo_main = GLB_webservices.prototype.http + 'ws_load_metainfo_main.php?runsetid=';
 GLB_webservices.prototype.metainfo_scrunset_params = GLB_webservices.prototype.http + 'ws_load_metainfo_runset_raw.php';
 GLB_webservices.prototype.metainfo_scmodel_params = GLB_webservices.prototype.http + 'ws_load_metainfo_raw.php';
-GLB_webservices.prototype.representations_ref0_timestamp = GLB_webservices.prototype.http + 'ws_load_timestamp_ref0_map.php';
 GLB_webservices.prototype.runsets_desc = modelplus.url.proxy + 'ws_runset_runsetdesc.php?model_id=';
 GLB_webservices.prototype.get_models_desc = function(sc_runset_id, sc_model_id){
 	return (GLB_webservices.prototype.http + 'ws_model_modeldesc.php%i%model_id=' + sc_model_id + '%e%runset_id=' + sc_runset_id);
-}
-
-// 3.0 - web services -related functions
-GLB_webservices.prototype.get_metainfo_load_model = function(runset_id, model_id){
-	return (GLB_webservices.prototype.http + "ws_load_model.php%i%runsetid="+runset_id+"%e%modelid="+model_id);
-}
-GLB_webservices.prototype.get_representations_ref0_timestamp_url = function(sc_runset_id, sc_model_id, sc_representation_id){
-	var args, url;
-	url = GLB_webservices.prototype.representations_ref0_timestamp;
-	arg = "%i%sc_runset_id="+sc_runset_id+"%e%sc_model_id="+sc_model_id+"%e%sc_representation_id="+sc_representation_id;
-	return(url + arg);
 }
 
 // 3.0 - all session variables
@@ -186,8 +201,6 @@ var GLB_map_domain_zoom = false;
 /*********************************** GLOBAL MAPS OBJECTS ************************************/
 
 function GLB_map_objects(){};
-// GLB_map_objects.prototype.kml_url = modelplus.url.base_frontend_webservices + "kmls/iowa_water_domain_02_reduced_c02.kml";
-GLB_map_objects.prototype.kml_url = modelplus.url.base_frontend_webservices + "kmls/iowa_water_domain_03_large_truncated.kml";
 GLB_map_objects.prototype.kml_object = null;
 
 /************************************* IFIS FUNCTIONS ***************************************/
@@ -195,7 +208,9 @@ function sc_init() {
 	// read_reference_timestamp0();
 	// read_reference_timestamp0_map();
 	// 'single' starts selected
-	// alert("c");
+	
+	console.log("sc_init()");
+	
 	var menu = new Array(
 		'<div class="np_title np_blue" style="clear: both; width:100%">IFIS MODEL-PLUS</div>',
 		'<div style="width:100%">Runset:' + 
@@ -236,7 +251,7 @@ function sc_init() {
 				'<a href="#" id="np'+opt_tool_vec_domain+'" >Domain mask</a>',
 				'<div id="div'+opt_tool_us_map+'" style="display:inline-block; width:100%">' +
 					'<a href="#" id="np'+opt_tool_us_map+'" style="display:inline-block; width:200px" >USGS Discharge Map</a>' +
-					'<img src="' + GLB_urls.prototype.base_image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'quni_usgs\', $(this));" />' +
+					'<img src="' + modelplus.viewer.image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'quni_usgs\', $(this));" />' +
 				'</div>',
 			'</div>'
 		);
@@ -245,12 +260,13 @@ function sc_init() {
 	$('#np_sc').html(menu.join(''));
 	$('#nptsc').attr("src", '../sc/model/model.png');
 	$('#nptsc').show();
-	$('#logoimg').attr('src', GLB_urls.prototype.base_image_folder + 'ifis-logo-mplus.png');
+	$('#logoimg').attr('src', modelplus.viewer.image_folder + 'ifis-logo-mplus.png');
 	$('#logoimg').parent().closest('a').attr("href", modelplus.url.base_frontend);
 
 	// load Iowa model domain map
+	console.log("Loading: " + modelplus.viewer.map_objects.domain_kml);
 	GLB_map_objects.prototype.kml_object = new google.maps.KmlLayer({
-        url: GLB_map_objects.prototype.kml_url,
+        url: modelplus.viewer.map_objects.domain_kml,
         map: null,
 		preserveViewport:true,
 		suppressInfoWindows: true,
@@ -324,10 +340,11 @@ function sc_init_rain() {
 
 function sc_init_community() {
   "use strict";
-  modelplus.styles.load("styles.css");
   modelplus.scripts.loadQueue(function(){
+    modelplus.viewer.define_global_variables();
+	modelplus.styles.load("styles.css");
 	communityselected(0, 'State of Iowa', 43.0, -92.6,'',0,0);
-    modelplus.scripts.load(GLB_urls.prototype.script_lib_file, function(){
+    modelplus.scripts.load(modelplus.scripts.uview_main, function(){
       load_init_data(populate_runset_main_sbox);
 	  var domain_mask = $("#np" + opt_tool_vec_domain);
       if (domain_mask.length != 0){
@@ -1039,10 +1056,10 @@ modelplus.scripts.loadQueue = function(callbackFunction){
     return;
   }
   
-  cur_script = "scripts/" + modelplus.scripts.queue[0];
+  cur_script = modelplus.scripts.queue[0];
   modelplus.scripts.queue.shift();
   console.log("Loading: " + cur_script);
-  modelplus.scripts.load(modelplus.url.base_frontend_viewer + cur_script,
+  modelplus.scripts.load(cur_script,
                          modelplus.scripts.loadQueue,
 						 callbackFunction);
 }

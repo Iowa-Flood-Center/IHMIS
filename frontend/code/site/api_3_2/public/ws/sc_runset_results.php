@@ -2,6 +2,33 @@
 
 use Results\RunsetResult as RunsetResult;
 
+function process_post_request($app){
+	
+	// get arguments
+	$post_data = $app->request->post();
+	
+	RunsetResult::setApp($app);
+	
+	// basic check on posted arguments
+    if(sizeof($post_data) == 0){
+      echo(json_encode(array("Exception" => "No parameter provided.")));
+      exit();
+    } elseif (!array_key_exists('runset_id', $post_data)) {
+      echo(json_encode(array("Exception" => "Missing 'runset_id' argument.")));
+      exit();
+    }
+
+	// create empty object in the file system
+	$runset_id = $post_data['runset_id'];
+    try{
+      RunsetResult::create(['id' => $runset_id]);
+      $return_array = array("Success" => "Reserved runset id '".$runset_id."'");
+    } catch(Exception $exp) {
+      $return_array = array("Exception" => $exp->getMessage());
+	}
+    echo(json_encode($return_array));
+}
+
 function process_get_request($app){
 	
 	$with_id = $app->request->params("id");
@@ -11,10 +38,8 @@ function process_get_request($app){
 	// query search
 	if(sizeof($app->request->params()) == 0){
 		$return_runsetresults = RunsetResult::all();
-	
 	} elseif (!is_null($with_id)) {
 		$return_runsetresults = RunsetResult::where('id', $with_id);
-	
 	} else {
 		$return_runsetresults = array("error"=>"unexpected parameter");
 	}

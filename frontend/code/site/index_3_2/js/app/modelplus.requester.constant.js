@@ -43,6 +43,7 @@ var modelplus = modelplus || {};
   ids.SET_MODELS_INNER_PARM_DIV_PREF = "set_models_inner_glbparm_div_";
   ids.SET_MODELS_INNER_EVAL_DIV_PREF = "set_models_inner_evaluat_div_";
   ids.SET_MODELS_INNER_REPR_DIV_PREF = "set_models_inner_represn_div_";
+  ids.SET_MODELS_SEL_REPR_PREF = "model_representation_";
   
   ids.SET_MODELS_COMPAR_H2 = "set_models_comparison_h2";
   ids.SET_MODELS_COMPAR_DIV = "set_models_comparison_div";

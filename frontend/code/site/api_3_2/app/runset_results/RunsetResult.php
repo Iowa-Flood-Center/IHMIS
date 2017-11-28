@@ -42,6 +42,22 @@
       return($return_obj);
     }
 	
+    /**
+     * Save current object into the file system path
+     */
+    public static function create($attributes){
+      $runset_id = $attributes['id'];
+      $folder_path = self::$app->fss->runsets_result_folder_path;
+	  $new_path = $folder_path . $runset_id;
+      $made = mkdir($new_path);
+	  if ($made){
+        $old = umask(0); 
+        chmod($new_path, 0777);
+		umask($old);
+	  }
+      return($made);
+    }
+	
 	// ///////////////////// GENERAL ///////////////////// //
 	
 	/**

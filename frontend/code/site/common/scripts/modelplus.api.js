@@ -59,6 +59,13 @@ var modelplus = modelplus || {};
 	return ($.getJSON(ws_url));
   }
   
+  // Tries to reserve a runset id
+  modelplus.api.reserve_runset_id = function(runset_id){
+    var post_url;
+    post_url = api_url + "sc_runset_results";
+    return($.post(post_url, {"runset_id": runset_id}));
+  }
+  
   // Retrieves a Runset id that can be used for new Runsets
   modelplus.api.get_auto_runset_id = function(){
 	var get_url;

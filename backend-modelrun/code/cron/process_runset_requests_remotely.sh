@@ -28,9 +28,9 @@ ext_foldergen_script=$(config_get $CONF_FILE PROCSERV_FGNFPH)
 ext_represgen_script=$(config_get $CONF_FILE PROCSERV_RGNFPH)
 
 # set some flags - useful for debugging - 0:no, 1:yes
-setup_dir_tree=0
-upload_metafiles=0
-upload_hdf5files=0
+setup_dir_tree=1
+upload_metafiles=1
+upload_hdf5files=1
 execute_bash=1
 
 # load python module
@@ -46,6 +46,8 @@ eval $(config_get $CONF_FILE CMD_LOAD_PYTHON)
     cur_command="ssh "${remote_addr}" python "${ext_foldergen_script}" -runsetid "${runsetid}
     echo "  Executing: '"${cur_command}"'."
     eval ${cur_command}
+  else
+    echo "  Not creating folder: flag OFF"
   fi
 
   # send hdf5 files
@@ -53,6 +55,8 @@ eval $(config_get $CONF_FILE CMD_LOAD_PYTHON)
     cur_command="scp -rp "${src_bins_dir}"* "${remote_addr}":"${dst_bins_dir}
     echo "  Executing: '"${cur_command}"'."
     eval ${cur_command}
+  else
+    echo "  Not sending raw files: flag OFF"
   fi
 
   # send meta files
@@ -60,13 +64,8 @@ eval $(config_get $CONF_FILE CMD_LOAD_PYTHON)
     cur_command="scp -r "${src_meta_dir}"* "${remote_addr}":"${dst_meta_dir}
     echo "  Executing: '"${cur_command}"'."
     eval ${cur_command}
-  fi
-
-  # send hdf5 files
-  if ! [ $upload_hdf5files -eq 0 ] ; then
-    cur_command="scp -rp "${src_bins_dir}"* "${remote_addr}":"${dst_bins_dir}
-    echo "  Executing: '"${cur_command}"'."
-    eval ${cur_command}
+  else
+    echo "  Not sending meta files: flag OFF"
   fi
 
   # perform post-processing effective steps
@@ -77,6 +76,8 @@ eval $(config_get $CONF_FILE CMD_LOAD_PYTHON)
     cur_command="ssh "${remote_addr}" '"${ssh_call}"'"
     echo "  Executing: "${cur_command}"."
     eval ${cur_command}
+  else
+    echo "  Not post-processing files: flag OFF"
   fi
   
   echo "Executed remote caller script."

@@ -151,7 +151,6 @@
       
       // iterates over each model creating its global files objects
       $all_global_files = array();
-	  //ini_set('display_errors', 1);
 	  \Settings::write_log_ln("Processing ".sizeof($this->model_requests)." models.", $app->log->file_path);
 	  
       foreach($this->model_requests as $cur_model_request){

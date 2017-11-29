@@ -897,7 +897,9 @@
 		 * RETURN :
 		 */
 		public static function get_remote_topology_file_path($current_timestamp){
-			return(AuxFilesLib::get_remote_central_folder_path().AuxFilesLib::TOPOLOGY_FILE_NAME);
+			$topo_filename = AuxFilesLib::TOPOLOGY_FILE_NAME;
+			$topo_folderpath = AuxFilesLib::$app->fss->anci_topo_folder_path;
+			return($topo_folderpath.$topo_filename);
 		}
 		
 		/**
@@ -908,10 +910,11 @@
 		 */
 		public static function get_remote_demparameters_file_path($current_timestamp, 
 		                                                          $hillslope_model_id){
+			$prms_folderpath = AuxFilesLib::$app->fss->anci_prms_folder_path;
 			if (($hillslope_model_id == 190)||($hillslope_model_id == 254)){
-				return(AuxFilesLib::get_remote_central_folder_path()."all_iowa_190_254.prm");                 // TODO - make it properly
+				return($prms_folderpath."all_iowa_190_254.prm");                 // TODO - make it properly
 			} else {
-				return(AuxFilesLib::get_remote_central_folder_path()."all_iowa_".$hillslope_model_id.".prm"); // TODO - make it properly
+				return($prms_folderpath."all_iowa_".$hillslope_model_id.".prm"); // TODO - make it properly
 			}
 			/*
 			$remote_folder_path = AuxFilesLib::get_remote_folder_path($current_timestamp);

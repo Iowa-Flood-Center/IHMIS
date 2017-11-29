@@ -105,6 +105,12 @@ $app->delete('/sc_runset_requests/:file_name',
 
 // --- Runset Results
 
+// creates a new runset result
+$app->post('/sc_runset_results/', function () use ($app) {
+	require './ws/sc_runset_results.php';
+	process_post_request($app);
+});
+
 // list all runset results
 $app->get('/sc_runset_results/', function() use ($app) {
 	require './ws/sc_runset_results.php';

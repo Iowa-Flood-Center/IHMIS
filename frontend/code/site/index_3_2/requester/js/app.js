@@ -163,6 +163,7 @@ var modelplus = modelplus || {};
   
   //
   modelplus.requester.state_machine.prev_step = function(){
+    var ids = modelplus.requester.constant.id;
     var sm = modelplus.requester.state_machine;
     sm.current_state -= 1;
     sm.update_form();
@@ -227,6 +228,7 @@ var modelplus = modelplus || {};
       .then(function(runset_id){
         var sm = modelplus.requester.state_machine;
         var ids = modelplus.requester.constant.id;
+		modelplus.api.reserve_runset_id(runset_id);
         sm.post_dict["sandbox"] = modelplus.url.is_sandbox;
 		sm.post_dict["runset_id"] = runset_id;
 		sm.post_dict["num_models"] = modelplus.requester.model_count;

@@ -43,6 +43,7 @@ var modelplus = modelplus || {};
   ids.SET_MODELS_INNER_PARM_DIV_PREF = "set_models_inner_glbparm_div_";
   ids.SET_MODELS_INNER_EVAL_DIV_PREF = "set_models_inner_evaluat_div_";
   ids.SET_MODELS_INNER_REPR_DIV_PREF = "set_models_inner_represn_div_";
+  ids.SET_MODELS_SEL_REPR_PREF = "model_representation_";
   
   ids.SET_MODELS_COMPAR_H2 = "set_models_comparison_h2";
   ids.SET_MODELS_COMPAR_DIV = "set_models_comparison_div";
@@ -105,7 +106,7 @@ var modelplus = modelplus || {};
 	{"date_str":"20100625",
      "label":"2010 Flood - June",
      "enable":true},
-	{"date_str":"20080815",
+	{"date_str":"20100815",
      "label":"2010 Flood - August",
      "enable":true},
 	{"date_str":"20110616",
@@ -114,7 +115,7 @@ var modelplus = modelplus || {};
 	{"date_str":"20130529",
      "label":"2013 - May",
      "enable":true},
-	{"date_str":"20150626",
+	{"date_str":"20140626",
      "label":"2014 - June",
      "enable":true},
 	{"date_str":"20150622",

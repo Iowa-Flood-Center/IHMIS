@@ -117,10 +117,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 		while(true){
           cur_input_id = cur_input_id_pref + "_" + cur_sub_idx + " option:selected";
 		  cur_input_dom = $("#"+cur_input_id);
-		  if(cur_input_dom.length <= 0){ 
-		    console.log("Failed '" + cur_input_id + "'." );
-		    break; }
-          console.log("Got '" + cur_input_id + "'." );
+		  if(cur_input_dom.length <= 0) break;
 		  cur_post_dict_id = "model_for_"+cur_mdl_index+"_"+cur_sub_idx;
 		  sm.post_dict[cur_post_dict_id] = cur_input_dom.val().trim();
           cur_sub_idx += 1;
@@ -146,12 +143,18 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 		while(true){
           cur_input_id = cur_input_id_pref + cur_sub_idx;
 		  cur_input_dom = $("#"+cur_input_id);
-		  if(cur_input_dom.length <= 0){ console.log("Fail " + cur_input_id); break; }
+		  if(cur_input_dom.length <= 0) break;
 		  if(cur_input_dom.prop('checked')){
-			sm.post_dict[cur_post_dict_id].push(cur_input_dom.val())
+			sm.post_dict[cur_post_dict_id].push(cur_input_dom.val());
 		  }
 		  cur_sub_idx += 1;
 		}
+		
+		// add representations
+        cur_input_id = ids.SET_MODELS_INNER_REPR_DIV_PREF + cur_mdl_index;
+		cur_post_dict_id = "model_repr_"+cur_mdl_index;
+		sm.post_dict[cur_post_dict_id] = modelplus.requester.get_checked_acronyms(cur_input_id);
+        sm.post_dict[cur_post_dict_id] = sm.post_dict[cur_post_dict_id].join(",");
       }
 	
       // TODO - add to memory
@@ -279,7 +282,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 	
 	// if null, clean forcings, ... and evaluation divs
     if(the_hlm_id == '-1'){
-      var div_id = ids.SET_MODELS_INNER_FORC_DIV_PREF + mdl_num;
+      var div_id = ids.SET_MODELS_INNER_FORC_DIV_PREF + model_num;
       $("#" + div_id).html(labels.HLM_SELECTION);
       return;
     }
@@ -409,7 +412,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   //
   function create_representation_input_object(repr_obj, mdl_num){
     var div_object, input_obj, label_obj, dom_id;
-	dom_id = "model_representation_"+mdl_num+"_"+repr_obj.id;
+	dom_id = ids.SET_MODELS_SEL_REPR_PREF + repr_obj.acronym;
 	div_object = $("<div>");
 	input_obj = $("<input type='checkbox' id='"+dom_id+"'>");
 	label_obj = $("<label for='"+dom_id+"'>"+repr_obj.title+"</label>");

@@ -68,7 +68,8 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
         sm.next_step_button();
         if(go_next){
           $("#"+ids.RUNSET_BASIC_HR).hide();
-          $("#"+ids.RUNSET_NAME_DIV).find(".help_button").hide();
+          // $("#"+ids.RUNSET_NAME_DIV).find(".help_button").hide();
+		  $("#"+ids.RUNSET_NAME_SPAN).html(sm.post_dict["runset_title"]);
 		  modelplus.requester.state_machine.next_step_go();
 		}
       };

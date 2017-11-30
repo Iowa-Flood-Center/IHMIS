@@ -101,7 +101,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 	var date_end_obj = new Date(modelplus.requester.state_machine.post_dict["timestamp_end"] * 1000);
 	var date_ini_str = date_ini_obj.getMonth()+"/"+date_ini_obj.getDate()+"/"+date_ini_obj.getFullYear();
 	var date_end_str = date_end_obj.getMonth()+"/"+date_end_obj.getDate()+"/"+date_end_obj.getFullYear();
-	var date_txt = "(from "+date_ini_str+" to "+date_end_str+")";
+	var date_txt = "Simulation: from "+date_ini_str+" to "+date_end_str;
     $("#"+modelplus.requester.constant.id.RUNSET_INIEND_DATE_SPAN).html(date_txt);
   }
   
@@ -120,7 +120,6 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 	
 	// clean receiving div
 	div_obj = $("#" + ids.REFERENCES_INCLUDE_LIST_DIV);
-	// div_obj.empty();
     if (div_obj.html().trim() == ""){
 
       for(cur_idx in json_obj){

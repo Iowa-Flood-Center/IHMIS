@@ -117,7 +117,7 @@ var modelplus = modelplus || {};
 	
 	// show representations
 	ret_html += "Representations: ";
-	ret_html += "TODO";
+	ret_html += sm.post_dict["model_repr_"+mdl_num];
 	ret_html += "\n";
 	
 	alert(ret_html);
@@ -252,7 +252,6 @@ var modelplus = modelplus || {};
     } else {
       $("#"+ids.SUBMIT_SUCCESS_DIV).show();
       $("#"+ids.SUBMIT_FAILURE_DIV).hide();
-	  //$("#"+ids.BUTTONS_DIV).hide();
     }
   }
   

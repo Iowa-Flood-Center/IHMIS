@@ -45,6 +45,10 @@ var modelplus = modelplus || {};
   ids.SET_MODELS_INNER_REPR_DIV_PREF = "set_models_inner_represn_div_";
   ids.SET_MODELS_SEL_REPR_PREF = "model_representation_";
   
+  ids.SET_MODELS_REPR_COMBINED_DIV = "set_models_repr_combined_div";
+  ids.SET_MODELS_REPR_COMBINED_INNER_DIV = "set_models_repr_combined_inner_div";
+  ids.SET_MODELS_INNER_REPR_COMBINED_DIV_PREF = "set_models_inner_repr_combined_div_";
+  
   ids.SET_MODELS_COMPAR_H2 = "set_models_comparison_h2";
   ids.SET_MODELS_COMPAR_DIV = "set_models_comparison_div";
   ids.SET_MODELS_COMPAR_NAMES = "set_models_comparison_span";

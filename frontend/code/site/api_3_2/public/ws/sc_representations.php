@@ -4,12 +4,17 @@ use DbModels\HlModel;
 use DbModels\ScProduct;
 use DbModels\ScRepresentation;
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 function process_get_request($app){
 
-	// get params
+	// get possible params
 	$from_scproducts = $app->request->params("from_products");
 	$from_schlmodel = $app->request->params("from_hlmodel");
 	$from_schlmodelcomp = $app->request->params("from_hlmodel_compareto");
+	$from_combining = $app->request->params("from_combining");
 	
 	// query search
 	if(sizeof($app->request->params()) == 0){
@@ -44,7 +49,7 @@ function process_get_request($app){
 		//
 		$the_model_1 = HlModel::where('id', (int)$from_schlmodel)->get()->first();
 		$the_model_2 = HlModel::where('id', (int)$from_schlmodelcomp)->get()->first();
-		// echo("HEHE");
+
 		$all_retrieved = array();
 		if (is_null($the_model_1)){
 			array_push($all_retrieved, array("error"=>
@@ -59,6 +64,24 @@ function process_get_request($app){
 				array_push($all_retrieved, $cur_representation);
 			}
 		}
+		
+	} 
+	elseif (!(is_null($from_combining))) {
+		
+		// search for valid Representations combined
+		$simple_representations = explode(",", $from_combining);
+		$all_retrieved = ScRepresentation::byCombining($simple_representations);
+		
+		if (ctype_digit(implode('', $simple_representations))){
+			// consider given values as IDS
+			$all_retrieved = array();
+		} else {
+			// consider given values as acronyms
+			$all_retrieved = ScRepresentation::byCombining($simple_representations);
+		}
+
+	} else {
+		$all_retrieved = array();
 	}
 	
 	// show it in JSON format

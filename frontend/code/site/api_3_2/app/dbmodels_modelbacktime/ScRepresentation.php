@@ -3,6 +3,7 @@
 namespace DbModels;
 
 // use DbModels\ScProduct;
+use Illuminate\Database\Capsule\Manager as DB;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class ScRepresentation extends Eloquent{
@@ -53,6 +54,28 @@ class ScRepresentation extends Eloquent{
 		$this->title = $title; 
 		$this->type = $type;
 		$this->acronym = $acronym;
+	}
+	
+	# ------------------------------{ GENR }------------------------------- #
+	
+	/**
+	 *
+	 */
+	public static function byCombining($repr_acronyms){
+		$f_name = "get_screpresentations_combined";
+		
+		$pg_array = "ARRAY['".implode("','", $repr_acronyms)."']";
+		$sql_command = "SELECT * FROM ".HlModel::schema.".".$f_name."(".$pg_array.");";
+		$sql_result = DB::connection('model_backtime')->select($sql_command);
+		$return_array = array();
+		foreach($sql_result as $cur_result){
+			array_push($return_array, 
+			           new ScRepresentation($cur_result['id'], 
+											$cur_result['title'],
+											$cur_result['type'], 
+											$cur_result['acronym']));
+		}
+		return($return_array);
 	}
 }
 

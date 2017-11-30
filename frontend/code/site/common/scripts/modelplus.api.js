@@ -48,6 +48,15 @@ var modelplus = modelplus || {};
 	return ($.getJSON(ws_url));
   }
   
+  // Get all possible combined representations
+  // repres_acronym : expected array of Strings
+  modelplus.api.get_representations_from_combining = function(repres_acronym){
+    var ws_url;
+	ws_url = api_url + "sc_representations%i%from_combining=";
+	ws_url += repres_acronym.join(",");
+	return($.getJSON(ws_url));
+  }
+  
   // Retrieves all common representations for two hlm models
   // hlm_id_1 : expected values such as 190, 254, ...
   // hlm_id_2 : expected values such as 190, 254, ...

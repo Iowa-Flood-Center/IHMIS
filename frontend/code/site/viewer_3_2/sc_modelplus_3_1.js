@@ -988,7 +988,7 @@ function load_ifis_rain(the_id, vis){
 		}
 	}
 	if(legend_id == null){ legend_id = "nolegend"; }
-	GLB_ifisrain_callback.prototype.legend = GLB_urls.prototype.base_legend_image_folder + legend_id + '.png';
+	GLB_ifisrain_callback.prototype.legend = modelplus.viewer.image_legend_folder + legend_id + '.png';
 	
 	// set up calendar type, design, 
 	GLB_ifisrain_callback.prototype.id = the_id;

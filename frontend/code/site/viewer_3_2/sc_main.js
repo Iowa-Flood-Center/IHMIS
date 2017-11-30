@@ -82,7 +82,6 @@ function GLB_menugroup_ids(){};
 
 // 3.0 - all local URLS
 function GLB_urls(){};
-GLB_urls.prototype.base_legend_image_folder = GLB_urls.prototype.base_image_folder + 'legends/';        
 GLB_urls.prototype.custom_display_folder = modelplus.url.base_frontend_viewer + 'custom_js/';
 modelplus.url.custom_display_css_folder = modelplus.url.base_frontend_viewer + 'custom_css/';
 

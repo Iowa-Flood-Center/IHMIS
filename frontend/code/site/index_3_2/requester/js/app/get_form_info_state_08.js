@@ -11,16 +11,12 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   
   // define get form functions
   (function () {
-   sm.get_form_info_functions[state_num] = function(){
+    sm.get_form_info_functions[state_num] = function(){
     sm.get_form_info_functions = sm.get_form_info_functions || {};
     
     // interface function 1
     var lock_fields = function(){
 	  return ( new Promise( function(resolve, reject){
-        $("#"+ids.CONTACT_INFO_DIV).find('*').each(function(){
-          $(this).prop('disabled', true);
-        });
-        sm.next_step_loading();
         resolve(true);
       }));
     }
@@ -28,30 +24,22 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
     // interface function 2
     var check_fields = function(){
       return ( new Promise( function(resolve, reject){
-        var selected_obj = $("input[name='"+ids.HOWCONTACT_RADIO_NAME+"']:checked");
-		var contact_email = $("#"+ids.CONTACT_EMAIL_INPUT).val().trim();
-		var will_resolve = true;
-        if (selected_obj.length === 0){
-          sm.next_step_error_show("Need to select one contact option.");
-          will_resolve = false;
-        } else {
-          var selected_val = selected_obj.val();
-          if ((selected_val != "how_contact_none")&&(contact_email == "")) {
-            sm.next_step_error_show("Need to provide a proper email address.");
-            will_resolve = false;
-          }
+        var selected_obj = $("input[name='"+ids.WHAT_DO_RADIO_NAME+"']:checked");
+		if (selected_obj.length === 0){
+          sm.next_step_error_show("Need to select one action.");
+          resolve(false);
+		} else {
+		  resolve(true);
 		}
-		resolve(will_resolve);
       }));
     }
 
     // interface function 3
     var solve = function(solved){
-      
+      // TODO - check if at least one option was defined
       return ( new Promise( function(resolve, reject){
-		if (solved){
-          sm.post_dict['contact_option'] = $("input[name='"+ids.HOWCONTACT_RADIO_NAME+"']:checked").val();
-	      sm.post_dict['email'] = $("#"+ids.CONTACT_EMAIL_INPUT).val().trim();
+        if(solved){
+          sm.post_dict['what_do'] = $("input[name='"+ids.WHAT_DO_RADIO_NAME+"']:checked").val();
 		}
         resolve(solved);
       }));
@@ -59,9 +47,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 
     // interface function 4
     var unlock_fields = function(go_next){
-      $("#"+ids.CONTACT_INFO_DIV).find('*').each(function(){
-        $(this).prop('disabled', false);
-      });
+      
       sm.next_step_button();
       if(go_next) modelplus.requester.state_machine.next_step_go();
     }
@@ -78,28 +64,31 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
     sm.update_form_functions = sm.update_form_functions || {};
 	
     sm.update_form_functions[state_num] = function(){
-      $("#"+ids.WHAT_DO_RADIOS_DIV).hide();
-      modelplus.requester.form.highlight_div(ids.CONTACT_INFO_DIV);
-      $("#"+ids.HOWCONTACT_RADIOS_DIV).show();
-      show_what_do_span();
-	  $("#"+ids.BUTTON_PREV_STEP).show();
-      $("#"+ids.BUTTON_NEXT_STEP).show();
-      $("#"+ids.BUTTON_SUBMIT).hide();
+      hide_what_do_span();
+      modelplus.requester.form.highlight_div(ids.WHAT_DO_DIV);
+      $("#"+ids.WHAT_DO_RADIOS_DIV).show();
+	  $("#"+ids.WHAT_DO_LABEL).hide();
+      $("#"+ids.CONTACT_INFO_DIV).hide();
+      $("#"+ids.HOWCONTACT_RADIOS_DIV).hide();
+      show_compositions_list_span();
 	}
   })();
 
   // --------------------------------------------------------- EXT ----------------------------------------------------------- //
   
-  function show_what_do_span(){
-    var what_do_val = modelplus.requester.state_machine.post_dict["what_do"];
-	$("#"+modelplus.requester.constant.id.WHAT_DO_H2).hide();
-    if(typeof what_do_val == "undefined"){
-      $("#"+modelplus.requester.constant.id.WHAT_DO_SPAN).html("UNDEFINED");
-	} else {
-      $("#"+modelplus.requester.constant.id.WHAT_DO_SPAN).html(what_do_val);
-	}
-	$("#"+modelplus.requester.constant.id.WHAT_DO_LABEL).show();
-	$("#"+modelplus.requester.constant.id.WHAT_DO_SPAN).show();
+  // 
+  function hide_what_do_span(){
+    $("#"+modelplus.requester.constant.id.WHAT_DO_SPAN).hide();
+	$("#"+modelplus.requester.constant.id.WHAT_DO_SPAN).hide();
+	$("#"+modelplus.requester.constant.id.WHAT_DO_H2).show();
+  }
+  
+  // 
+  function show_compositions_list_span(){
+    $("#"+ids.SET_MODELS_COMPOS_NAMES).html("No compositions.");  // TODO - dynamic
+    $("#"+ids.SET_MODELS_COMPOS_LABEL).show();
+    $("#"+ids.SET_MODELS_COMPOS_NAMES).show();
+	$("#"+ids.SET_MODELS_COMPOS_H2).hide();
   }
   
 })();

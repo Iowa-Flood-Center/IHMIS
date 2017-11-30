@@ -72,9 +72,8 @@
 		 <div class="grid-x grid-padding-x" >
 		  <div class="small-10 medium-6 cell left_div">
 		    <label id="runset_mid_date_label">
-              Flood Maximum Date:<br>
+              Flood Maximum Date: <span id="runset_mid_date_span"></span> <br>
 			  <input type="text" placeholder="MM/DD/YYYY" id="runset_mid_date_input" style="width:50%; display:inline-block">
-			  <span id="runset_mid_date_span"></span>
 			  <span id="runset_iniend_date_span"></span>
             </label>
           </div>
@@ -125,7 +124,6 @@
 		 <div class="grid-x grid-padding-x" >
 		  <div class="small-10 medium-6 cell left_div" >
 			<label id="references_include_names"></label>
-            <br />
 			<div class="medium-6 cell" id="references_include_list_div"></div>
 		  </div>
 		  <div class="small-2 medium-1 cell help_button_div">
@@ -137,6 +135,7 @@
 		 </div>
 		</div>
         
+		<!-- step 4 : set models -->
 		<div class="grid-container begins_hidden" id="set_models_div" >
 		 <div class="grid-x grid-padding-x header" >
           <strong id="set_models_h2" >Set Models</strong>
@@ -199,6 +198,24 @@
 		 </div>
         </div>
 		
+		<!-- step 5 : representations combined -->
+		<div class="grid-container begins_hidden" id="set_models_repr_combined_div" >
+		  <div class="grid-x grid-padding-x header" >
+            <strong id="set_models_repr_combined_h2" >Set Representations Combined</strong>
+		  </div>
+		  <div class="grid-x grid-padding-x" >
+		    <div class="small-10 medium-6 cell left_div" id="set_models_repr_combined_inner_div" >
+  	        </div>
+		    <div class="small-2 medium-1 cell help_button_div">
+              <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
+            </div>
+            <div class="small-12 medium-5 cell begins_hidden help_message">
+		      <blockquote>...</blockquote>
+		    </div>
+		  </div>
+        </div>
+		
+		<!-- step 6 : models comparison -->
 		<div class="grid-container begins_hidden" id="set_models_comparison_div" class="begins_hidden">
 		 <div class="grid-x grid-padding-x header" >
           <strong id="set_models_comparison_h2" >Set Models Comparisons</strong>
@@ -219,6 +236,7 @@
 		  </div>
 		 </div>
         </div>
+		
 		<div class="grid-container begins_hidden" id="set_models_compositions_div" class="begins_hidden">
          <div class="grid-x grid-padding-x header" >
           <strong id="set_models_compositions_h2" >Set Models Composition</strong>
@@ -273,7 +291,6 @@
 		 <div class="grid-x grid-padding-x" >
           <div class="small-10 medium-6 cell left_div" >
 			<label id="contact_info_span" class="begins_hidden"></label>
-			<br />
 			<div id="how_contact_radios_div">
               <input type="radio" name="how_contact" id="how_contact_none" value="how_contact_none">
                 <label for="how_contact_none">No contact</label><br />
@@ -303,7 +320,7 @@
               Previous Step
             </a>
           </div>
-          <div class="small-12 medium-2 cell">
+          <div class="small-12 medium-2 cell center_div">
             <span id="label_current_step" ></span>
           </div>
           <div class="small-12 medium-5 cell" style="text-align:right">
@@ -343,6 +360,7 @@
 	<script src="requester/js/app/get_form_info_state_07.js"></script>
 	<script src="requester/js/app/get_form_info_state_08.js"></script>
 	<script src="requester/js/app/get_form_info_state_09.js"></script>
+	<script src="requester/js/app/get_form_info_state_10.js"></script>
 	<script type="text/javascript" src="base_lib.js"></script>
   </body>
 </html>

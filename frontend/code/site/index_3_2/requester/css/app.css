@@ -19,6 +19,10 @@ div.right_div{
   text-align:right;
 }
 
+div.center_div{
+  text-align:center;
+}
+
 h2{
   font-size: 14px;
   text-decoration: bold;

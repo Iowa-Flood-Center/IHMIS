@@ -187,10 +187,8 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
     sm.update_form_functions[state_num] = function(){
       hide_models_list_span();
       modelplus.requester.form.highlight_div(ids.SET_MODELS_DIV);
-      $("#"+ids.SET_MODELS_COMPAR_DIV).hide();
-      $("#"+ids.SET_MODELS_COMPOS_DIV).hide();
-      $("#"+ids.WHAT_DO_DIV).hide();
-      $("#"+ids.CONTACT_INFO_DIV).hide();
+      $("#"+ids.SET_MODELS_REPR_COMBINED_DIV).hide();
+	  $("#"+ids.SET_MODELS_REPR_COMBINED_INNER_DIV).empty();
       show_reference_list_span();
 	  $("#"+ids.SET_MODELS_TITLE).show();
 	  load_hlm_options()
@@ -238,7 +236,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
       switch(this_id){
         case model_title_label_id:
           break;
-        case model_title_label_id:
+        case model_title_span_id:
           $(this).html($("#"+model_title_input_id).val());
           $(this).show();
           return;
@@ -412,7 +410,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   //
   function create_representation_input_object(repr_obj, mdl_num){
     var div_object, input_obj, label_obj, dom_id;
-	dom_id = ids.SET_MODELS_SEL_REPR_PREF + repr_obj.acronym;
+	dom_id = ids.SET_MODELS_SEL_REPR_PREF + mdl_num + "_" + repr_obj.acronym;
 	div_object = $("<div>");
 	input_obj = $("<input type='checkbox' id='"+dom_id+"'>");
 	label_obj = $("<label for='"+dom_id+"'>"+repr_obj.title+"</label>");

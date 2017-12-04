@@ -20,7 +20,7 @@ var modelplus = modelplus || {};
     if (date_str.length != 10)
       return(null);
     var mid_year = date_str.substring(6,10);
-	var mid_month = date_str.substring(0,2);
+	var mid_month = parseInt(date_str.substring(0,2)) - 1;
 	var mid_day = date_str.substring(3,5);
 	return (modelplus.utils.get_timestamp(mid_day, mid_month, mid_year));
   }
@@ -54,8 +54,6 @@ var modelplus = modelplus || {};
    * RETURN: Array of strings
    */
   modelplus.requester.get_checked_acronyms = function(parent_div_id){
-    "use strict";
-
     var cur_all_checkbox, cur_all_checked, cur_checkbox_idx, cur_checkbox;
 	
 	cur_all_checkbox = $("#"+parent_div_id+" :input");
@@ -68,6 +66,23 @@ var modelplus = modelplus || {};
     }
 	return(cur_all_checked);
   };
+  
+  /**
+   * Get the values of all selected items in a div.
+   * RETURN: Array of strings
+   */
+  modelplus.requester.get_checked_values = function(parent_div_id){
+    var cur_all_checkbox, cur_all_checked, cur_checkbox_idx, cur_checkbox;
+	
+	cur_all_checkbox = $("#"+parent_div_id+" :input");
+    cur_all_checked = Array();
+    for(cur_checkbox_idx in cur_all_checkbox){
+      cur_checkbox = cur_all_checkbox[cur_checkbox_idx];
+      if(!cur_checkbox.checked) continue;
+      cur_all_checked.push(cur_checkbox.value);
+    }
+	return(cur_all_checked);
+  }
   
   // pop up with all information from a model
   modelplus.requester.show_model_details = function(a_obj){

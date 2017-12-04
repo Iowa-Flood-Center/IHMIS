@@ -350,8 +350,7 @@
      * RETURN :
      */
     public function create_evaluation_mtx_meta_file($app){
-      // TODO - solve make this work
-      if(true){
+      if(false){
         $this->create_evaluation_mtx_empty_meta_file($app);
       } else {
         $this->create_evaluation_mtx_filled_meta_file($app);
@@ -367,8 +366,6 @@
       // defines final file path
       $json_final_filepath = AuxFilesLib::get_local_metaevaluationmtx_file_path($this->current_timestamp);
     
-      // read template file and make empty evaluations
-      //$json_final_content = file(FoldersDefs::METAEVALUATION_TEMPLATE_FILEPATH);
       $json_final_content = file($app->fss->metaevaluation_template_filepath);
       $json_final_content[1] = "";
       
@@ -378,7 +375,7 @@
         fwrite($fp, $value);
       }
       fclose($fp);
-      
+	  
       return;
     }
     
@@ -387,10 +384,47 @@
      * RETURN :
      */
     public function create_evaluation_mtx_filled_meta_file($app){
+      // defines final file path
+      $json_final_filepath = AuxFilesLib::get_local_metaevaluationmtx_file_path($this->current_timestamp);
+    
+      // read template file and make empty evaluations
+	  $json_final_content = file($app->fss->metaevaluation_template_filepath);
+	  $line_template = $json_final_content[1];
+	  
+	  // build intermediary inner matrix
+      $all_evaluations = [];
+	  foreach($this->model_requests as $cur_model_request){
+		  if (is_null($cur_model_request->evaluations)) continue;
+		  foreach($cur_model_request->evaluations as $cur_evaluation){
+			  if (!array_key_exists($cur_evaluation, $all_evaluations)){
+				  $all_evaluations[$cur_evaluation] = [];
+			  }
+			  array_push($all_evaluations[$cur_evaluation], 
+			             $cur_model_request->model_id);
+		  }
+      }
+	  
+	  // create inner lines
+	  $all_lines = [];
+	  foreach ($all_evaluations as $cur_evaluation => $cur_models){
+		  $cur_line = str_replace('EVALUATIONID_REFERENCEID', $cur_evaluation, $line_template);
+		  $cur_line = str_replace('SC_MODEL_IDS', json_encode($cur_models), $cur_line);
+		  // $cur_line = str_replace("\n", "", $cur_line);
+		  $cur_line = preg_replace('/\s\s+/', ' ', $cur_line);
+		  array_push($all_lines, $cur_line);
+      }
+	  
+	  // replace it
+      $json_final_content[1] = implode(",\n", $all_lines)."\n";
       
-      // 
-      
-      
+      // write all internal lines
+      $fp = fopen($json_final_filepath, 'w');
+      foreach ($json_final_content as $key => $value){
+        fwrite($fp, $value);
+      }
+      fclose($fp);
+	  
+      return;
     }
     
     /**

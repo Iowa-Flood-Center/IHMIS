@@ -53,7 +53,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 		$.each(sm.post_dict[cur_post_dict_id].split(","), function(i, el){
           if($.inArray(el, cur_tmp_vect) === -1) cur_tmp_vect.push(el);
         });
-		sm.post_dict[cur_post_dict_id] = cur_tmp_vect;
+		sm.post_dict[cur_post_dict_id] = cur_tmp_vect.join(",");
       }
 	  
       return ( new Promise( function(resolve, reject){

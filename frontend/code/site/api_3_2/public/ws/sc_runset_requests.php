@@ -25,6 +25,8 @@ function process_get_request($app){
 }
 
 function process_post_request($app){
+	//error_reporting(E_ALL);
+    //ini_set('display_errors', 1);
 	
 	// get arguments
 	$post_data = $app->request->post();
@@ -45,7 +47,7 @@ function process_post_request($app){
 	} catch(Exception $exp) {
 		echo(json_encode(array("Exception" => $exp->getMessage())));
 		exit();
-	}
+	} 
 	
 	// set up log file
 	if ((!property_exists($app->log, "file_path"))||(is_null($app->log->file_path)))

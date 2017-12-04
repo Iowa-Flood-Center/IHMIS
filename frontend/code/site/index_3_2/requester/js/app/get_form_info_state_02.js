@@ -95,10 +95,14 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   //
   function show_date_mid_span(){
     var date_obj = new Date(modelplus.requester.state_machine.post_dict["timestamp_mid"] * 1000);
-	var date_str = date_obj.getMonth()+"/"+date_obj.getDate()+"/"+date_obj.getFullYear();
+    var month = date_obj.getMonth() + 1;
+	var day = date_obj.getDate();
+	var year = date_obj.getFullYear();
+	var date_str = month + "/" + day + "/" + year;
     $("#"+modelplus.requester.constant.id.RUNSET_MID_DATE_SPAN).html(date_str);
   }
   
+  //
   function get_what_run(){
     var sm = modelplus.requester.state_machine;
 	var ids = modelplus.requester.constant.id;

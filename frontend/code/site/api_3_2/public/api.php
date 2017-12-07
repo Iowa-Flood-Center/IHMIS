@@ -149,6 +149,12 @@ $app->get('/sc_model_results/', function() use ($app) {
 	process_get_request($app);
 });
 
+// add new available initial conditions
+$app->post('/initial_condition_available/', function() use ($app) {
+	require './ws/initial_condition_availability.php';
+	process_post_request($app);
+});
+
 // --- a test
 
 $app->get('/test/', function () use ($app) {

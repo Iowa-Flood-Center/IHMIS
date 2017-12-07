@@ -44,7 +44,7 @@ function process_get_request($app){
 		$return_runsetresults = array("error"=>"unexpected parameter");
 	}
 	
-	// show it in JSON format
+	// translate result into array
 	$return_array = array();
 	foreach($return_runsetresults as $cur_runsetresult){
 		if (is_object($cur_runsetresult)){
@@ -55,6 +55,22 @@ function process_get_request($app){
 			echo("What is '".$cur_runsetresult."'?\n");
 		}
 	}
+	
+	// sort array by init_timestamp
+	usort($return_array, function($runset_a, $runset_b){
+		$SORT_FIELD = 'timestamp_ini';
+		if(!isset($runset_a[$SORT_FIELD])){
+			return(-1);
+		} elseif(!isset($runset_b[$SORT_FIELD])){
+			return(1);
+		} elseif ($runset_a[$SORT_FIELD] < $runset_b[$SORT_FIELD]) {
+			return(-1);
+		} else {
+			return(1);
+		}
+	});
+	
+	// show it in JSON format
 	echo(json_encode($return_array));
 }
 

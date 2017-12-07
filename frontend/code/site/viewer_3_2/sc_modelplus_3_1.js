@@ -64,9 +64,6 @@ function onchange_runset_main_sbox(){
 	if ($("#np" + GLB_map_type).hasClass("npact")){
 		reclick_id = "#np" + GLB_map_type;
 		$("#np" + GLB_map_type).click();
-		console.log("Done...1");
-	} else {
-		console.log("Done...2");
 	}
 	
 	// load all models related to selected runset
@@ -1229,30 +1226,11 @@ function populate_model_main_sbox(){
 function load_init_data(func_to_run){
   modelplus.api.get_runset_results()
     .then(function(data){
-      console.log("LOADED PROMISE!");
       GLB_vars.prototype.sc_runsets = data;
       if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
         func_to_run();
       }
 	});
-	/*
-	$.ajax({
-		url: GLB_webservices.prototype.metainfo_list_runsets
-	}).success(function(data) {
-		// parse data and build message
-		var parsed_json;
-		try{
-			GLB_vars.prototype.sc_runsets = JSON.parse(data);
-			if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
-				func_to_run();
-			}
-		} catch(err) {
-			alert("Error 123: " + err);
-			// alert("Unable to parse: " + data);
-			// alert("Error: " + err)
-		}
-	})
-	*/
 }
 
 /**
@@ -1561,10 +1539,9 @@ function call_custom_display(display_id){
 	$('link[id='+stylesheet_link_id+']').remove();
 	var css_tag = '<link rel="stylesheet" type="text/css" id="'+stylesheet_link_id+'" href="'+css_address+'">';
 	$('head').append(css_tag);
-	console.log("Appended '"+css_address+"'");
 
 	// call display
-	display_address = GLB_urls.prototype.custom_display_folder + display_id + ".js";
+	display_address = modelplus.url.custom_display_js_folder + display_id + ".js";
 	if (typeof custom_display !== 'undefined'){
 		// delete custom_display;
 		custom_display = null;

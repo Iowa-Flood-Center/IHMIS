@@ -12,336 +12,51 @@
 	<link rel="stylesheet" href="requester/css/app.css">
 	<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
   </head>
-  <body id="central" onload="modelplus.requester.onload();">
+  <body id="central" >
     <div id="wrapper">
       <div id="doc">
         <div id="header">
           <!-- keep empty -->
         </div>
-          <div id="main-feature">
+        <div id="main-feature">
 		  
-    <form>
-      <div class="grid-container" >
-        <div class="grid-x grid-padding-x" >
-		  <div class="medium-6 cell left_div">
-            New Runset Request
-		  </div>
-		  <div class="medium-6 cell right_div">
-		    &nbsp;<a href="../" >Back</a>&nbsp;
-		  </div>
-        </div>
+          <div class="grid-container" >
         
-		<div class="grid-x grid-padding-x begins_hidden" id="submit_success_div">
-          <div ><!-- TODO: understand foundation properly -->
-            <span>SUBMISSION SUCCESSFUL.</span>
-			<br />
-			<span>You can submit a new runset clicking <a href="#" onclick="location.reload();" >here</a>.</span>
-		  </div>
-        </div>
-		<div class="grid-x grid-padding-x begins_hidden" id="submit_failure_div">
-          <div ><!-- TODO: understand foundation properly -->
-            <span>SUBMISSION FAILED.</span>
-			<br>
-			<span id="submit_failure_msg_div"></span>
-		  </div>
-        </div>
-		
-		<!-- First step -->
-		<div class="grid-container" id="runset_name_div">
-		 <div class="grid-x grid-padding-x header" >
-		   <strong>Basic info</strong>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-          <div class="small-10 medium-6 cell left_div">
-            <label id="runset_name_label">Runset Label: <span id="runset_name_span"></span>
-              <input type="text" placeholder="Flood of 2029" id="runset_name_input">
-            </label>
-		  </div>
-		  <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-		    <blockquote>Label that names a runset.<br >It must be unique.</blockquote>
-		  </div>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-		  <div class="medium-12 cell">
-           <hr id="runset_basic_hr">
-		  </div>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-		  <div class="small-10 medium-6 cell left_div">
-		    <label id="runset_mid_date_label">
-              Flood Maximum Date: <span id="runset_mid_date_span"></span> <br>
-			  <input type="text" placeholder="MM/DD/YYYY" id="runset_mid_date_input" style="width:50%; display:inline-block">
-			  <span id="runset_iniend_date_span"></span>
-            </label>
-          </div>
-          <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-            <blockquote>
-			  <strong>Suggested dates:</strong><br >
-              <div id="runset_mid_date_predefined_div"></div>
-            </blockquote>
-          </div>
-         </div>
-        </div>
-        
-		<!-- Second step -->
-		<div class="grid-container begins_hidden" id="simulation_type_div">
-		 <div class="grid-x grid-padding-x header" >
-		   <strong id="simulation_type_h2">Simulation Type</strong>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-          <div class="small-10 medium-6 cell left_div" >
-            <br>
-            <input type="radio" name="what_run" id="what_run_20dseq" value="what_run_20dseq">
-              <label for="what_run_20dseq">20 days sequence</label><br />
-            <input type="radio" name="what_run" id="what_run_06hseq" value="what_run_06hseq">
-              <label for="what_run_06hseq">06 hours sequence (test)</label><br />
-            <input type="radio" name="what_run" id="what_run_10dp10df" value="what_run_10dp10df">
-              <label for="what_run_10dp10df">10 days past, 10 days forecast</label><br />
-            <input type="radio" name="what_run" id="what_run_06hp06hf" value="what_run_06hp06hf">
-              <label for="what_run_06hp06hf">06 hours past, 06 hours forecast (test)</label><br />
-          </div>
-		  <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-		    <blockquote>Determines the simulation time.<br>
-			Recommended: 20 days sequence.</blockquote>
-		  </div>
-		 </div>
-        </div>
-		
-		<div class="grid-container begins_hidden" id="references_include_div">
-		 <div class="grid-x grid-padding-x header" >
-		  <strong id="references_include_h2" >References to Include</strong>
-		  <strong id="references_include_label" class="begins_hidden">References</strong>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-		  <div class="small-10 medium-6 cell left_div" >
-			<label id="references_include_names"></label>
-			<div class="medium-6 cell" id="references_include_list_div"></div>
-		  </div>
-		  <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-		    <blockquote>The references impact on the available evaluations.</blockquote>
-		  </div>
-		 </div>
-		</div>
-        
-		<!-- step 4 : set models -->
-		<div class="grid-container begins_hidden" id="set_models_div" >
-		 <div class="grid-x grid-padding-x header" >
-          <strong id="set_models_h2" >Set Models</strong>
-		  <strong id="set_models_label" class="begins_hidden">Models</strong>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-          <div class="small-10 medium-6 cell left_div" >
-			<label id="set_models_names" class="begins_hidden"></label>
-            <div id="set_models_added_div"></div>
-		    <div id="set_models_add_div">
-              <a onclick="modelplus.requester.add_new_model()" >Add new model</a>
-			</div>
-          </div>
-		  <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-		    <blockquote>
-              Each Runset must have at least one Model.<br>
-			  Each Model is defined by:
-			  <ul>
-			    <li>
-				  <strong>Model label*:</strong><br>
-				  Short label describing the model. It must be unique within the new Runset.
-				</li>
-				<li>
-				  <strong>Model description:</strong><br>
-				  Longer text in which the model may be described freely.
-				</li>
-				<li>
-				  <strong>Hillslope model*:</strong><br>
-				  The vertical model that describes the flow of water within each hillslope.<br >
-				  All hillslopes are going to be governed by the same Hillslope Model.<br >
-				  The availability of a hillslope model depends on the initial conditions on the server.
-				</li>
-				<li>
-				  <strong>Forcings*:</strong><br>
-				  Can be seen as the input data to be used in the model simulation.<br >
-				  Each hillslope model requires a different set of forcings.<br >
-				  The availability of a forcing source depends on the database condition in the server.<br >
-				  Each forcing must have a source defined.
-				</li>
-				<li>
-				  <strong>Global Parameters*:</strong><br>
-				  Each hillslope model requires a different set of global parameters.<br >
-				  Each of then must have a value specified.
-				</li>
-				<li>
-				  <strong>Evaluations:</strong><br>
-				  Each model output can be evaluated in different ways using different sources of data taken as reference.
-				</li>
-				<li>
-				  <strong>Representations:</strong><br>
-				  Each hillslope model provides a different set of outputs.<br >
-				  From each set of outputs a different set of representations can be obtained.
-				</li>
-			  </ul>
-			</blockquote>
-		  </div>
-		 </div>
-        </div>
-		
-		<!-- step 5 : representations combined -->
-		<div class="grid-container begins_hidden" id="set_models_repr_combined_div" >
-		  <div class="grid-x grid-padding-x header" >
-            <strong id="set_models_repr_combined_h2" >Set Representations Combined</strong>
-		  </div>
-		  <div class="grid-x grid-padding-x" >
-		    <div class="small-10 medium-6 cell left_div" id="set_models_repr_combined_inner_div" >
-  	        </div>
-		    <div class="small-2 medium-1 cell help_button_div">
-              <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
+		    <!-- First step -->
+		    <div class="grid-container" >
+		 
+		      <div class="grid-x grid-padding-x" >
+		        <div class="medium-6 cell left_div">
+                  New Request
+		        </div>
+		        <div class="medium-6 cell right_div">
+		          &nbsp;<a href="../" >Back</a>&nbsp;
+		        </div>
+              </div>
+		 
+		      <div class="grid-x grid-padding-x" >
+                <div class="small-6 medium-4 cell center_div">
+                  <a class="button" href="requester/runset_requester.html">
+                    Runset Request
+                  </a>
+		        </div>
+		        <div class="small-6 medium-4 cell center_div">
+                  <a class="button" href="requester/model_requester.html">
+                    Model Request
+                  </a>
+                </div>
+				<div class="small-6 medium-4 cell center_div">
+                  <a class="button" href="requester/runset_merge_requester.html">
+                    Runset Merge
+                  </a>
+		        </div>
+		      </div>
             </div>
-            <div class="small-12 medium-5 cell begins_hidden help_message">
-		      <blockquote>...</blockquote>
-		    </div>
-		  </div>
-        </div>
-		
-		<!-- step 6 : models comparison -->
-		<div class="grid-container begins_hidden" id="set_models_comparison_div" class="begins_hidden">
-		 <div class="grid-x grid-padding-x header" >
-          <strong id="set_models_comparison_h2" >Set Models Comparisons</strong>
-		  <strong id="set_models_comparison_label"  class="begins_hidden">Models Comparison</strong>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-		  <div class="small-10 medium-6 cell left_div" >
-		    <label id="set_models_comparison_span" class="begins_hidden">No comparisons</label> <!-- TODO : make dynamic -->
-          </div>
-		  <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-		    <blockquote>
-			  Defines the comparisons to be performed between each two models.<br >
-			  Options are only available when more than one model is defined for the Runset.
-			</blockquote>
-		  </div>
-		 </div>
-        </div>
-		
-		<div class="grid-container begins_hidden" id="set_models_compositions_div" class="begins_hidden">
-         <div class="grid-x grid-padding-x header" >
-          <strong id="set_models_compositions_h2" >Set Models Composition</strong>
-		  <strong id="set_models_compositions_label" class="begins_hidden">Models Composition</strong>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-          <div class="small-10 medium-6 cell left_div" >
-		    <label id="set_models_compositions_span" class="begins_hidden">No compositions</label> <!-- TODO : make dynamic -->
-          </div>
-		  <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-		    <blockquote>
-			  Some representations can be overlapped and combined.<br >
-			  Combinations between two or more simple representations are only available if all of them were selected to be produced.
-			</blockquote>
-		  </div>
-		 </div>
-        </div>
-		<div class="grid-container begins_hidden" id="what_do_div" class="begins_hidden">
-		 <div class="grid-x grid-padding-x header" >
-          <strong id="what_do_h2" >What to do?</strong>
-		  <strong id="what_do_label" class="begins_hidden">Action</strong>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-          <div class="small-10 medium-6 cell left_div" >
-            <label id="what_do_span" class="begins_hidden">Create only / Simulation</label> <!-- TODO : make dynamic -->
-			<div id="what_do_radios_div">
-			  <input type="radio" name="what_do" id="what_do_genonly" value="genonly">
-                <label for="what_do_genonly">Only generate input files</label><br >
-			  <input type="radio" name="what_do" id="what_do_genrun" value="genrun">
-                <label for="what_do_genrun">Perform full execution</label><br >
-			</div>
-          </div>
-		  <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-		    <blockquote>
-			  Determines whether the Runset Request will be effectively processed or if will just create the input files for the model.<br > 
-			  Recommended: perform full execution
-			</blockquote>
-		  </div>
-		 </div>
-        </div>
-		<div class="grid-container begins_hidden" id="contact_info_div" >
-		 <div class="grid-x grid-padding-x header" >
-          <strong id="contact_info_h2" >Contact policy</strong>
-		  <strong id="contact_info_label" class="begins_hidden">Contact</strong>
-		 </div>
-		 <div class="grid-x grid-padding-x" >
-          <div class="small-10 medium-6 cell left_div" >
-			<label id="contact_info_span" class="begins_hidden"></label>
-			<div id="how_contact_radios_div">
-              <input type="radio" name="how_contact" id="how_contact_none" value="how_contact_none">
-                <label for="how_contact_none">No contact</label><br />
-			  <input type="radio" name="how_contact" id="how_contact_onfinish" value="how_contact_onfinish">
-                <label for="how_contact_onfinish">Only when everything is done.</label><br />
-			  <input type="radio" name="how_contact" id="how_contact_all" value="how_contact_all">
-                <label for="how_contact_all">All steps</label><br />
-		      <label id="contact_email_label">Email:<span id="contact_email_span"></span>
-			    <input type="text" placeholder="your@email.com" id="contact_email_input">
-			  </label>
-			</div>
-          </div>
-		  <div class="small-2 medium-1 cell help_button_div">
-            <a href="#" class="help_button"><img src="imgs/question_mark.png" ></a>
-          </div>
-          <div class="small-12 medium-5 cell begins_hidden help_message">
-		    <blockquote>
-			  Determines how the development of the simulation as post processing will be reported to you.
-			</blockquote>
-		  </div>
-		 </div>
-        </div>
-		<div class="grid-container">
-         <div class="grid-x grid-padding-x" id="buttons_div">
-          <div class="small-12 medium-5 cell left_div">
-            <a class="button" id="button_prev_step" onclick="modelplus.requester.state_machine.prev_step();">
-              Previous Step
-            </a>
-          </div>
-          <div class="small-12 medium-2 cell center_div">
-            <span id="label_current_step" ></span>
-          </div>
-          <div class="small-12 medium-5 cell" style="text-align:right">
-            <span id="label_next_step_error" class="hidden_label" ></span>
-            <a class="button" id="button_next_step" onclick="modelplus.requester.state_machine.next_step_click();">
-              Next Step
-            </a>
-            <a class="button" id="button_submit" onclick="modelplus.requester.state_machine.submit();">
-              Submit
-            </a>
           </div>
 
-            <div id="footer">
-              <!-- keep empty -->
-            </div>
-          </div> <!-- doc -->
-		 </div>   <!-- wrapper -->
-		</div>
+        </div>
       </div>
-    </form>
-
+    </div>
     <script src="requester/js/vendor/jquery.js"></script>
 	<script src="requester/js/vendor/jquery-ui.js"></script>
     <script src="requester/js/vendor/what-input.js"></script>
@@ -349,18 +64,8 @@
 	
 	<script src="../common/scripts/modelplus.url.js"></script>
 	<script src="../common/scripts/modelplus.api.js"></script>
-    <script src="requester/js/app.js"></script>
+    <!-- <script src="requester/js/app.js"></script> -->
 	<script src="requester/js/app/modelplus.requester.constant.js"></script>
-	<script src="requester/js/app/get_form_info_state_01.js"></script>
-	<script src="requester/js/app/get_form_info_state_02.js"></script>
-	<script src="requester/js/app/get_form_info_state_03.js"></script>
-	<script src="requester/js/app/get_form_info_state_04.js"></script>
-	<script src="requester/js/app/get_form_info_state_05.js"></script>
-	<script src="requester/js/app/get_form_info_state_06.js"></script>
-	<script src="requester/js/app/get_form_info_state_07.js"></script>
-	<script src="requester/js/app/get_form_info_state_08.js"></script>
-	<script src="requester/js/app/get_form_info_state_09.js"></script>
-	<script src="requester/js/app/get_form_info_state_10.js"></script>
 	<script type="text/javascript" src="base_lib.js"></script>
   </body>
 </html>

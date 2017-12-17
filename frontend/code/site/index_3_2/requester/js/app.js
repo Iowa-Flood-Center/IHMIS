@@ -14,6 +14,7 @@ var modelplus = modelplus || {};
   // define Requester State Machine attributes
   modelplus.requester.state_machine.current_state = 1;
   modelplus.requester.state_machine.post_dict = {};
+  modelplus.requester.state_machine.auxi_dict = {};
 
   // TODO - MOVE TO UTILS
   modelplus.utils.datestr_to_timestamp = function(date_str){
@@ -149,7 +150,10 @@ var modelplus = modelplus || {};
 	
 	$("#"+modelplus.requester.constant.id.LABEL_NEXT_STEP_ERROR).hide();
 	var div_dom = $("#"+div_id);
-	$(".help_button").hide();
+	if (div_dom.length == 0)
+		console.log("Highlighted div not found: " + div_id);
+	else
+		$(".help_button").hide();
 	div_dom.find(".help_button").show();
 	div_dom.show();
     div_dom.addClass(modelplus.requester.constant.classes.FILLING_FORM);

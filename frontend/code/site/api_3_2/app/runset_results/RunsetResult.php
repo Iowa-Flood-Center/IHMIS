@@ -71,7 +71,7 @@
     public function toArray(){ return($this->attr); }
     
     /**
-     *
+     * Builds an RunsetResult from a filepath
      */
     public static function fromFile($file_path){
       if(!file_exists($file_path)){return(null);}
@@ -86,7 +86,7 @@
     }
     
     /**
-     *
+     * Select a single Runset Result based on a given attribute
      */
     public static function where($attribute, $value){      
       $all_objects = self::all();
@@ -94,12 +94,67 @@
       foreach($all_objects as $cur_object){
         if(!isset($cur_object->attr[$attribute])){ continue; }
         if($cur_object->attr[$attribute] == $value){
+          $cur_object->fill_object();
           array_push($all_return, $cur_object);
         }
       }
       return($all_return);
     }
+  
+    /**
+     * Select all Runsets that represents the same time interval than another one
+     */
+    public static function concurrentlyTo($runset_id){
+      $TIME_INI = "timestamp_ini";
+	  $TIME_END = "timestamp_end";
+	  
+	  // retrieve initial and final timestamps
+      $reference_runset = RunsetResult::where("id", $runset_id);
+      if(count($reference_runset) == 0) return(array());
+      $timestamp_ini = $reference_runset[0]->attr[$TIME_INI];
+      $timestamp_end = $reference_runset[0]->attr[$TIME_END];
     
+      // select other equivalent runsets
+      $all_objects = self::all();
+      $all_return = array();
+      foreach($all_objects as $cur_object){
+        if(!isset($cur_object->attr[$TIME_INI])){ continue; }
+		if(!isset($cur_object->attr[$TIME_END])){ continue; }
+		if($cur_object->attr["id"] == $runset_id){ continue; }
+		if (($cur_object->attr[$TIME_INI] == $timestamp_ini) && 
+		    ($cur_object->attr[$TIME_END] == $timestamp_end)){
+          $cur_object->fill_object();
+          array_push($all_return, $cur_object);
+        }
+      }
+      return($all_return);
+    }
+  
+    // ///////////////////// SPECIFIC //////////////////// //
+  
+    /**
+     * Fill the content of the object
+     */
+    private function fill_object(){
+      error_reporting(E_ALL);
+      ini_set('display_errors', 1);
+    
+      // read sc_models
+      ModelResult::setApp(RunsetResult::$app);
+      $this->attr['sc_model'] = ModelResult::all($this->attr['id']);
+    
+      // read sc_model_combinations
+      $this->attr['sc_model_combination'] = array("TODO"=>"TODO");
+    
+      // read sc_references
+      ReferenceResult::setApp(RunsetResult::$app);
+      $this->attr['sc_reference'] = ReferenceResult::all($this->attr['id']);
+    
+      $this->attr['sc_evaluation'] = array("TODO"=>"TODO");
+      $this->attr['comp_mtx'] = array("TODO"=>"TODO");
+      $this->attr['web_menu'] = array("TODO"=>"TODO");
+    }
+
   }
 
 ?>

@@ -878,7 +878,7 @@
 		 * RETURN :
 		 */
 		public static function get_remote_initialcondition_repo_folder_path($hillslope_model_id, $asynch_version){
-			return(AuxFilesLib::$app->fss->dest_initcond_repo_folder_path.$hillslope_model_id."/".$asynch_version."/");
+			return(AuxFilesLib::$app->fss->dest_initcond_repo_folder_path.$asynch_version."/");
 		}
 		
 		/**

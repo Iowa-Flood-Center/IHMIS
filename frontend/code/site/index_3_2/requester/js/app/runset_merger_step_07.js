@@ -5,33 +5,37 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 2;
+  const state_num = 7;
   var sm = modelplus.requester.state_machine;
+  var g_ids = modelplus.requester.constant.id;
+  var s_ids = modelplus.model_requester.constant.id;
+  
   sm.get_form_info_functions = sm.get_form_info_functions || {};
   
   // define get form functions
   (function () {
    sm.get_form_info_functions[state_num] = function(){
-    var sm = modelplus.requester.state_machine;
     var ids = modelplus.requester.constant.id;
     
     // interface function 1
     var lock_fields = function(){
-	  
+      var solved = true;  // TODO - do it properly
+      return ( new Promise( function(resolve, reject){
+        resolve(solved);
+      }));
     }
 
     // interface function 2
     var check_fields = function(){
+      var solved = true;  // TODO - do it properly
       return ( new Promise( function(resolve, reject){
-        
+        resolve(solved);
       }));
     }
 
     // interface function 3
     var solve = function(data){
       var solved = true;  // TODO - do it properly
-      
-      
       return ( new Promise( function(resolve, reject){
         resolve(solved);
       }));
@@ -45,15 +49,21 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
     }
     
     return(lock_fields()
-      .then(check_fields));
+      .then(check_fields)
+      .then(solve)
+      .then(unlock_fields));
    }
   })();
   
   // define get form functions
   (function () {
     sm.update_form_functions = sm.update_form_functions || {};
-	
     
+    sm.update_form_functions[state_num] = function(){
+      modelplus.requester.form.highlight_div(null);
+	  $("#"+g_ids.BUTTON_NEXT_STEP).hide();
+	  $("#"+g_ids.BUTTON_SUBMIT).show();
+    }
   })();
 
 })();

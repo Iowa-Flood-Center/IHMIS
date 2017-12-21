@@ -14,6 +14,7 @@
 		public $gbl_parameters;           //
 		public $model_reprs;              // Array of SC-Representation IDs
 		public $modelseq_reprs;           // Array of SC-Representation IDs or null
+		public $evaluations;              // Array of SC-Evaluation_SC-Reference IDs or null
 		public $what_run;                 //
 		public $globalfile_requests;      //
 		

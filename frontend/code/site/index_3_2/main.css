@@ -261,7 +261,7 @@ button.punch{
 	
 a.btnmain{
 	color:#FFF;
-	background:#76AE00;
+	background:#CCBB00;
 	text-decoration:none;
 	font-weight:100;
 	font-size:27px;
@@ -273,17 +273,17 @@ a.btnmain{
 	padding:15px 24px;
 	margin:-12px 40px 0 0;
 	border:0 solid #CCC;
-	box-shadow:0 0 0 #365100;
+	box-shadow:0 0 0 #444400;
 	transition:all .3s ease;
 	transform:translate(0,0);
 	cursor:pointer}
 a.btnwht{
 	float:right;
 	transform:translate(0,0);
-	box-shadow:0 11px 0 #365100}
+	box-shadow:0 11px 0 #444400}
 a.btnwht:hover{
-	box-shadow:0 7px 0 #365100;
+	box-shadow:0 7px 0 #444400;
 	transform:translate(0,4px)}
 a.btnwht:active{
-	box-shadow:0 3px 0 #365100;
+	box-shadow:0 3px 0 #444400;
 	transform:translate(0,8px)}

@@ -73,31 +73,24 @@ var modelplus = modelplus || {};
 	  arg += "%e%sc_representation_id="+representation_id;
       return(url + arg);
     }
+    vw.ws_get_models_desc = (sc_runset_id, sc_model_id)=>{
+      return (vw.ws + 'ws_model_modeldesc.php%i%model_id=' + sc_model_id + '%e%runset_id=' + sc_runset_id);
+    }
+	
+	GLB_webservices.prototype.http = vw.ws;
 	// TODO - send the following to the API - OFF
+
+    // define folders for custom javascripts and stylesheets
+	modelplus.url.custom_display_js_folder = modelplus.url.base_frontend_viewer + 'custom_js/';
+    modelplus.url.custom_display_css_folder = modelplus.url.base_frontend_viewer + 'custom_css/';
   }
 })();
 
 // 3.0 - all menu groups - TODO: send it somewhere else
 function GLB_menugroup_ids(){};
 
-// 3.0 - all local URLS
-function GLB_urls(){};
-GLB_urls.prototype.base_legend_image_folder = GLB_urls.prototype.base_image_folder + 'legends/';        
-GLB_urls.prototype.custom_display_folder = modelplus.url.base_frontend_viewer + 'custom_js/';
-modelplus.url.custom_display_css_folder = modelplus.url.base_frontend_viewer + 'custom_css/';
-
-// 3.0 - all web services
+// 3.0 - all menu groups - TODO: vanish with that
 function GLB_webservices(){};
-
-GLB_webservices.prototype.metainfo_list_runsets = GLB_webservices.prototype.http + "ws_list_runsets.php";
-
-GLB_webservices.prototype.metainfo_main = GLB_webservices.prototype.http + 'ws_load_metainfo_main.php?runsetid=';
-GLB_webservices.prototype.metainfo_scrunset_params = GLB_webservices.prototype.http + 'ws_load_metainfo_runset_raw.php';
-GLB_webservices.prototype.metainfo_scmodel_params = GLB_webservices.prototype.http + 'ws_load_metainfo_raw.php';
-GLB_webservices.prototype.runsets_desc = modelplus.url.proxy + 'ws_runset_runsetdesc.php?model_id=';
-GLB_webservices.prototype.get_models_desc = function(sc_runset_id, sc_model_id){
-	return (GLB_webservices.prototype.http + 'ws_model_modeldesc.php%i%model_id=' + sc_model_id + '%e%runset_id=' + sc_runset_id);
-}
 
 // 3.0 - all session variables
 function GLB_vars(){};
@@ -209,8 +202,6 @@ function sc_init() {
 	// read_reference_timestamp0_map();
 	// 'single' starts selected
 	
-	console.log("sc_init()");
-	
 	var menu = new Array(
 		'<div class="np_title np_blue" style="clear: both; width:100%">IFIS MODEL-PLUS</div>',
 		'<div style="width:100%">Runset:' + 
@@ -259,6 +250,10 @@ function sc_init() {
 	//
 	$('#np_sc').html(menu.join(''));
 	$('#nptsc').attr("src", '../sc/model/model.png');
+	$('#nptsc').css("background-color", '#CCBB00');
+	$('#nptsc').hover(
+		()=>{ $('#nptsc').css("background-color", '#AA9900');}, 
+		()=>{ $('#nptsc').css("background-color", '#CCBB00');});
 	$('#nptsc').show();
 	$('#logoimg').attr('src', modelplus.viewer.image_folder + 'ifis-logo-mplus.png');
 	$('#logoimg').parent().closest('a').attr("href", modelplus.url.base_frontend);
@@ -425,7 +420,7 @@ function sc_np_links(type, vis) {
 		// display/hide usgs discharge kml
 		case opt_tool_us_map:
 			// keeps in 3.0 - TODO : modularize this
-			var display_address = GLB_urls.prototype.custom_display_folder + "disclausgssih.js";
+			var display_address = modelplus.url.custom_display_js_folder + "disclausgssih.js";
 			if ($("#np" + type).hasClass("npact")){
 				delete custom_display;
 				loadScript(display_address, function(){
@@ -686,8 +681,6 @@ function load_runset_desc(){
 	select_value = $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val();
 	// web_service_add = GLB_runsets_desc_url + select_value;
 	
-	// alert("..." + " +++ " + GLB_webservices.prototype.runsets_desc);
-	
 	// display blocks
 	div_modal.style.display = "block";
 	inner_html = "<p><span id='modal_close_span' onclick='modelplus.main.hide_message_block()'>×</span></p>";
@@ -704,7 +697,7 @@ function load_model_desc(){
 	
 	sc_model_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 	sc_runset_id = $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val();
-	web_service_add = GLB_webservices.prototype.get_models_desc(sc_runset_id, sc_model_id);
+	web_service_add = modelplus.viewer.ws_get_models_desc(sc_runset_id, sc_model_id);
 	
 	$.ajax({
 		url: web_service_add

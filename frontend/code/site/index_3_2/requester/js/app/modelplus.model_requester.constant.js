@@ -4,22 +4,27 @@ var modelplus = modelplus || {};
   "use strict";
 
   // define model constants
-  modelplus.requester = modelplus.requester || {};
-  modelplus.requester.constant = modelplus.requester.constant || {};
+  modelplus.model_requester = modelplus.model_requester || {};
+  modelplus.model_requester.constant = modelplus.model_requester.constant || {};
   
   // define HTML ids
   
-  modelplus.requester.constant.id = modelplus.requester.constant.id || {};
+  modelplus.model_requester.constant.id = modelplus.model_requester.constant.id || {};
+  var ids = modelplus.model_requester.constant.id;
   
-  var ids = modelplus.requester.constant.id;
-  
-  ids.RUNSET_NAME_DIV = "runset_name_div";
-  ids.RUNSET_NAME_SPAN = "runset_name_span";
-  ids.RUNSET_NAME_INPUT = "runset_name_input";
+  ids.RUNSET_CHOICE_DIV = "runset_choice_div";
+  ids.RUNSET_CHOICE_SPAN = "runset_name_span";
+  ids.RUNSET_CHOICE_INPUT = "runset_name_input";
   ids.RUNSET_BASIC_HR = "runset_basic_hr";
   ids.RUNSET_MID_DATE_SPAN = "runset_mid_date_span";
   ids.RUNSET_MID_DATE_INPUT = "runset_mid_date_input";
   ids.RUNSET_MID_DATE_PREDEF_DIV = "runset_mid_date_predefined_div";
+  
+  ids.RUNSET_INFO_DIV = "runset_info_div";
+  ids.RUNSET_INFO_LABEL_SPAN = "runset_info_label_span";
+  ids.RUNSET_INFO_INTER_SPAN = "runset_info_interval_span";
+  ids.RUNSET_INFO_MODEL_SPAN = "runset_info_models_span";
+  ids.RUNSET_INFO_REFER_SPAN = "runset_info_references_span";
   
   ids.WHATRUN_RADIO_NAME = "what_run";
   ids.RUNSET_INIEND_DATE_SPAN = "runset_iniend_date_span";
@@ -74,63 +79,30 @@ var modelplus = modelplus || {};
   ids.HOWCONTACT_RADIO_NAME = "how_contact";
   ids.HOWCONTACT_RADIOS_DIV = "how_contact_radios_div";
   
-  ids.BUTTONS_DIV = "buttons_div"
-  ids.LABEL_NEXT_STEP_ERROR = "label_next_step_error";
-  ids.LABEL_NEXT_STEP = "label_current_step";
-  ids.BUTTON_PREV_STEP = "button_prev_step";
-  ids.BUTTON_NEXT_STEP = "button_next_step";
-  ids.BUTTON_SUBMIT = "button_submit";
-  ids.SUBMIT_SUCCESS_DIV = "submit_success_div";
-  ids.SUBMIT_FAILURE_DIV = "submit_failure_div";
-  ids.SUBMIT_FAILURE_MSG_DIV = "submit_failure_msg_div";
+  //ids.BUTTONS_DIV = "buttons_div"
+  //ids.LABEL_NEXT_STEP_ERROR = "label_next_step_error";
+  //ids.LABEL_NEXT_STEP = "label_current_step";
+  //ids.BUTTON_PREV_STEP = "button_prev_step";
+  //ids.BUTTON_NEXT_STEP = "button_next_step";
+  //ids.BUTTON_SUBMIT = "button_submit";
+  //ids.SUBMIT_SUCCESS_DIV = "submit_success_div";
+  //ids.SUBMIT_FAILURE_DIV = "submit_failure_div";
+  //ids.SUBMIT_FAILURE_MSG_DIV = "submit_failure_msg_div";
   
   // define CSS classes
   
-  modelplus.requester.constant.classes = modelplus.requester.constant.classes || {};
-  modelplus.requester.constant.classes.FILLING_FORM = "filling_form";
+  //modelplus.model_requester.constant.classes = modelplus.model_requester.constant.classes || {};
+  //modelplus.model_requester.constant.classes.FILLING_FORM = "filling_form";
   
   // define labels
+  modelplus.model_requester.constant.labels = modelplus.model_requester.constant.labels || {};
+  var labels = modelplus.model_requester.constant.labels;
   
-  modelplus.requester.constant.labels = modelplus.requester.constant.labels || {};
+  labels.LOADING = "Loading...";
   
-  modelplus.requester.constant.labels.REFERENCES_SELECTION = "Select References";
-  modelplus.requester.constant.labels.HLM_SELECTION = "[Select a Hillslope model]";
-  modelplus.requester.constant.labels.NONE = "None";
-  modelplus.requester.constant.labels.SUBMIT_FAILURE = "Exception";
-  
-  // define recommended dates
-  
-  modelplus.requester.constant.predefined_mid_dates = [
-    {"date_str":"20080606",
-     "label":"2008 Flood - June",
-     "enable":true},
-	{"date_str":"20091029",
-     "label":"2009 Flood - October",
-     "enable":true},
-	{"date_str":"20100625",
-     "label":"2010 Flood - June",
-     "enable":true},
-	{"date_str":"20100815",
-     "label":"2010 Flood - August",
-     "enable":true},
-	{"date_str":"20110616",
-     "label":"2011 Flood - June",
-     "enable":true},
-	{"date_str":"20130529",
-     "label":"2013 - May",
-     "enable":true},
-	{"date_str":"20140626",
-     "label":"2014 - June",
-     "enable":true},
-	{"date_str":"20150622",
-     "label":"2015 - June",
-     "enable":true},
-	{"date_str":"20151205",
-     "label":"2015 - December",
-     "enable":false},
-	{"date_str":"20160921",
-     "label":"2016 - September",
-     "enable":true}
-  ];
+  //modelplus.model_requester.constant.labels.REFERENCES_SELECTION = "Select References";
+  //modelplus.model_requester.constant.labels.HLM_SELECTION = "[Select a Hillslope model]";
+  //modelplus.model_requester.constant.labels.NONE = "None";
+  //modelplus.model_requester.constant.labels.SUBMIT_FAILURE = "Exception";
 
 })();

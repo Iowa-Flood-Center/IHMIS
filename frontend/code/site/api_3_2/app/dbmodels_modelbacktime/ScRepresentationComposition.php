@@ -2,7 +2,6 @@
 
 namespace DbModels;
 
-// use DbModels\ScProduct;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class ScRepresentationComposition extends Eloquent{

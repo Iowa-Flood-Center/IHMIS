@@ -5,6 +5,9 @@
 	//
 	abstract class ModelRequestFactory{
 		
+		/**
+		 *
+		 */
 		public static function getModelRequest($posts, $count_model){
 			
 			// basic check
@@ -18,6 +21,10 @@
 			$return_obj->model_title = $posts["model_title_".$count_model];
 			$return_obj->model_desc = $posts["model_desc_".$count_model];
 			$return_obj->hillslope_model_id = $posts["hillslope_model_".$count_model];
+			
+			// check title and description (fill if left empty)
+			if (trim($return_obj->model_title) == ""){ $return_obj->model_title = $return_obj->model_id; }
+			if (trim($return_obj->model_desc) == ""){ $return_obj->model_desc = $return_obj->model_title; }
 			
 			// get forcings sources
 			$return_obj->forcings_dict = array();
@@ -38,27 +45,35 @@
 			
 			// get model representations
 			$field_id = "model_repr_".$count_model;
-			if(isset($posts[$field_id]) && (trim($posts[$field_id]) != "")){
-				$return_obj->model_reprs = explode(",", $posts[$field_id]);
-			} else {
-				$return_obj->model_reprs = null;
-			}
+			$return_obj->model_reprs = ModelRequestFactory::read_array($field_id, $posts);
 			
 			// get model comb representations
 			$field_id = "modelseq_repr_".$count_model;
-			if(isset($posts[$field_id]) && (trim($posts[$field_id]) != "")){
-				$return_obj->modelseq_reprs = explode(",", $posts[$field_id]);
-			} else {
-				$return_obj->modelseq_reprs = null;
-			}
+			$return_obj->modelseq_reprs = ModelRequestFactory::read_array($field_id, $posts);
 			
-			// check title and description (fill if left empty)
-			if (trim($return_obj->model_title) == ""){ $return_obj->model_title = $return_obj->model_id; }
-			if (trim($return_obj->model_desc) == ""){ $return_obj->model_desc = $return_obj->model_title; }
+			// get evaluation
+			$field_id = "model_eval_".$count_model;
+			$return_obj->evaluations = ModelRequestFactory::read_array($field_id, $posts);
 			
 			return($return_obj);
 		}
 		
+		/**
+		 * Reads a post string and translate it into array of strings
+		 */
+		private static function read_array($field_id, $posts){
+			if(isset($posts[$field_id])){
+				if (is_array($posts[$field_id])){
+					return($posts[$field_id]);
+				} else {
+					if (trim($posts[$field_id]) != ""){
+						return(explode(",", $posts[$field_id]));
+					}
+				}
+			} else {
+				return(null);
+			}
+		}
 	}
 
 ?>

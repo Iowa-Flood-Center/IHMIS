@@ -20,6 +20,9 @@ var modelplus = modelplus || {};
   modelplus.api = modelplus.api || {};
   
   // 
+  // forcing_id : 
+  // timestamp_ini : 
+  // timestamp_end : 
   modelplus.api.get_forcing_options = function(forcing_id, timestamp_ini, timestamp_end){
     var ws_url;
     ws_url = api_url + "forcing_sources";
@@ -27,6 +30,31 @@ var modelplus = modelplus || {};
 	ws_url += "%e%timestamp_ini=" + timestamp_ini;
 	ws_url += "%e%timestamp_end=" + timestamp_end;
 	return ($.getJSON(ws_url));
+  }
+  
+  //
+  // hlm_id : expected values such as 190, 254, ...
+  modelplus.api.get_forcing_types_for_hlm = function(hlm_id){
+    var ws_url;
+    ws_url = api_url + 'forcing_types%i%from_hlmodel='+hlm_id;
+    return ($.getJSON(ws_url));
+  }
+  
+  //
+  // hlm_id : expected values such as 190, 254, ...
+  modelplus.api.get_global_parameters_for_models = function(hlm_id){
+    var ws_url;
+	ws_url = 'hl_models_global_parameters%i%from_hlmodel='+hlm_id;
+	return ($.getJSON(ws_url));
+  }
+  
+  // 
+  modelplus.api.get_hlm_options = function(timestamp_ini, timestamp_end){
+    var ws_url;
+    ws_url = api_url +'hl_models';
+	ws_url += '%i%timestamp_ini=' + timestamp_ini;
+	ws_url += '%e%timestamp_end=' + timestamp_end;
+    return ($.getJSON(ws_url));
   }
   
   // 
@@ -48,6 +76,15 @@ var modelplus = modelplus || {};
 	return ($.getJSON(ws_url));
   }
   
+  // Get all possible combined representations
+  // repres_acronym : expected array of Strings
+  modelplus.api.get_representations_from_combining = function(repres_acronym){
+    var ws_url;
+	ws_url = api_url + "sc_representations%i%from_combining=";
+	ws_url += repres_acronym.join(",");
+	return($.getJSON(ws_url));
+  }
+  
   // Retrieves all common representations for two hlm models
   // hlm_id_1 : expected values such as 190, 254, ...
   // hlm_id_2 : expected values such as 190, 254, ...
@@ -64,6 +101,20 @@ var modelplus = modelplus || {};
     var ws_url;
 	ws_url = api_url + "sc_runset_results";
 	return ($.getJSON(ws_url));
+  }
+  
+  // Retrieves information from a specific Runset Result
+  modelplus.api.get_runset_result = function(runset_id){
+    var ws_url;
+    ws_url = api_url + "sc_runset_results%i%id=" + runset_id;
+    return ($.getJSON(ws_url));
+  }
+  
+  // Retrieves information from all Runset Result concurrently to another
+  modelplus.api.get_concurrently_runset_results = function(runset_id){
+    var ws_url;
+	ws_url = api_url + "sc_runset_results%i%concurrently_id=" + runset_id;
+    return ($.getJSON(ws_url));
   }
   
   // Tries to reserve a runset id

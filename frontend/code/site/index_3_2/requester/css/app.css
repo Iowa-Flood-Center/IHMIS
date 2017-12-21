@@ -19,6 +19,14 @@ div.right_div{
   text-align:right;
 }
 
+div.center_div{
+  text-align:center;
+}
+
+span.runset_name{
+  font-weight:bold
+}
+
 h2{
   font-size: 14px;
   text-decoration: bold;
@@ -41,6 +49,7 @@ div.filling_form{
 
 a.button{
   margin:2px;
+  display:inline-block;
 }
 
 div.help_button_div{

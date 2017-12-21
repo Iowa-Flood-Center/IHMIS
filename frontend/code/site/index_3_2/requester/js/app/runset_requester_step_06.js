@@ -5,7 +5,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 5;
+  const state_num = 6;
   var sm = modelplus.requester.state_machine;
   var ids = modelplus.requester.constant.id;
   
@@ -13,8 +13,6 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   (function () {
    sm.get_form_info_functions = sm.get_form_info_functions || {};
    sm.get_form_info_functions[state_num] = function(){
-    var sm = modelplus.requester.state_machine;
-    var ids = modelplus.requester.constant.id;
     
     // interface function 1
     var lock_fields = function(){
@@ -76,17 +74,14 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
     sm.update_form_functions = sm.update_form_functions || {};
 	
     sm.update_form_functions[state_num] = function(){
-      hide_comparisons_list_span();
-	  $("#"+ids.SET_MODELS_TITLE).hide();
-	  $("#"+ids.SET_MODELS_ADD_DIV).hide();
-      $("#"+ids.SET_MODELS_ADDED_DIV).hide();
+	  $("#"+ids.SET_MODELS_REPR_COMBINED_DIV).hide();
+	  hide_comparisons_list_span();
       $("#"+ids.SET_MODELS_COMPOS_DIV).hide();
 	  $("#"+ids.SET_MODELS_COMPAR_H2).show();
 	  build_comparisons_options();
 	  $("#"+ids.SET_MODELS_COMPAR_NAMES).show();
-      show_models_list_span();
+      
       modelplus.requester.form.highlight_div(ids.SET_MODELS_COMPAR_DIV);
-      $("#"+ids.WHAT_DO_DIV).hide();
     }
   })();
   
@@ -187,23 +182,6 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   
   
   
-  // 
-  function show_models_list_span(){
-    var cur_mdl_index, cur_a, cur_a_id;
-	var titles_array = [];
-    for(cur_mdl_index = 1; cur_mdl_index <= modelplus.requester.model_count; cur_mdl_index++){
-      if(sm.post_dict["model_title_"+cur_mdl_index] === "undefined") continue;
-	  
-      cur_a_id = "model_a_"+cur_mdl_index;
-	  cur_a = "<a id='"+cur_a_id+"' onclick='modelplus.requester.show_model_details(this)'>";
-	  cur_a += "["+sm.post_dict["model_title_"+cur_mdl_index]+"]";
-	  cur_a += "</a>";
-	  titles_array.push(cur_a);
-    }
-	
-    $("#"+ids.SET_MODELS_NAMES).html(titles_array.join(", "));
-    $("#"+ids.SET_MODELS_LABEL).show();
-    $("#"+ids.SET_MODELS_NAMES).show();
-  }
+  
 
 })();

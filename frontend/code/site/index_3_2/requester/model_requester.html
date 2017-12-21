@@ -1,0 +1,192 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFC MODEL PLUS - IFIS SPECIAL CASE</title>
+    
+    <link rel="stylesheet" href="css/foundation.css">
+    <link rel="stylesheet" href="css/jquery-ui.css">
+    <link rel="stylesheet" href="../main.css" media="screen" />
+    <link rel="stylesheet" href="css/app.css">
+    <link href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+  </head>
+  <body id="central" onload="modelplus.requester.onload();">
+    <div id="wrapper">
+      <div id="doc">
+        <div id="header">
+          <!-- keep empty -->
+        </div>
+        <div id="main-feature">
+          <form>
+            <div class="grid-container" >
+              <div class="grid-x grid-padding-x" >
+                <div class="medium-6 cell left_div">
+                  New Models Request
+                </div>
+                <div class="medium-6 cell right_div">
+                  &nbsp;<a href="../requester.html" >Back</a>&nbsp;
+                </div>
+              </div>
+            </div>
+            
+            <!-- step 1 INI -->
+            <div class="grid-container" id="runset_choice_div">
+             <div class="grid-x grid-padding-x header" >
+               <strong>Select Runset</strong>
+             </div>
+             <div class="grid-x grid-padding-x" >
+              <div class="small-10 medium-6 cell left_div">
+                <label id="runset_name_label">Runset Label: <span id="runset_name_span"></span>
+                  <select id="runset_name_input">
+                    <option>Loading...</option>
+                  </select>
+                </label>
+              </div>
+              <div class="small-2 medium-1 cell help_button_div">
+                <a href="#" class="help_button"><img src="../imgs/question_mark.png" ></a>
+              </div>
+              <div class="small-12 medium-5 cell begins_hidden help_message">
+                <blockquote>Select the Runset to have a new model.</blockquote>
+              </div>
+             </div>
+            </div>
+            <!-- step 1 END -->
+            
+            <!-- Runset Infos INI -->
+            <div class="grid-container begins_hidden" id="runset_info_div">
+              <div class="grid-x grid-padding-x header" >
+                <strong>Runset Label:</strong>
+                <span id="runset_info_label_span"></span>
+              </div>
+              <div class="grid-x grid-padding-x header" >
+                <strong>Runset interval:</strong>
+                <span id="runset_info_interval_span"></span>
+              </div>
+              <div class="grid-x grid-padding-x header" >
+                <strong>Existing models:</strong>
+                <span id="runset_info_models_span"></span>
+              </div>
+              <div class="grid-x grid-padding-x header" >
+                <strong>References:</strong>
+                <span id="runset_info_references_span"></span>
+              </div>
+            </div>
+            <!-- Runset Infos END -->
+            
+			<!-- step 2 : INI -->
+			<div class="grid-container begins_hidden" id="set_models_div" >
+			 <div class="grid-x grid-padding-x header" >
+			  <strong id="set_models_h2" >Set Models</strong>
+			  <strong id="set_models_label" class="begins_hidden">Models</strong>
+			 </div>
+			 <div class="grid-x grid-padding-x" >
+			  <div class="small-10 medium-6 cell left_div" >
+				<label id="set_models_names" class="begins_hidden"></label>
+				<div id="set_models_added_div"></div>
+				<div id="set_models_add_div" class="begins_hidden">
+				  <a onclick="modelplus.model_requester.add_new_model()" >Add new model</a>
+				</div>
+			  </div>
+			  <div class="small-2 medium-1 cell help_button_div">
+				<a href="#" class="help_button"><img src="../imgs/question_mark.png" ></a>
+			  </div>
+			  <div class="small-12 medium-5 cell begins_hidden help_message">
+				<blockquote>
+				  Each Runset must have at least one Model.<br>
+				  Each Model is defined by:
+				  <ul>
+					<li>
+					  <strong>Model label*:</strong><br>
+					  Short label describing the model. It must be unique within the new Runset.
+					</li>
+					<li>
+					  <strong>Model description:</strong><br>
+					  Longer text in which the model may be described freely.
+					</li>
+					<li>
+					  <strong>Hillslope model*:</strong><br>
+					  The vertical model that describes the flow of water within each hillslope.<br >
+					  All hillslopes are going to be governed by the same Hillslope Model.<br >
+					  The availability of a hillslope model depends on the initial conditions on the server.
+					</li>
+					<li>
+					  <strong>Forcings*:</strong><br>
+					  Can be seen as the input data to be used in the model simulation.<br >
+					  Each hillslope model requires a different set of forcings.<br >
+					  The availability of a forcing source depends on the database condition in the server.<br >
+					  Each forcing must have a source defined.
+					</li>
+					<li>
+					  <strong>Global Parameters*:</strong><br>
+					  Each hillslope model requires a different set of global parameters.<br >
+					  Each of then must have a value specified.
+					</li>
+					<li>
+					  <strong>Evaluations:</strong><br>
+					  Each model output can be evaluated in different ways using different sources of data taken as reference.
+					</li>
+					<li>
+					  <strong>Representations:</strong><br>
+					  Each hillslope model provides a different set of outputs.<br >
+					  From each set of outputs a different set of representations can be obtained.
+					</li>
+				  </ul>
+				</blockquote>
+			  </div>
+			 </div>
+			</div>
+			<!-- step 2 : END -->
+			
+            <!-- Buttons INI -->
+            <div class="grid-container">
+              <div class="grid-x grid-padding-x" id="buttons_div">
+                <div class="small-12 medium-5 cell left_div">
+                  <a class="button" id="button_prev_step" onclick="modelplus.requester.state_machine.prev_step();">
+                    Previous Step
+                  </a>
+                </div>
+                <div class="small-12 medium-2 cell center_div">
+                  <span id="label_current_step" ></span>
+                </div>
+                <div class="small-12 medium-5 cell" style="text-align:right">
+                  <span id="label_next_step_error" class="hidden_label" ></span>
+                    <a class="button" id="button_next_step" onclick="modelplus.requester.state_machine.next_step_click();">
+                      Next Step
+                    </a>
+                    <a class="button" id="button_submit" onclick="modelplus.requester.state_machine.submit();">
+                      Submit
+                    </a>
+                </div>
+              </div>
+            </div>
+            <!-- Buttons END --> 
+
+          </form>
+        </div>  
+        <div id="footer">
+          <!-- keep empty -->
+        </div>
+      </div> <!-- doc -->
+    </div> <!-- wrapper -->
+    
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/vendor/jquery-ui.js"></script>
+    <script src="js/vendor/what-input.js"></script>
+    <script src="js/vendor/foundation.js"></script>
+    
+    <script src="../../common/scripts/modelplus.url.js"></script>
+    <script src="../../common/scripts/modelplus.api.js"></script>
+    <script src="../../common/scripts/modelplus.constant.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/app/modelplus.requester.constant.js"></script>
+    <script src="js/app/modelplus.model_requester.constant.js"></script>
+    
+	<script src="js/app/modelplus.requester.add_model.js"></script>
+    <script src="js/app/model_requester_step_01.js"></script>
+    <script src="js/app/model_requester_step_02.js"></script>
+    
+    <script src="../base_lib.js"></script>
+  </body>
+</html>

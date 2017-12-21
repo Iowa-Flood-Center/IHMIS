@@ -92,7 +92,8 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 
     // interface function 3
     var solve = function(solved){
-      var model_div_id, input_id, cur_sub_idx, cur_input_id_pref, cur_post_dict_id;
+      var model_div_id, input_id;
+	  var cur_sub_idx, cur_input_id_pref, cur_post_dict_id, cur_eval_div_id;
 	  var cur_input_id, cur_input_dom;
 	  var cur_mdl_index = 1;
 
@@ -139,6 +140,9 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 		cur_sub_idx = 1;
 		cur_input_id_pref = "model_evaluation_"+cur_mdl_index+"_";
 		cur_post_dict_id = "model_eval_"+cur_mdl_index;
+		cur_eval_div_id = ids.SET_MODELS_INNER_EVAL_DIV_PREF + cur_mdl_index;
+		sm.post_dict[cur_post_dict_id] = modelplus.requester.get_checked_values(cur_eval_div_id);
+		/*
 		sm.post_dict[cur_post_dict_id] = [];
 		while(true){
           cur_input_id = cur_input_id_pref + cur_sub_idx;
@@ -149,6 +153,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 		  }
 		  cur_sub_idx += 1;
 		}
+		*/
 		
 		// add representations
         cur_input_id = ids.SET_MODELS_INNER_REPR_DIV_PREF + cur_mdl_index;
@@ -187,10 +192,8 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
     sm.update_form_functions[state_num] = function(){
       hide_models_list_span();
       modelplus.requester.form.highlight_div(ids.SET_MODELS_DIV);
-      $("#"+ids.SET_MODELS_COMPAR_DIV).hide();
-      $("#"+ids.SET_MODELS_COMPOS_DIV).hide();
-      $("#"+ids.WHAT_DO_DIV).hide();
-      $("#"+ids.CONTACT_INFO_DIV).hide();
+      $("#"+ids.SET_MODELS_REPR_COMBINED_DIV).hide();
+	  $("#"+ids.SET_MODELS_REPR_COMBINED_INNER_DIV).empty();
       show_reference_list_span();
 	  $("#"+ids.SET_MODELS_TITLE).show();
 	  load_hlm_options()
@@ -238,7 +241,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
       switch(this_id){
         case model_title_label_id:
           break;
-        case model_title_label_id:
+        case model_title_span_id:
           $(this).html($("#"+model_title_input_id).val());
           $(this).show();
           return;
@@ -386,10 +389,10 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   // create evaluations DOM inputs
   function create_evaluations_input_objects(eval_obj, mdl_num){
     var div_object, input_obj, label_obj, dom_id, label_text;
-	dom_id = "model_evaluation_"+mdl_num+"_"+eval_obj.acronym+"_"+eval_obj.screference_acronym;
+	dom_id = "model_evaluation_"+mdl_num+"_"+eval_obj.id+"_"+eval_obj.id;
 	div_object = $("<div>");
 	input_obj = $("<input type='checkbox' id='"+dom_id+"'>");
-	input_obj.val(eval_obj.id);
+	input_obj.val(eval_obj.acronym+"_"+eval_obj.screference_acronym);
 	
 	label_text = eval_obj.title + "(using "+eval_obj.screference_title+")";
 	
@@ -412,7 +415,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   //
   function create_representation_input_object(repr_obj, mdl_num){
     var div_object, input_obj, label_obj, dom_id;
-	dom_id = ids.SET_MODELS_SEL_REPR_PREF + repr_obj.acronym;
+	dom_id = ids.SET_MODELS_SEL_REPR_PREF + mdl_num + "_" + repr_obj.acronym;
 	div_object = $("<div>");
 	input_obj = $("<input type='checkbox' id='"+dom_id+"'>");
 	label_obj = $("<label for='"+dom_id+"'>"+repr_obj.title+"</label>");

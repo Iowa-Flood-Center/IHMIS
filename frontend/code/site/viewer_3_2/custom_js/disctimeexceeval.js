@@ -317,7 +317,7 @@ function gofad_click(){
 function goa_click(){
 	var display_address;
 	
-	display_address = GLB_urls.prototype.custom_display_folder + "disctimeexceeval.js";
+	display_address = modelplus.url.custom_display_js_folder + "disctimeexceeval.js";
 	
 	delete custom_display;
 	hide_custom_display("disctimeexceeval");

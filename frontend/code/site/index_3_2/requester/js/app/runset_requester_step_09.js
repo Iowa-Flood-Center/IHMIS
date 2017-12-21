@@ -5,7 +5,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 8;
+  const state_num = 9;
   var sm = modelplus.requester.state_machine;
   var ids = modelplus.requester.constant.id;
   
@@ -63,7 +63,10 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
         $(this).prop('disabled', false);
       });
       sm.next_step_button();
-      if(go_next) modelplus.requester.state_machine.next_step_go();
+      if(go_next){
+        modelplus.requester.state_machine.next_step_go();
+        $(".help_button").hide();
+      }
     }
     
     return(lock_fields()
@@ -79,6 +82,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 	
     sm.update_form_functions[state_num] = function(){
       $("#"+ids.WHAT_DO_RADIOS_DIV).hide();
+	  $("#"+ids.HOWCONTACT_SPAN).hide();
       modelplus.requester.form.highlight_div(ids.CONTACT_INFO_DIV);
       $("#"+ids.HOWCONTACT_RADIOS_DIV).show();
       show_what_do_span();

@@ -45,15 +45,16 @@ richhydroforecast01.updateLeadTime_callback = function(data){
   var cur_fore_id, cur_release_idx, cur_release_timestamp, cur_keys;
   var cur_timeseries_stg, cur_timeseries_dsc;
   var added_timesries = 0;
-  for(var fore_idx = 0; fore_idx < data.forecasts.length; fore_idx++){
-    cur_fore_id = data["forecasts"][fore_idx]["id"];
-    cur_keys = Object.keys(data["forecasts"][fore_idx]["timeseries_stg"]);
+  var json_data = ($.type(data) === "string") ? JSON.parse(data) : data;
+  for(var fore_idx = 0; fore_idx < json_data.forecasts.length; fore_idx++){
+    cur_fore_id = json_data["forecasts"][fore_idx]["id"];
+    cur_keys = Object.keys(json_data["forecasts"][fore_idx]["timeseries_stg"]);
 	  
     // add retrieved data to 'global' variable '...specifications'
     for(var cur_release_idx = 0; cur_release_idx < cur_keys.length; cur_release_idx++){
       cur_release_timestamp = cur_keys[cur_release_idx];
-      cur_timeseries_stg = data["forecasts"][fore_idx]["timeseries_stg"][cur_release_timestamp];
-      cur_timeseries_dsc = data["forecasts"][fore_idx]["timeseries_dsc"][cur_release_timestamp];
+      cur_timeseries_stg = json_data["forecasts"][fore_idx]["timeseries_stg"][cur_release_timestamp];
+      cur_timeseries_dsc = json_data["forecasts"][fore_idx]["timeseries_dsc"][cur_release_timestamp];
 	  richhydroforecast01.addTimesseries(cur_fore_id, cur_release_timestamp, cur_timeseries_stg, cur_timeseries_dsc);
 	  
 	  // debug

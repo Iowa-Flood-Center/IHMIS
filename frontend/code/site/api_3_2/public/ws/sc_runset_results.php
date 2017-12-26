@@ -29,17 +29,14 @@ function process_post_request($app){
   echo(json_encode($return_array));
 }
 
-function process_get_request($app){
-  error_reporting(E_ALL);
-  ini_set('display_errors', 1);
-  
-  $with_id = $app->request->params("id");
-  $concurrently_id = $app->request->params("concurrently_id");
+function process_get_request($app, $req, $res){
+  $with_id = $app->util->get_param($req, "id");
+  $concurrently_id = $app->util->get_param($req, "concurrently_id");
   
   RunsetResult::setApp($app);
   
   // query search
-  if(sizeof($app->request->params()) == 0){
+  if(sizeof($req->getQueryParams()) == 0){
     $return_runsetresults = RunsetResult::all();
   } elseif (!is_null($with_id)) {
     $return_runsetresults = RunsetResult::where('id', $with_id);
@@ -77,7 +74,7 @@ function process_get_request($app){
   });
   
   // show it in JSON format
-  echo(json_encode($return_array));
+  return($app->util->show_json($res, $return_array));
 }
 
 function process_delete_request($app, $sc_runset_id){

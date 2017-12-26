@@ -8,16 +8,16 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-function process_get_request($app){
+function process_get_request($app, $req, $res){
 
 	// get possible params
-	$from_scproducts = $app->request->params("from_products");
-	$from_schlmodel = $app->request->params("from_hlmodel");
-	$from_schlmodelcomp = $app->request->params("from_hlmodel_compareto");
-	$from_combining = $app->request->params("from_combining");
+	$from_scproducts = $app->util->get_param($req, "from_products");
+	$from_schlmodel = $app->util->get_param($req, "from_hlmodel");
+	$from_schlmodelcomp = $app->util->get_param($req, "from_hlmodel_compareto");
+	$from_combining = $app->util->get_param($req, "from_combining");
 	
 	// query search
-	if(sizeof($app->request->params()) == 0){
+	if(sizeof($req->getQueryParams()) == 0){
 		// no argument, gets all
 		$all_retrieved = ScRepresentation::all();
 	
@@ -33,6 +33,7 @@ function process_get_request($app){
 		$all_retrieved = array_unique($all_retrieved);
 		
 	} elseif ((!is_null($from_schlmodel))&&(is_null($from_schlmodelcomp))) {
+		
 		// 
 		$the_model = HlModel::where('id', (int)$from_schlmodel)->get()->first();
 		$all_retrieved = array();
@@ -85,17 +86,7 @@ function process_get_request($app){
 	}
 	
 	// show it in JSON format
-	$return_array = array();
-	foreach($all_retrieved as $cur_screpresentation){
-		if (is_object($cur_screpresentation)){
-			array_push($return_array, $cur_screpresentation->toArray());
-		} elseif(is_array($cur_screpresentation)) {
-			array_push($return_array, $cur_screpresentation);
-		} else {
-			echo("What is '".$cur_screpresentation."'?<br />");
-		}
-	}
-	echo(json_encode($return_array));
+	return($app->util->show_json($res, $all_retrieved));
 }
 
 ?> 

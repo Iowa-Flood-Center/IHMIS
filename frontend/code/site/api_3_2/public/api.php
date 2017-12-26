@@ -13,10 +13,12 @@ require_once '../app/dbconnection/database.php';
 require_once '../app/fsconnection/foldersystem.php';
 
 use Illuminate\Database\Capsule\Manager as Capsule;
+use Slim\Http\Response as Response;
+use Slim\Http\Request as Request;
 
 // -----------------------------{ SLIM }------------------------------ //
 
-$app = new \Slim\Slim();
+$app = new \Slim\App();
 $app->dbs = function(){ return(new Capsule); };
 $app->fss = FolderSystemFactory::create(is_sandbox());
 $app->log = (object) null;
@@ -31,27 +33,31 @@ load_utils($app);
 // --- Static definitions
 
 // request statical HL-Models
-$app->get('/hl_models', function() use ($app){
+$app->get('/hl_models',
+          function(Request $req,  Response $res, $args = []) use ($app){
 	require './ws/hl_models.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // request statical global parameters of HL-Models
-$app->get('/hl_models_global_parameters', function() use ($app){
+$app->get('/hl_models_global_parameters', 
+          function(Request $req, Response $res, $args = []) use ($app){
 	require './ws/hl_models_global_parameters.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // request statical SC-References
-$app->get('/sc_references', function() use ($app){
+$app->get('/sc_references', 
+          function(Request $req, Response $res, $args = []) use ($app){
 	require './ws/sc_references.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // request statical SC-Representations
-$app->get('/sc_representations', function() use ($app){
+$app->get('/sc_representations', 
+          function(Request $req, Response $res, $args = []) use ($app){
 	require './ws/sc_representations.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // 
@@ -61,21 +67,24 @@ $app->get('/sc_representationscomp', function() use ($app){
 });
 
 // request statical SC-Evaluations
-$app->get('/sc_evaluations', function() use ($app){
+$app->get('/sc_evaluations', 
+          function(Request $req, Response $res, $args = []) use ($app){
 	require './ws/sc_evaluations.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // request forcing types
-$app->get('/forcing_types', function() use ($app){
+$app->get('/forcing_types',
+    function(Request $req,  Response $res, $args = []) use ($app){
 	require './ws/forcing_types.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // request forcing sources
-$app->get('/forcing_sources', function() use ($app){
+$app->get('/forcing_sources', 
+          function(Request $req, Response $res, $args = []) use ($app){
 	require './ws/forcing_sources.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // request forcing precipitations
@@ -137,9 +146,10 @@ $app->post('/sc_runset_results/', function () use ($app) {
 });
 
 // list all runset results
-$app->get('/sc_runset_results/', function() use ($app) {
+$app->get('/sc_runset_results',
+          function(Request $req,  Response $res, $args = []) use ($app) {
 	require './ws/sc_runset_results.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // delete an specific runset result
@@ -149,9 +159,10 @@ $app->delete('/sc_runset_results/:sc_runset_id',
 	process_delete_request($app, $sc_runset_id);
 });
 
-$app->get('/sc_forecast_set/', function() use ($app) {
+$app->get('/sc_forecast_set', 
+    function(Request $req,  Response $res, $args = []) use ($app) {
 	require './ws/sc_forecast_set.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // --- Runset Model Results
@@ -196,7 +207,6 @@ $app->get('/test/', function () use ($app) {
 
 // ------------------------------{ CALL }----------------------------- //
 
-$app->response->headers->set('Content-Type', 'application/json');
 $app->run();
 
 ?>

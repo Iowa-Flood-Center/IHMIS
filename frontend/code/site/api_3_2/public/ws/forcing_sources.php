@@ -2,16 +2,16 @@
 
 use DbModels\ForcingSource;
 
-function process_get_request($app){
+function process_get_request($app, $req, $res){
 
-	$from_type = $app->request->params("from_type");
-	$timestamp_ini = $app->request->params("timestamp_ini");
-	$timestamp_end = $app->request->params("timestamp_end");
+	$from_type = $app->util->get_param($req, "from_type");
+	$timestamp_ini = $app->util->get_param($req, "timestamp_ini");
+	$timestamp_end = $app->util->get_param($req, "timestamp_end");
 
 	$all_retrieved = null;
 	
 	// query search
-	if(sizeof($app->request->params()) == 0){
+	if(sizeof($req->getQueryParams()) == 0){
 		// no argument, gets all
 		$all_retrieved = ForcingSource::all();
 	
@@ -61,21 +61,8 @@ function process_get_request($app){
 		echo(json_encode($app->invalid_argument));
 		return;}
 	
-	// show
-	$return_array = array();
-	foreach($all_retrieved as $cur_hlmodel){
-		if (is_array($cur_hlmodel)){
-			array_push($return_array, $cur_hlmodel);
-		} elseif (is_object($cur_hlmodel)) {
-			array_push($return_array, $cur_hlmodel->toArray());
-		} elseif (is_null($cur_hlmodel)) {
-			continue;
-		} else {
-			array_push($return_array, $cur_hlmodel);
-		}
-	}
-	echo(json_encode($return_array));
-	
+	// show it in JSON format
+	return($app->util->show_json($res, $all_retrieved));
 }
 
 ?>

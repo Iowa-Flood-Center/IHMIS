@@ -6,8 +6,19 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'Symfony\\Component\\Translation\\' => array($vendorDir . '/symfony/translation'),
+    'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
     'Results\\' => array($baseDir . '/app/runset_results'),
     'Requester\\' => array($baseDir . '/app/requester'),
+    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
+    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'Interop\\Container\\' => array($vendorDir . '/container-interop/container-interop/src/Interop/Container'),
+    'Illuminate\\Support\\' => array($vendorDir . '/illuminate/support'),
+    'Illuminate\\Database\\' => array($vendorDir . '/illuminate/database'),
+    'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),
+    'Illuminate\\Container\\' => array($vendorDir . '/illuminate/container'),
+    'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
     'DbPrecipitations\\' => array($baseDir . '/app/dbmodels_precipitation'),
     'DbModels\\' => array($baseDir . '/app/dbmodels_modelbacktime'),
     'DbArtefacts\\' => array($baseDir . '/app/dbmodels_artefacts'),

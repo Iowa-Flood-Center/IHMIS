@@ -20,6 +20,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
     // interface function 1
     var lock_fields = function(){
       return ( new Promise( function(resolve, reject){
+        $("#"+s_ids.SET_MODELS_DIV + " input").prop('disabled', true);
         resolve(true);
       }));
     }
@@ -35,6 +36,8 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
     var solve = function(data){
       var solved = true;  // TODO - do it properly
       
+      sm.post_dict["models_id"] = modelplus.requester.get_checked_acronyms(s_ids.SET_MODELS_DIV);
+      
       return ( new Promise( function(resolve, reject){
         resolve(solved);
       }));
@@ -42,9 +45,12 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 
     // interface function 4
     var unlock_fields = function(go_next){
-      
-      sm.next_step_button();
-      if(go_next) modelplus.requester.state_machine.next_step_go();
+	  sm.next_step_button();
+      if(go_next){
+        modelplus.requester.state_machine.next_step_go();
+	  } else {
+        $("#"+s_ids.SET_MODELS_DIV + " input").prop('disabled', false);
+      }
     }
     
     return(lock_fields()
@@ -57,11 +63,11 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   // define get form functions
   (function () {
     sm.update_form_functions = sm.update_form_functions || {};
-    
     sm.update_form_functions[state_num] = function(){
+      $("#"+s_ids.SET_MODELS_DIV + " input").prop('disabled', false);
       $("#"+s_ids.SET_MODELS_COMPAR_DIV).hide();
       modelplus.requester.form.highlight_div(s_ids.SET_MODELS_DIV);
-	  display_potential_models(select_potential_models());
+      display_potential_models(select_potential_models());
     }
   })();
   
@@ -69,8 +75,8 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   
   // 
   function select_potential_models(){
-    var models_to = modelplus.requester.state_machine.auxi_dict["from_runset"]["sc_model"];
-    var models_from = modelplus.requester.state_machine.auxi_dict["to_runset"]["sc_model"];
+    var models_to = modelplus.requester.state_machine.auxi_dict["to_runset"]["sc_model"];
+    var models_from = modelplus.requester.state_machine.auxi_dict["from_runset"]["sc_model"];
     var models_potential = [];
     models_from.forEach(function(model_from){
       var will_add = true;
@@ -87,27 +93,34 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   // 
   function display_potential_models(potential_models){
     var div_dom = $("#"+s_ids.COPY_MODELS_ADDED_DIV);
-	if(div_dom.html() != "") return;
+    if(div_dom.html() != "") return;
     potential_models.forEach(function(cur_model){
-	  div_dom.append(create_model_checkbox_dom(cur_model));
+      var appended_obj = create_model_checkbox_dom(cur_model);
+      if (appended_obj == null) return;
+      div_dom.append(create_model_checkbox_dom(cur_model));
     });
   }
   
   //
   function create_model_checkbox_dom(model_obj){
     var span_dom = $("<span>");
-	var input_dom = $("<input type='checkbox'>");
-	var label_dom = $("<label>");
-	
-	var checkbox_id = "copy_model_checkbox_" + model_obj.id;
-	input_dom.attr("id", checkbox_id);
-	label_dom.attr("for", checkbox_id);
-	label_dom.html(model_obj.title);
-	
-	span_dom.append(input_dom);
-	span_dom.append(label_dom);
-	span_dom.append($("<br />"));
-	return(span_dom);
+    var input_dom = $("<input type='checkbox'>");
+    var label_dom = $("<label>");
+    
+    // basic check - not create 'previous'
+    if (model_obj.title.indexOf("(prev.)") !== -1) return(null);
+    
+    // create objects
+    var checkbox_id = "copy_model_checkbox_" + model_obj.id;
+    input_dom.attr("id", checkbox_id);
+    label_dom.attr("for", checkbox_id);
+    label_dom.html(model_obj.title);
+    
+    // append them
+    span_dom.append(input_dom);
+    span_dom.append(label_dom);
+    span_dom.append($("<br />"));
+    return(span_dom);
   }
 
 })();

@@ -2,6 +2,9 @@
 
 // -----------------------------{ LOAD }------------------------------ //
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 date_default_timezone_set('America/Chicago');
 
 require '../vendor/autoload.php';
@@ -90,9 +93,16 @@ $app->get('/sc_runset_requests', function () use ($app) {
 	process_get_request($app);
 });
 
+// request runset merge requests
+$app->get('/sc_runset_merge_requests', function () use ($app) {
+	require './ws/sc_runset_merge_requests.php';
+	process_get_request($app);
+});
+
 // create new runset request
 $app->post('/sc_runset_requests/new', function () use ($app) {
 	require './ws/sc_runset_requests.php';
+	echo("wow");
 	process_post_request($app);
 });
 
@@ -100,6 +110,21 @@ $app->post('/sc_runset_requests/new', function () use ($app) {
 $app->delete('/sc_runset_requests/:file_name', 
              function($file_name) use ($app){
 	require './ws/sc_runset_requests.php';
+	process_delete_request($app, $file_name);
+});
+
+// --- Runset Merge Requests
+
+// create new runset merge request
+$app->post('/sc_runset_merge_requests/new', function() use ($app) {
+	require './ws/sc_runset_merge_requests.php';
+	process_post_request($app);
+});
+
+// delete a runset merge request
+$app->delete('/sc_runset_merge_requests/:file_name', 
+             function($file_name) use ($app){
+	require './ws/sc_runset_merge_requests.php';
 	process_delete_request($app, $file_name);
 });
 
@@ -128,6 +153,13 @@ $app->get('/sc_forecast_set/', function() use ($app) {
 	require './ws/sc_forecast_set.php';
 	process_get_request($app);
 });
+
+// --- Runset Model Results
+$app->delete('/sc_runset_model_results/:sc_runset_id/:sc_model_id', function($sc_runset_id, $sc_model_id) use ($app) {
+	require './ws/sc_runset_model_results.php';
+	process_delete_request($app, $sc_runset_id, $sc_model_id);
+});
+
 
 // --- Others
 

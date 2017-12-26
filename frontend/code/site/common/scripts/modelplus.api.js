@@ -155,5 +155,60 @@ var modelplus = modelplus || {};
 	ws_url = api_url + "sc_runset_requests/new";
 	return ($.post(ws_url, post_dictionary));
   }
+  
+  // Submit a request for a runset merge
+  modelplus.api.request_new_runset_merge = function(post_dictionary){
+    var ws_url;
+	ws_url = api_url + "sc_runset_merge_requests/new";
+	return ($.post(ws_url, post_dictionary));
+  }
+  
+  // 
+  modelplus.api.get_runset_merge_in_waiting_room = function(){
+    var ws_url;
+	ws_url = api_url + "sc_runset_merge_requests";
+	ws_url += "%i%from=waitingroom"
+	return($.getJSON(ws_url));
+  }
+  
+  //
+  // runset_id : String.
+  // model_ids : Array of Strings.
+  modelplus.api.delete_model_from_runset_result = function(runset_id, model_id){
+    var ws_url;
+	ws_url = api_url + "sc_runset_model_results";
+	ws_url += "/" + runset_id;
+	ws_url += "/" + model_id;
+	return($.delete(ws_url));
+  }
 
+})();
+
+/**
+ * Extra helpful functions
+ */
+(function () {
+  "use strict";
+  $.delete = function(url, data){
+	
+	/*
+    return $.ajax({
+		contentType: "application/x-www-form-urlencoded; charset=utf-8",
+		url: url,
+		type: 'POST',
+		data: {_method: "delete"}
+    });
+	*/
+	var xhr = new XMLHttpRequest();
+	xhr.open("DELETE", url, true);
+	xhr.onload = function () {
+		var users = xhr.responseText;
+		if (xhr.readyState == 4 && xhr.status == "200") {
+			console.table(users);
+		} else {
+			console.error(users);
+		}
+	}
+	xhr.send(null);
+  }
 })();

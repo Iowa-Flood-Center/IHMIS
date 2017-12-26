@@ -54,9 +54,27 @@
     echo(file_get_contents($url, false, $context));
   }
   
+  /**
+   * VERBOSE
+   */
+  function delete_curl($url){
+    $ch = curl_init();
+	$proxy = Settings::get_property("proxy_address");
+	
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+	// curl_setopt($ch, CURLOPT_PROXY, $proxy);
+	curl_exec($ch);
+	curl_close($ch);
+
+  }
+  
   
   if($_SERVER['REQUEST_METHOD'] === 'POST'){
     post_curl($url);
+
+  } elseif($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    delete_curl($url);
 
   } else {
     // build get message

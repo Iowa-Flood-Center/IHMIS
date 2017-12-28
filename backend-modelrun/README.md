@@ -39,10 +39,18 @@ git pull origin develop
 ### Setting up configuration files
 
 Copy all the content from the `conf-TEMPLATE/` folder to the `conf/` directory.
-```
-TODO
-```
 
-Go over each file in the `conf/` directory tree structure, addapting their content to your system's particularities.
+Go over each file in the `conf/` directory tree structure, adapting their content to your system's particularities. Replace the following inner terms:
+
+- ```[RAW_ROOT]```: folder path for the ```/raw``` data folder; 
+- ```[CODE_ROOT]```: folder path for the ```/dev/backend-modelrun/code``` data folder;
+- ```[URL_PAGE]```: URL for the main page of the system (```http://...```);
+- ```[URL_WAIT]```: URL for the waiting room for runset requests folder of the system (```http://...```);
+- ```[ADD_SERV]```: username on ```backend-postprocess``` component;  
+- ```[USR_SERV]```: address of the ```backend-postprocess``` component.
 
 After each file is changed, rename the file by removing the `-TEMPLATE` prefix (example: `filesys-TEMPLATE.json` -> `filesys.json`).
+
+### Setting up crontab 
+
+In the *backend-modelrun* component, it is necessary a user which has his/her crontab set up following the instructions and the example described in ```backend-modelrun/code/cron```.    

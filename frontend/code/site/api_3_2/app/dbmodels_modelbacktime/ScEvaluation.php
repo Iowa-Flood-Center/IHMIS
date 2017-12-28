@@ -23,8 +23,12 @@ class ScEvaluation extends Eloquent{
 	 */
 	public static function fromReferences($app, $references_id){
 		$where_in = "('".implode("','", $references_id)."')";
-		$where_tag = 'static_modelplus_definitions.screference.acronym in '.$where_in;
+		$where_tag = 'static_modelplus_definitions.screference.acronym in '.$where_in;		
+		/*
 		$sel_query = $app->dbs->table('static_modelplus_definitions.scproduct_screference',
+		                              'model_backtime')*/
+        $sel_query = DB::connection(ScEvaluation::get_connection())
+		                    ->table('static_modelplus_definitions.scproduct_screference',
 		                              'model_backtime')
 						    ->join('static_modelplus_definitions.scevaluation_scproduct', 
 						           'static_modelplus_definitions.scproduct_screference.id_scproduct', 
@@ -51,7 +55,11 @@ class ScEvaluation extends Eloquent{
 	 */
 	public static function forHlModel($app, $hl_model){
 		$where_tag = '"static_modelplus_definitions"."hlmodel"."id" = '.$hl_model;
+		/*
 		$sel_query = $app->dbs->table('static_modelplus_definitions.scevaluation',
+		                              'model_backtime')*/
+		$sel_query = DB::connection(ScEvaluation::get_connection())
+							->table('static_modelplus_definitions.scevaluation',
 		                              'model_backtime')
 						    ->join('static_modelplus_definitions.scevaluation_scproduct', 
 						           'static_modelplus_definitions.scevaluation_scproduct.id_scevaluation', 
@@ -71,6 +79,14 @@ class ScEvaluation extends Eloquent{
 	}
 	
 	public function __toString(){ return((string)$this->id);}
+	
+	/**
+	 * Dumb way to trick out the mandatory protected scope of $connection var
+	 */
+	private static function get_connection(){
+		$tmp_obj = new ScEvaluation();
+		return($tmp_obj->connection);
+	}
 }
 
 ?>

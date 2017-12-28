@@ -20,11 +20,15 @@ function load_utils($app){
 		 * $arguments : Array of arrays or array of objects with the method 'toArray()'
 		 * RETURN : True. Values are echoed.
 		 */
-		public function show_json($all_retrieved){
+		public function show_json($response, $all_retrieved){
 			$return_array = array();
 			foreach($all_retrieved as $cur_screpresentation){
 				if (is_object($cur_screpresentation)){
-					array_push($return_array, $cur_screpresentation->toArray());
+					if(method_exists($cur_screpresentation, 'toArray')){
+						array_push($return_array, $cur_screpresentation->toArray());
+					} else {
+						array_push($return_array, get_object_vars($cur_screpresentation));
+					}
 				} elseif(is_array($cur_screpresentation)) {
 					array_push($return_array, $cur_screpresentation);
 				} else {
@@ -34,7 +38,20 @@ function load_utils($app){
 					exit();
 				}
 			}
-			echo(json_encode($return_array));
+			return($response->withJson($return_array));
+		}
+		
+		/**
+		 * Gets the value of a parameter if it exists. Null otherwise.
+		 * $request: Slim\Http\Request
+		 * $param_id: String
+		 */
+		public function get_param($request, $param_id){
+			$all_params = $request->getQueryParams();
+			if(array_key_exists($param_id, $all_params))
+				return($all_params[$param_id]);
+			else
+				return(null);
 		}
 	}
 	

@@ -21,11 +21,12 @@ class HlModel extends Eloquent{
 		$f_name = "get_screpresentations_from_hlmodel";
 		
 		$sql_command = "SELECT ".HlModel::schema.".".$f_name."(".$this->id.");";
-		$sql_result = DB::connection('model_backtime')->select($sql_command);
+		$sql_result = DB::connection(HlModel::get_connection())->select($sql_command);
 		$return_array = array();
 		foreach($sql_result as $cur_result){
 			array_push($return_array, 
-			           new ScRepresentation($cur_result[$f_name]));
+			           new ScRepresentation($cur_result->$f_name));
+			
 		}
 		
 		return($return_array);
@@ -38,7 +39,7 @@ class HlModel extends Eloquent{
 		
 		$sql_command = "SELECT ".HlModel::schema.".".$f_name.
 		                   "(".$this->id.", ". $hl_model_2->id .");";
-		$sql_result = DB::connection('model_backtime')->select($sql_command);
+		$sql_result = DB::connection(HlModel::get_connection())->select($sql_command);
 		$return_array = array();
 		foreach($sql_result as $cur_result){
 			array_push($return_array, 
@@ -95,27 +96,39 @@ class HlModel extends Eloquent{
 		// define "10 days" initial condition timestamp
 		$initcond_timestamp = ReqAuxFiles::get_initcond_timestamp($timestamp_ini);
 		
-		// read content in initial conditions catalogue file
+		// read content in initial conditions catalog file
 		$json_str = file_get_contents($app->fss->initialstates_hdf5_list_filepath);
 		$json_data = json_decode($json_str, true);
 		
 		// check if it exists in the dictionary
-		if (!array_key_exists($initcond_timestamp, $json_data))
-			return ($lhmodel_ids);
+		if (!array_key_exists($initcond_timestamp, $json_data)){
+			// echo("NopeExist: ".$initcond_timestamp.".\n");
+			// print_r($json_data);
+			return ($lhmodel_ids);}
 		
 		// check if version is present
-		if (!array_key_exists($asynch_vers, $json_data[$initcond_timestamp]))
-			return($lhmodel_ids);
+		if (!array_key_exists($asynch_vers, $json_data[$initcond_timestamp])){
+			// echo("NopeVersion.");
+			return($lhmodel_ids);}
 		
 		// push push
 		$lhmodel_ids = $json_data[$initcond_timestamp][$asynch_vers];
 		
 		// get from database
+		// echo("Going for DB.");
 		return(HlModel::whereIn('id', $lhmodel_ids)->get());
 		
 	}
 	
 	public function __toString(){ return((string)$this->id);}
+	
+	/**
+	 * Dumb way to trick out the mandatory protected scope of $connection var
+	 */
+	private static function get_connection(){
+		$tmp_obj = new HlModel();
+		return($tmp_obj->connection);
+	}
 }
 
 ?>

@@ -65,5 +65,14 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 	  $("#"+g_ids.BUTTON_SUBMIT).show();
     }
   })();
+  
+  // //////////////////////////////////////////////////
+  
+  //
+  modelplus.requester.state_machine.submit = function(){
+    console.log("Submitted");
+    modelplus.api.request_new_runset_merge(sm.post_dict)
+      .done(sm.submit_post);
+  }
 
 })();

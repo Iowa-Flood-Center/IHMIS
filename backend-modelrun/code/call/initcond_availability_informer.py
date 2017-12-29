@@ -41,24 +41,23 @@ def list_available_files_per_version(all_settings):
             continue
 
         print("Considering HLM ids: {0}".format(cur_hlm_ids))
-        for cur_hlm_id in cur_hlm_ids:
 
-            # get dir path
-            if (not os.path.exists(cur_initcond_dir_path)) or (not os.path.isdir(cur_initcond_dir_path)):
-                print("Folder not found: '{0}'.".format(cur_initcond_dir_path))
-                continue
+        # get dir path
+        if (not os.path.exists(cur_initcond_dir_path)) or (not os.path.isdir(cur_initcond_dir_path)):
+            print("Folder not found: '{0}'.".format(cur_initcond_dir_path))
+            continue
 
-            # list files
-            cur_all_files = os.listdir(cur_initcond_dir_path)
-            if len(cur_all_files) == 0:
-                print("Folder is empty: '{0}'.".format(cur_initcond_dir_path))
-                continue
+        # list files
+        cur_all_files = os.listdir(cur_initcond_dir_path)
+        if len(cur_all_files) == 0:
+            print("Folder is empty: '{0}'.".format(cur_initcond_dir_path))
+            continue
 
-            # add to dictionary
-            if cur_asynch_ver not in return_dict.keys():
-                return_dict[cur_asynch_ver] = []
+        # add to dictionary
+        if cur_asynch_ver not in return_dict.keys():
+            return_dict[cur_asynch_ver] = []
 
-            return_dict[cur_asynch_ver].extend(cur_all_files)
+        return_dict[cur_asynch_ver].extend(cur_all_files)
 
     return return_dict
 
@@ -136,3 +135,4 @@ def make_http_request(available_files, all_settings):
 the_settings = load_json_settings(settings_file_name)
 all_available_files = list_available_files_per_version(the_settings)
 make_http_request(all_available_files, the_settings)
+print("Done.")

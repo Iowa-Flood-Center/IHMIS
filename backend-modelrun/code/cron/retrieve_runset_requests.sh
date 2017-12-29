@@ -1,4 +1,7 @@
-#!/bin/bash -l
+#!/bin/bash -i
+
+# set up environment similar to the logged user one
+. /etc/profile
 
 # go to file dir and load config file
 cd "$(dirname "$0")"

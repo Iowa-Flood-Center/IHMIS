@@ -7,6 +7,8 @@ A typical Crontab configuration would be:
 	SHELL=/bin/bash
 
 	IHMIS_BASH=<THIS_FOLDER>
+    IHMIS_CONF=<CONF_FOLDER>
+    IHMIS_LOGS=<LOGS_FOLDER>
 
     #minute (0-59)
     #|   hour (0-23)
@@ -17,18 +19,25 @@ A typical Crontab configuration would be:
     #|   |    |   |   |   |
 
     ## retrieve runsets from waiting room
-    24,40,56 * * * *  bash $IHMIS_BASH"retrieve_runset_requests.sh"
+    24,40,56 * * * *  bash ${IHMIS_BASH}retrieve_runset_requests.sh
 
     ## process retrieved runsets generating their representations
-    16,32,48 * * * *  bash $IHMIS_BASH"process_runset_requests.sh"
+    16,32,48 * * * *  bash ${IHMIS_BASH}process_runset_requests.sh
 
 	## retrieve and process runset merge requests
-	28,52 * * * * bash $IHMIS_BASH"retrieve_runsetmerge_requests.sh"
+	28,52 * * * * bash ${IHMIS_BASH}retrieve_runsetmerge_requests.sh
 
     ## update list of available initial conditions in server IIHR-50
-    23 16 * * * bash $IHMIS_BASH"initcond_availability_informer.sh"
+    23 16 * * * bash ${IHMIS_BASH}initcond_availability_informer.sh
 
-**Note**: replace ```<THIS_FOLDER>``` (in 3rd line) by the folder to which the scripts were deployed. 
+    ## logrotate
+    54 2 * * * logrotate ${IHMIS_CONF}logrotate.conf -s ${IHMIS_LOGS}logrotate_status"
+
+**Note 1**: replace ```<THIS_FOLDER>``` (in 3rd line) by the folder to which the scripts were deployed.
+ 
+**Note 2**: replace ```<CONF_FOLDER>``` (in 4rd line) by the folder to which the configuration files were deployed.
+
+**Note 3**: replace ```<LOGS_FOLDER>``` (in 5rd line) by the folder to which the logs are being written.
 
 As a standard, the execution of each script will generate log files in the folders or file prefixes defined by variables in the ```conf/system.conf``` file. All ```CAPITAL_LETTERS``` variables described in this document must be defined in such configuration file.
 

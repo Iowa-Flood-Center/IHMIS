@@ -2,31 +2,50 @@
 
 use Results\RunsetResult as RunsetResult;
 
-function process_post_request($app){
+function process_post_request($app, $req, $res){
   
   // get arguments
-  $post_data = $app->request->post();
+  $post_data = $req->getParsedBody();
   
   RunsetResult::setApp($app);
   
   // basic check on posted arguments
   if(sizeof($post_data) == 0){
-    echo(json_encode(array("Exception" => "No parameter provided.")));
-    exit();
+    $return_array = array("Exception" => "No parameter provided.");
+    return($app->util->show_json($res, $return_array));
   } elseif (!array_key_exists('runset_id', $post_data)) {
-    echo(json_encode(array("Exception" => "Missing 'runset_id' argument.")));
-    exit();
+    $return_array = array("Exception" => "Missing 'runset_id' argument.");
+    return($app->util->show_json($res, $return_array));
   }
 
-  // create empty object in the file system
   $runset_id = $post_data['runset_id'];
   try{
-    RunsetResult::create(['id' => $runset_id]);
-    $return_array = array("Success" => "Reserved runset id '".$runset_id."'");
+    if(sizeof($post_data) == 1){
+      // create empty object in the file system
+      RunsetResult::create(['id' => $runset_id]);
+      $return_array = array("Success" => "Reserved runset id '".$runset_id."'");
+	  
+    } else {
+      $any_change = false;
+	  $target_runset = RunsetResult::where('id', $runset_id)[0];
+      if(array_key_exists('show_main', $post_data)) {
+        $any_change = true;
+		$target_runset->show_main($post_data['show_main']);
+      }
+	  if(array_key_exists('hide_main', $post_data)) {
+		$any_change = true;
+		$target_runset->hide_main($post_data['hide_main']);
+      }
+	  if (!$any_change){
+		$return_array = array("Failure" => "No valid action.");
+	  } else {
+		$return_array = array("Success" => "Edited runset with id '".$runset_id."'");
+      }
+    }
   } catch(Exception $exp) {
     $return_array = array("Exception" => $exp->getMessage());
   }
-  echo(json_encode($return_array));
+  return($app->util->show_json($res, $return_array));
 }
 
 function process_get_request($app, $req, $res){
@@ -42,7 +61,7 @@ function process_get_request($app, $req, $res){
     $return_runsetresults = RunsetResult::where('id', $with_id);
   } elseif (!is_null($concurrently_id)) {
     $return_runsetresults = RunsetResult::concurrentlyTo($concurrently_id);
-	// $return_runsetresults = array("error"=>"unexpected parametera");
+    // $return_runsetresults = array("error"=>"unexpected parametera");
   } else {
     $return_runsetresults = array("error"=>"unexpected parameter");
   }

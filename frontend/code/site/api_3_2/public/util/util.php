@@ -22,18 +22,20 @@ function load_utils($app){
 		 */
 		public function show_json($response, $all_retrieved){
 			$return_array = array();
-			foreach($all_retrieved as $cur_screpresentation){
-				if (is_object($cur_screpresentation)){
-					if(method_exists($cur_screpresentation, 'toArray')){
-						array_push($return_array, $cur_screpresentation->toArray());
+			foreach($all_retrieved as $cur_key => $cur_item){
+				if (is_object($cur_item)){
+					if(method_exists($cur_item, 'toArray')){
+						array_push($return_array, $cur_item->toArray());
 					} else {
-						array_push($return_array, get_object_vars($cur_screpresentation));
+						array_push($return_array, get_object_vars($cur_item));
 					}
-				} elseif(is_array($cur_screpresentation)) {
-					array_push($return_array, $cur_screpresentation);
+				} elseif(is_array($cur_item)) {
+					array_push($return_array, $cur_item);
+				} elseif(is_string($cur_item) || is_bool($cur_item)) {
+					$return_array[$cur_key] = $cur_item;
 				} else {
 					$error_tag = "ERROR";
-					$error_msg = "Invalid object format (".gettype($cur_screpresentation).").";
+					$error_msg = "Invalid object format (".gettype($cur_item).").";
 					echo(json_encode(array($error_tag=>$error_msg)));
 					exit();
 				}
@@ -47,11 +49,17 @@ function load_utils($app){
 		 * $param_id: String
 		 */
 		public function get_param($request, $param_id){
+			// try on GET
 			$all_params = $request->getQueryParams();
-			if(array_key_exists($param_id, $all_params))
+			if((!is_null($all_params)) && array_key_exists($param_id, $all_params))
 				return($all_params[$param_id]);
-			else
-				return(null);
+			
+			// try on POST
+			$all_params = $request->getParsedBody();
+			if((!is_null($all_params)) && array_key_exists($param_id, $all_params))
+				return($all_params[$param_id]);
+			
+			return(null);
 		}
 	}
 	

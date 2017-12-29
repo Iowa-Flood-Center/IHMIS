@@ -17,6 +17,7 @@
 	<script type="text/javascript" src="../common/vendor/jquery-3.1.1.min.js"></script>
 	<script type="text/javascript" src="../common/scripts/modelplus.url.js"></script>
 	<script type="text/javascript" src="../common/scripts/modelplus.api.js"></script>
+	<script type="text/javascript" src="../common/scripts/modelplus.util.js"></script>
 	<script type="text/javascript" src="base_lib.js"></script>
 	<script type="text/javascript" src="settings.js"></script>
 	<link rel="stylesheet" href="main.css" media="screen" />

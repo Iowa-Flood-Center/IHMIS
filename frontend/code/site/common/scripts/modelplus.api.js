@@ -117,6 +117,18 @@ var modelplus = modelplus || {};
     return ($.getJSON(ws_url));
   }
   
+  // 
+  // runset_id: String. Runset ID.
+  // main_visibility: Boolean. TRUE if visible in main, FALSE otherwise.
+  modelplus.api.change_runset_result_main_visibility = function(runset_id, main_visibility){
+    var post_url, ws_args, ws_parm;
+	post_url = api_url + "sc_runset_results";
+	ws_args = {"runset_id": runset_id};
+	ws_parm = (main_visibility) ? "show_main" : "hide_main";
+    ws_args[ws_parm] = ["main"];
+	return($.post(post_url, ws_args));
+  }
+  
   // Tries to reserve a runset id
   modelplus.api.reserve_runset_id = function(runset_id){
     var post_url;

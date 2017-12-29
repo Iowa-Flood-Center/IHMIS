@@ -7,9 +7,9 @@ use Requester\ModelCombRequestFactory as ModelCombRequestFactory;
 
 require_once '../../common/libs/settings.php';
 
-function process_get_request($app){
+function process_get_request($app, $req, $res){
   // get params
-  $from = $app->request->params("from");
+  $from = $app->util->get_param($req, "from");
   
   // query search
   $all_retrieved = null;
@@ -24,12 +24,12 @@ function process_get_request($app){
   echo(json_encode($all_retrieved));
 }
 
-function process_post_request($app){
+function process_post_request($app, $req, $res){
   //error_reporting(E_ALL);
   //ini_set('display_errors', 1);
   
   // get arguments
-  $post_data = $app->request->post();
+  $post_data = $req->getParsedBody();
   $post_data["runset_title"] = str_replace("_", " ", $post_data["runset_title"]);
   
   // build the RunsetRequest and all ModelRequest objects
@@ -58,11 +58,12 @@ function process_post_request($app){
   $runset_obj->create_all_meta_files($app);
   $runset_obj->compact_all_metafiles();
   $runset_obj->schedule_files_deletion(2);
-  echo(json_encode($runset_obj->dispatch()));
   $app->log->file_path = null;
+
+  return($app->util->show_json($res, $runset_obj->dispatch()));
 }
 
-function process_delete_request($app, $file_name){
+function process_delete_request($app, $res, $file_name){
   
   if(RunsetRequest::delete_from_waiting_room($app, $file_name)){
     $ret = array("success"=>$file_name);
@@ -70,7 +71,8 @@ function process_delete_request($app, $file_name){
     $ret = array("error"=>$file_name);
   }
   
-  echo(json_encode($ret));
+  return($app->util->show_json($res, $ret));
+  // echo(json_encode($ret));
 }
 
 ?>

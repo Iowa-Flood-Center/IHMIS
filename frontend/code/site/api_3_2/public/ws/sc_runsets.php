@@ -1,8 +1,8 @@
 <?php
 
-function process_get_request($app){
+function process_get_request($app, $req, $res){
   // get params
-  $action = $app->request->params("do");
+  $action = $app->util->get_param($req, "do");
   
   $all_retrieved = array();
   
@@ -29,7 +29,7 @@ function process_get_request($app){
   }
   
   // show
-  echo(json_encode($all_retrieved));
+  return($app->util->show_json($res, $all_retrieved));
 }
 
 ?>

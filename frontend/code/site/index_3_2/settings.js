@@ -3,9 +3,7 @@
 /**************************************************************************************/
 
 GLB_vars_settings = function(){};
-// GLB_vars_settings.prototype.runsets_url = modelplus.url.proxy + modelplus.url.base_webservice + "ws_list_runsets.php";      // TODO - move to API
 GLB_vars_settings.prototype.delete_url = modelplus.url.proxy + modelplus.url.base_webservice + "ws_delete_runset.php";      // TODO - move to API
-GLB_vars_settings.prototype.showhide_url = modelplus.url.proxy + modelplus.url.base_webservice + "ws_showhide_runset.php";  // TODO - move to API
 GLB_vars_settings.prototype.settings_base_url = modelplus.url.base_frontend_sandbox + "index_3_1/settings/";
 GLB_vars_settings.prototype.evaluations_list_url = modelplus.url.proxy + GLB_vars_settings.prototype.settings_base_url + "ws_list_evaluations_possible.php";
 GLB_vars_settings.prototype.evaluations_delete_url = modelplus.url.proxy + GLB_vars_settings.prototype.settings_base_url + "ws_delete_evaluation_possible.php";
@@ -29,12 +27,13 @@ var modelplus = modelplus || {};
         var cur_i, cur_obj;
         var the_html_cont, the_html_save;
         var div_content = $("#the_content");
+		div_content.empty();
       
         // list runsets
         the_html_cont = json_obj.length + " runsets:<br />";
         for(cur_i = 0; cur_i < json_obj.length; cur_i++){
           cur_obj = json_obj[cur_i];
-          div_content.append(create_runset_line_div(cur_obj.id, cur_obj.title));
+          div_content.append(create_runset_line_div(cur_obj));
           div_content.append(create_runset_edit_div(cur_obj.id));
         }
       
@@ -44,42 +43,54 @@ var modelplus = modelplus || {};
   }
   
   //
-  function create_runset_line_div(runset_id, runset_title){
-    var div_obj, cur_obj;
+  function create_runset_line_div(runset_obj){
+    var div_obj, cur_obj, cur_div;
+	var runset_id = runset_obj.id;
+	var runset_title = runset_obj.title;
     
-    div_obj = $("<div style='display:inline-block'>");
+    div_obj = $("<div class='runset_line'>");
     
+	cur_div = $("<div class='runset_line_title'>");
     cur_obj = $("<span >");
     cur_obj.html(runset_title);
-    div_obj.append(cur_obj);
+	cur_div.append(cur_obj);
+    div_obj.append(cur_div);
     
-    div_obj.append("(");
-    cur_obj = $("<a >");
-    cur_obj.attr("onclick", "modelplus.settings.edit_runset(\""+runset_id+"\");");
-    cur_obj.html("edit");
-    div_obj.append(cur_obj);
-    
-    div_obj.append(") (");
-    
+	cur_div = $("<div class='runset_line_option'>");
     cur_obj = $("<a >");
     cur_obj.attr("onclick", "delete_runset(\""+runset_id+"\");");
-    cur_obj.html("delete");
-    div_obj.append(cur_obj);
-    
-    div_obj.append(") (");
-    
+    cur_obj.attr("class", "runset_line_option");
+	cur_obj.html("delete");
+    cur_div.append("(", cur_obj, ")");
+    div_obj.append(cur_div);
+	
+	cur_div = $("<div class='runset_line_option'>");
     cur_obj = $("<a >");
-    cur_obj.attr("onclick", "hide_runset(\""+runset_id+"\");");
-    cur_obj.html("hide");
-    div_obj.append(cur_obj);
+    cur_obj.attr("onclick", "modelplus.settings.edit_runset(\""+runset_id+"\");");
+	cur_obj.attr("class", "runset_line_option");
+    cur_obj.html("edit");
+	cur_div.append("(", cur_obj, ")");
+	div_obj.append(cur_div);
     
-    div_obj.append(") (");
-    
+	cur_div = $("<div class='runset_line_option'>");
     cur_obj = $("<a >");
-    cur_obj.attr("onclick", "show_runset(\""+runset_id+"\");");
-    cur_obj.html("show");
-    div_obj.append(cur_obj);
-    div_obj.append(")");
+    cur_obj.attr("onclick", "modelplus.settings.hide_runset(\""+runset_id+"\");");
+	cur_obj.attr("class", "runset_line_option");
+    cur_obj.html("(hide)");
+	cur_div.append(cur_obj);
+	if(!modelplus.util.is_runset_visible_public(runset_obj))
+      cur_obj.attr("style", "display:none");
+    div_obj.append(cur_div);
+    
+	cur_div = $("<div class='runset_line_option'>");
+    cur_obj = $("<a >");
+    cur_obj.attr("onclick", "modelplus.settings.show_runset(\""+runset_id+"\");");
+	cur_obj.attr("class", "runset_line_option");
+    cur_obj.html("(show)");
+    cur_div.append(cur_obj);
+	if(modelplus.util.is_runset_visible_public(runset_obj))
+      cur_obj.attr("style", "display:none");
+    div_obj.append(cur_div);
     
     return(div_obj);
   }
@@ -139,6 +150,30 @@ var modelplus = modelplus || {};
       });
   }
   
+  //
+  modelplus.settings.show_runset = function(runset_id){
+    var url_show, confirm_r;
+    confirm_r = confirm("Really want to show '"+runset_id+"' ?");
+    if(confirm_r){
+      modelplus.api.change_runset_result_main_visibility(runset_id, true)
+		.then(function(data){
+          modelplus.settings.replace_runsets();
+		});
+    }
+  }
+  
+  // 
+  modelplus.settings.hide_runset = function(runset_id){
+    var url_hide, confirm_r;
+    confirm_r = confirm("Really want to hide '"+runset_id+"' ?");
+    if(confirm_r){
+      modelplus.api.change_runset_result_main_visibility(runset_id, false)
+		.then(function(data){
+          modelplus.settings.replace_runsets();
+		});
+    }
+  }
+  
   // 
   modelplus.settings.delete_models = function(runset_id){
 	var models_id;
@@ -161,7 +196,7 @@ var modelplus = modelplus || {};
 		var model_id = cur_element.attr('value');
 	    models_id.push(model_id);
 		modelplus.api.delete_model_from_runset_result(runset_id, models_id)
-					/*
+		/*
 	      .then(function(data){
 	        alert(JSON.stringify(data));
 	      });*/
@@ -196,60 +231,6 @@ var modelplus = modelplus || {};
 /**************************************** FUNCS ****************************************/
 /**************************************************************************************/
 
-/**
- * 
- * runset_id :
- * RETURN :
- */
-
-
-/**
- *
- * runset_id :
- * RETURN :
- */
-function hide_runset(runset_id){
-  var url_hide, confirm_r;
-  
-  confirm_r = confirm("Really want to hide '"+runset_id+"' ?");
-  
-  if(confirm_r){
-    url_hide = GLB_vars_settings.prototype.showhide_url + "%i%runset_id=" + runset_id + "%e%show_main=0";
-    $.ajax({
-      url: url_hide,
-      success: function(data) {
-        replace_runsets();
-      },
-      error: function(data){
-        alert("Error: " + data);
-      }
-    });
-  }
-}
-
-/**
- *
- * runset_id :
- * RETURN :
- */
-function show_runset(runset_id){
-  var url_show, confirm_r;
-  
-  confirm_r = confirm("Really want to show '"+runset_id+"' ?");
-  
-  if(confirm_r){
-    url_show = GLB_vars_settings.prototype.showhide_url + "%i%runset_id=" + runset_id + "%e%show_main=1";
-    $.ajax({
-      url: url_show,
-      success: function(data) {
-        replace_runsets();
-      },
-      error: function(data){
-        alert("Error: " + data);
-      }
-    });
-  }
-}
 
 /**
  *

@@ -6,7 +6,6 @@ var modelplus = modelplus || {};
   "use strict";
 
   modelplus.requester = modelplus.requester || {};
-  modelplus.utils = modelplus.utils || {};            // TODO - this should not be here
 
   // define Requester State Machine
   modelplus.requester.state_machine = modelplus.requester.state_machine || {};
@@ -15,23 +14,6 @@ var modelplus = modelplus || {};
   modelplus.requester.state_machine.current_state = 1;
   modelplus.requester.state_machine.post_dict = {};
   modelplus.requester.state_machine.auxi_dict = {};
-
-  // TODO - MOVE TO UTILS
-  modelplus.utils.datestr_to_timestamp = function(date_str){
-    if (date_str.length != 10)
-      return(null);
-    var mid_year = date_str.substring(6,10);
-	var mid_month = parseInt(date_str.substring(0,2)) - 1;
-	var mid_day = date_str.substring(3,5);
-	return (modelplus.utils.get_timestamp(mid_day, mid_month, mid_year));
-  }
-  
-  // TODO - MOVE TO UTILS
-  modelplus.utils.get_timestamp = function(day, month, year){
-    var date_obj = new Date(Date.UTC(year, month, day, 0, 0, 0));
-	date_obj.setUTCHours(date_obj.getUTCHours() + 5);
-	return (date_obj.getTime() / 1000);
-  }
   
   // --------------------------------------------------------- GET ----------------------------------------------------------- //
   

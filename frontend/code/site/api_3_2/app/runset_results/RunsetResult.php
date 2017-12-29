@@ -133,6 +133,42 @@
     // ///////////////////// SPECIFIC //////////////////// //
   
     /**
+	 * 
+	 * $scopes : Array of strings. Expected values like 'main', 'sandbox'
+	 * RETURN : TRUE if able to update, FALSE otherwise
+	 */
+    public function show_main($scopes){
+      // basic check
+	  if(!is_array($scopes)) return(false);
+	  
+	  if (($this->attr['show_main'] == "T")||(is_null($this->attr['show_main']))){
+		$this->attr['show_main'] = array("main", "sandbox");
+      }
+	  
+	  $this->attr['show_main'] = array_merge($this->attr['show_main'], 
+	                                         $scopes);
+      $this->attr['show_main'] = array_unique($this->attr['show_main']);
+	  $this->update_runset_file();
+	}
+	
+	/**
+	 * 
+	 * $scopes : Array of strings. Expected values like 'main', 'sandbox'
+	 */
+    public function hide_main($scopes){
+      // basic check
+	  if(!is_array($scopes)) return(false);
+	  
+	  if ($this->attr['show_main'] == "T"){
+		$this->attr['show_main'] = array("main", "sandbox");
+      }
+	  
+	  $this->attr['show_main'] = array_diff($this->attr['show_main'],
+	                                        $scopes);
+      $this->update_runset_file();
+	}
+  
+    /**
      * Fill the content of the object
      */
     private function fill_object(){
@@ -154,7 +190,31 @@
       $this->attr['comp_mtx'] = array("TODO"=>"TODO");
       $this->attr['web_menu'] = array("TODO"=>"TODO");
     }
-
+	
+	/**
+     * 
+     */
+	private function update_runset_file(){
+      
+	  // filter data
+	  $new_obj = array();
+	  $copied_keys = array("id", "title", "description", "timestamp_ini", 
+	                       "timestamp_end", "show_main");
+	  foreach($copied_keys as $cur_key){
+        if(array_key_exists($cur_key, $this->attr)){
+          $new_obj[$cur_key] = $this->attr[$cur_key];
+		}
+	  }
+	  $new_obj = array("sc_runset" => $new_obj);
+	  $out_json = json_encode($new_obj, JSON_PRETTY_PRINT);
+	  
+	  // define main file
+	  $out_path = self::$app->fss->runsets_result_folder_path;
+	  $out_path .= $this->attr['id'] . RunsetResult::SUB_FILE_PATH;
+	  
+	  // write it
+	  file_put_contents($out_path, $out_json);
+	}
   }
 
 ?>

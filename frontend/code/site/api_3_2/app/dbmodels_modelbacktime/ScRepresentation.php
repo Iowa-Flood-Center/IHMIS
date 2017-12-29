@@ -70,10 +70,10 @@ class ScRepresentation extends Eloquent{
 		$return_array = array();
 		foreach($sql_result as $cur_result){
 			array_push($return_array, 
-			           new ScRepresentation($cur_result['id'], 
-											$cur_result['title'],
-											$cur_result['type'], 
-											$cur_result['acronym']));
+			           new ScRepresentation($cur_result->id, 
+											$cur_result->title,
+											$cur_result->type, 
+											$cur_result->acronym));
 		}
 		return($return_array);
 	}

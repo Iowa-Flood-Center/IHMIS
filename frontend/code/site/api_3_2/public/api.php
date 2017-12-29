@@ -97,9 +97,10 @@ $app->get('/forcing_precipitations', function() use ($app){
 // --- Runset Requests
 
 // request runsets requests
-$app->get('/sc_runset_requests', function () use ($app) {
+$app->get('/sc_runset_requests', 
+          function(Request $req, Response $res, $args = []) use ($app) {
 	require './ws/sc_runset_requests.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // request runset merge requests
@@ -109,17 +110,17 @@ $app->get('/sc_runset_merge_requests', function () use ($app) {
 });
 
 // create new runset request
-$app->post('/sc_runset_requests/new', function () use ($app) {
+$app->post('/sc_runset_requests/new', 
+           function(Request $req, Response $res, $args = []) use ($app) {
 	require './ws/sc_runset_requests.php';
-	echo("wow");
-	process_post_request($app);
+	return(process_post_request($app, $req, $res));
 });
 
 // delete a runset request
-$app->delete('/sc_runset_requests/:file_name', 
-             function($file_name) use ($app){
+$app->delete('/sc_runset_requests/{file_name}', 
+             function(Request $req, Response $res, $args) use ($app){
 	require './ws/sc_runset_requests.php';
-	process_delete_request($app, $file_name);
+	return(process_delete_request($app, $res, $args['file_name']));
 });
 
 // --- Runset Merge Requests
@@ -140,9 +141,10 @@ $app->delete('/sc_runset_merge_requests/:file_name',
 // --- Runset Results
 
 // creates a new runset result
-$app->post('/sc_runset_results/', function () use ($app) {
+$app->post('/sc_runset_results',
+           function (Request $req,  Response $res, $args = []) use ($app) {
 	require './ws/sc_runset_results.php';
-	process_post_request($app);
+	return(process_post_request($app, $req, $res));
 });
 
 // list all runset results
@@ -181,9 +183,10 @@ $app->get('/pois/', function() use ($app) {
 });
 
 // 
-$app->get('/sc_runsets/', function() use ($app) {
+$app->get('/sc_runsets', 
+          function(Request $req,  Response $res, $args = []) use ($app) {
 	require './ws/sc_runsets.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 //

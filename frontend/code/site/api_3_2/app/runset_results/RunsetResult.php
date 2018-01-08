@@ -174,21 +174,24 @@
     private function fill_object(){
       error_reporting(E_ALL);
       ini_set('display_errors', 1);
-    
+
+      $runset_id = $this->attr['id'];
+	
       // read sc_models
       ModelResult::setApp(RunsetResult::$app);
-      $this->attr['sc_model'] = ModelResult::all($this->attr['id']);
-    
-      // read sc_model_combinations
-      $this->attr['sc_model_combination'] = array("TODO"=>"TODO");
+      $this->attr['sc_model'] = ModelResult::all($runset_id);
     
       // read sc_references
       ReferenceResult::setApp(RunsetResult::$app);
-      $this->attr['sc_reference'] = ReferenceResult::all($this->attr['id']);
+      $this->attr['sc_reference'] = ReferenceResult::all($runset_id);
     
-      $this->attr['sc_evaluation'] = array("TODO"=>"TODO");
-      $this->attr['comp_mtx'] = array("TODO"=>"TODO");
-      $this->attr['web_menu'] = array("TODO"=>"TODO");
+      // read sc_evaluation
+	  MetaFile::set_app(RunsetResult::$app);
+	  $this->attr['sc_representation'] = RepresentationResult::all($runset_id);
+	  $this->attr['sc_model_combination'] = ModelCombinationResult::all($runset_id);
+	  $this->attr['sc_evaluation'] = EvaluationResult::all($runset_id);
+      $this->attr['comp_mtx'] = ComparisonResult::get_base($runset_id);
+      $this->attr['web_menu'] = Menu::get_base($runset_id);
     }
 	
 	/**

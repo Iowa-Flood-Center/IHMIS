@@ -37,7 +37,7 @@
          * RETURN :
          */
         public function get_show_main_string(){
-            return( ($this->show_main ? "true" : "false"));
+            return( ($this->show_main ? '["sandbox"]' : "[]"));
         }
         
         /**

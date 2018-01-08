@@ -104,9 +104,10 @@ $app->get('/sc_runset_requests',
 });
 
 // request runset merge requests
-$app->get('/sc_runset_merge_requests', function () use ($app) {
+$app->get('/sc_runset_merge_requests', 
+          function(Request $req, Response $res, $args = []) use ($app) {
 	require './ws/sc_runset_merge_requests.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // create new runset request
@@ -126,16 +127,17 @@ $app->delete('/sc_runset_requests/{file_name}',
 // --- Runset Merge Requests
 
 // create new runset merge request
-$app->post('/sc_runset_merge_requests/new', function() use ($app) {
+$app->post('/sc_runset_merge_requests/new', 
+           function(Request $req, Response $res, $args = []) use ($app) {
 	require './ws/sc_runset_merge_requests.php';
-	process_post_request($app);
+	return(process_post_request($app, $req, $res));
 });
 
 // delete a runset merge request
-$app->delete('/sc_runset_merge_requests/:file_name', 
-             function($file_name) use ($app){
+$app->delete('/sc_runset_merge_requests/{file_name}', 
+             function(Request $req, Response $res, $args) use ($app){
 	require './ws/sc_runset_merge_requests.php';
-	process_delete_request($app, $file_name);
+	return(process_delete_request($app, $res, $args['file_name']));
 });
 
 // --- Runset Results
@@ -190,9 +192,10 @@ $app->get('/sc_runsets',
 });
 
 //
-$app->get('/sc_model_results/', function() use ($app) {
+$app->get('/sc_model_results',
+          function(Request $req,  Response $res, $args = []) use ($app) {
 	require './ws/sc_model_results.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // add new available initial conditions

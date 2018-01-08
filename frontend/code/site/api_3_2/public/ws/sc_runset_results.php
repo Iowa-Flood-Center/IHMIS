@@ -50,6 +50,7 @@ function process_post_request($app, $req, $res){
 
 function process_get_request($app, $req, $res){
   $with_id = $app->util->get_param($req, "id");
+  $with_title = $app->util->get_param($req, "title");
   $concurrently_id = $app->util->get_param($req, "concurrently_id");
   
   RunsetResult::setApp($app);
@@ -59,6 +60,8 @@ function process_get_request($app, $req, $res){
     $return_runsetresults = RunsetResult::all();
   } elseif (!is_null($with_id)) {
     $return_runsetresults = RunsetResult::where('id', $with_id);
+  } elseif (!is_null($with_title)) {
+    $return_runsetresults = RunsetResult::where('title', $with_title);
   } elseif (!is_null($concurrently_id)) {
     $return_runsetresults = RunsetResult::concurrentlyTo($concurrently_id);
     // $return_runsetresults = array("error"=>"unexpected parametera");

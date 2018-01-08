@@ -80,10 +80,12 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
         }
 		
 		// check if at least one model was created correctly
+		/*
         if (will_resolve && (count_valid_models == 0)){
           sm.next_step_error_show("At least one model must be defined.");
           will_resolve = false;
         }
+		*/
         
         // define resolution
         resolve(will_resolve);
@@ -536,10 +538,16 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   
   //
   function show_reference_list_span(){
+    var list_html;
     $("#" + ids.REFERENCES_INCLUDE_LIST_DIV).hide();
     $("#" + ids.REFERENCES_INCLUDE_TITLE).hide();
     $("#" + ids.REFERENCES_INCLUDE_LABEL).show();
-    $("#" + ids.REFERENCES_INCLUDE_NAMES).html(JSON.stringify(sm.post_dict["reference_ids"]));  
+	if(sm.post_dict["reference_ids"].length != 0){
+      list_html = JSON.stringify(sm.post_dict["reference_ids"]);
+	} else {
+      list_html = "No reference considered.";
+	}
+    $("#" + ids.REFERENCES_INCLUDE_NAMES).html(list_html);
     $("#" + ids.REFERENCES_INCLUDE_NAMES).show();
   }
 

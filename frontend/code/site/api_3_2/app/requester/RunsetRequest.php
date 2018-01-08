@@ -246,10 +246,6 @@
      */
     // private function create_central_job_file($all_global_file_paths, $app){
     private function create_central_job_file($app){
-      // basic check
-      if ((is_null($this->globalfile_requests)) || (sizeof($this->globalfile_requests) == 0)){ 
-        return(null); }
-      
       // define job file path
       $job_final_filepath = AuxFilesLib::get_local_temp_folder_path($this->current_timestamp);
       $job_final_filepath .= $this->runset_id.".job";
@@ -286,21 +282,18 @@
       $folder_path = AuxFilesLib::get_remote_folder_path($this->current_timestamp);
       $all_calls = "";
       $all_deps = array();
-      foreach($this->globalfile_requests as $cur_global_file_request){
-        /*
-        $asynch_call = AuxFilesLib::get_hydrologicalmodel_bin_path($cur_global_file_request->hillslope_model_id);
-        $all_calls .= "mpirun -np ".$job_noc." ".$asynch_call." ";
-        $all_calls .= $folder_path.basename($cur_global_file_request->glb_remote_file_path."\n");
-        */
+	  if (!is_null($this->globalfile_requests)){
+        foreach($this->globalfile_requests as $cur_global_file_request){
         
-        $call_dep = AuxFilesLib::get_hydrologicalmodel_path_and_dependencies($cur_global_file_request->hillslope_model_id);
+          $call_dep = AuxFilesLib::get_hydrologicalmodel_path_and_dependencies($cur_global_file_request->hillslope_model_id);
         
-        $all_deps = array_merge($all_deps, $call_dep['dependencies']);
+          $all_deps = array_merge($all_deps, $call_dep['dependencies']);
         
-        $asynch_call = $call_dep['path'];
-        $all_calls .= "mpirun -np ".$job_noc." ".$asynch_call." ";
-        $all_calls .= $folder_path.basename($cur_global_file_request->glb_remote_file_path."\n");
-      }
+          $asynch_call = $call_dep['path'];
+          $all_calls .= "mpirun -np ".$job_noc." ".$asynch_call." ";
+          $all_calls .= $folder_path.basename($cur_global_file_request->glb_remote_file_path."\n");
+        }
+	  }
       
       $job_final_content[9] = implode("\n", array_unique($all_deps))."\n";
       

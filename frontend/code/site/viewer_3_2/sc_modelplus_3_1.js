@@ -66,78 +66,79 @@ function onchange_runset_main_sbox(){
 		$("#np" + GLB_map_type).click();
 	}
 	
-	// load all models related to selected runset
-	the_url = modelplus.viewer.ws_load_runset + main_runset_id;
-	
-	$.ajax({
-		url: the_url,
-		runset_id: main_runset_id
-	}).success(function(data) {
-		var div_main_obj;
+	modelplus.api.get_runset_result(main_runset_id)
+		.then(function(json_data){
+			var div_main_obj;
+			var parsed_json = json_data[0];
 		
-		// parse JSON content
-		try{
-			parsed_json = JSON.parse(data);
-		} catch(err) {
-			alert("Unable to parse '"+ data +"'. Error: " + err);
-			return;
-		}
-		
-		// set up variables
-		GLB_vars.prototype.sc_runset = parsed_json.sc_runset;
-		GLB_vars.prototype.sc_models = parsed_json.sc_model;
-		GLB_vars.prototype.sc_model_combinations = parsed_json.sc_model_combination;
-		GLB_vars.prototype.sc_references = parsed_json.sc_reference;
-		GLB_vars.prototype.sc_representation = parsed_json.sc_representation;
-		GLB_vars.prototype.sc_evaluation = parsed_json.sc_evaluation;
-		GLB_vars.prototype.comparison_matrix = parsed_json.comp_mtx;
-		if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
-			func_to_run();
-		}
-		GLB_vars.prototype.webmenu = parsed_json.web_menu;
-		
-		// set up functions
-		GLB_vars.prototype.get_runset_ini = function(){
-			if (GLB_vars.prototype.sc_runset.timestamp_ini !== undefined){
-				return(parseInt(GLB_vars.prototype.sc_runset.timestamp_ini));
-			} else {
-				return(null);
+			// parse JSON content
+			try{
+				parsed_json = json_data[0];
+			} catch(err) {
+				Console.log("Unable to parse '"+ data +"'. Error: " + err);
+				return;
 			}
-		}
-		GLB_vars.prototype.get_runset_end = function(){
-			if (GLB_vars.prototype.sc_runset.timestamp_end !== undefined){
-				return(parseInt(GLB_vars.prototype.sc_runset.timestamp_end));
-			} else {
-				return(null);
+			
+			// set up variables
+			// GLB_vars.prototype.sc_runset = parsed_json.sc_runset;
+			GLB_vars.prototype.sc_runset = {
+				"id":parsed_json.id,
+				"title":parsed_json.title,
+				"show_main":parsed_json.show_main
+			};
+			GLB_vars.prototype.sc_models = parsed_json.sc_model;
+			GLB_vars.prototype.sc_model_combinations = parsed_json.sc_model_combination;
+			GLB_vars.prototype.sc_references = parsed_json.sc_reference;
+			GLB_vars.prototype.sc_representation = parsed_json.sc_representation;
+			GLB_vars.prototype.sc_evaluation = parsed_json.sc_evaluation;
+			GLB_vars.prototype.comparison_matrix = parsed_json.comp_mtx;
+			if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
+				func_to_run();
 			}
-		}
-		GLB_vars.prototype.get_runset_timediff = function(){
-			var timestamp_ini, timestamp_end;
-			timestamp_ini = GLB_vars.prototype.get_runset_ini();
-			timestamp_end = GLB_vars.prototype.get_runset_end();
-			if((timestamp_ini != null) && (timestamp_end != null)){
-				return(timestamp_end - timestamp_ini);
-			} else {
-				return(null);
+			GLB_vars.prototype.webmenu = parsed_json.web_menu;
+			
+			// set up functions
+			GLB_vars.prototype.get_runset_ini = function(){
+				if (GLB_vars.prototype.sc_runset.timestamp_ini !== undefined){
+					return(parseInt(GLB_vars.prototype.sc_runset.timestamp_ini));
+				} else {
+					return(null);
+				}
 			}
-		}
-		
-		// basic check
-		if (Object.keys(GLB_vars.prototype.webmenu).length == 0){
-			if ($('#'+modelplus.ids.MENU_RUNSET_SBOX).val() !== ""){
-				alert("Missing meta files for menu.");
+			GLB_vars.prototype.get_runset_end = function(){
+				if (GLB_vars.prototype.sc_runset.timestamp_end !== undefined){
+					return(parseInt(GLB_vars.prototype.sc_runset.timestamp_end));
+				} else {
+					return(null);
+				}
 			}
-		}
-		
-		populate_model_main_sbox();
-		
-		//
-		if (this.runset_id == ''){
-			div_main_obj = $("#" + modelplus.ids.MENU_MAIN_ALERT_DIV);
-			div_main_obj.append(modelplus.labels.SELECT_RUNSET);
-			div_main_obj.show();
-		}
-	})
+			GLB_vars.prototype.get_runset_timediff = function(){
+				var timestamp_ini, timestamp_end;
+				timestamp_ini = GLB_vars.prototype.get_runset_ini();
+				timestamp_end = GLB_vars.prototype.get_runset_end();
+				if((timestamp_ini != null) && (timestamp_end != null)){
+					return(timestamp_end - timestamp_ini);
+				} else {
+					return(null);
+				}
+			}
+			
+			// basic check
+			if (Object.keys(GLB_vars.prototype.webmenu).length == 0){
+				if ($('#'+modelplus.ids.MENU_RUNSET_SBOX).val() !== ""){
+					alert("Missing meta files for menu.");
+				}
+			}
+			
+			populate_model_main_sbox();
+			
+			//
+			if (this.runset_id == ''){
+				div_main_obj = $("#" + modelplus.ids.MENU_MAIN_ALERT_DIV);
+				div_main_obj.append(modelplus.labels.SELECT_RUNSET);
+				div_main_obj.show();
+			}
+		});
 }
 
 /**
@@ -165,13 +166,9 @@ function onchange_model_main_sbox(){
 		$("#np" + GLB_map_type).click();
 	}
 	
-	// load all single representations, comparison representations and evaluations of a model
-	the_url = modelplus.viewer.ws_get_metainfo_load_model(runset_id, main_model_id);
-	
-	$.ajax({
-		url: the_url,
-		runset_id: runset_id
-	}).success(function(data) {
+	modelplus.api.get_model_result(runset_id, main_model_id)
+      .then(function(json_data){
+		
 		var cur_html, cur_select_id, cur_select_obj, cur_select_html, cur_a_id, cur_a_obj;
 		var cur_parameter_id, cur_parameter_name, cur_par_index;
 		var cur_menu_item, cur_menu_repr, cur_repr_array;
@@ -179,8 +176,10 @@ function onchange_model_main_sbox(){
 		var sc_model_obj;
 		var count_added;
 		
-		// alert(data);
-		sc_model_obj = JSON.parse(data);
+		if (json_data instanceof Array)
+			sc_model_obj = json_data[0];
+		else 
+			sc_model_obj = json_data;
 		
 		// get and clean div containers
 		div_main_obj = $("#"+modelplus.ids.MENU_MAIN_ALERT_DIV);
@@ -200,8 +199,8 @@ function onchange_model_main_sbox(){
 		
 		// basic check
 		if ((typeof(sc_model_obj) !== 'undefined') && (
-			(sc_model_obj.sc_representation != undefined) || (sc_model_obj.sc_evaluation != undefined) ||
-			(sc_model_obj.sc_represcomb != undefined))){
+			(sc_model_obj.sc_representation_set != undefined) || (sc_model_obj.sc_evaluation_set != undefined) ||
+			(sc_model_obj.sc_represcomb_set != undefined))){
 			
 			$("#" + modelplus.ids.MENU_MODEL_ABOUT).show();
 					
@@ -219,8 +218,8 @@ function onchange_model_main_sbox(){
 					for(var j = 0; j < cur_menu_item.representations.length; j++){
 						cur_menu_repr = cur_menu_item.representations[j];
 						// see if current sc_menu element (var cur_menu_repr) is in the models meta file description (var sc_model_obj)
-						if((typeof(sc_model_obj.sc_representation) !== 'undefined') && 
-								(sc_model_obj.sc_representation.indexOf(cur_menu_repr) != -1)){
+						if((typeof(sc_model_obj.sc_representation_set) !== 'undefined') && 
+								(sc_model_obj.sc_representation_set.indexOf(cur_menu_repr) != -1)){
 							cur_repr_array.push(cur_menu_repr);
 						}
 					}
@@ -296,13 +295,13 @@ function onchange_model_main_sbox(){
 			for(var i = 0; i < GLB_vars.prototype.webmenu.evaluation.length; i++){
 				//alert("XY " + GLB_vars.prototype.webmenu.evaluation[i]);
 				cur_menu_item = GLB_vars.prototype.webmenu.evaluation[i];
-				if((cur_menu_item.evaluation != undefined) && (typeof(sc_model_obj.sc_evaluation) !== 'undefined')){
+				if((cur_menu_item.evaluation != undefined) && (typeof(sc_model_obj.sc_evaluation_set) !== 'undefined')){
 					var cur_raw_eval_id;
-					for(var j=0; j < sc_model_obj.sc_evaluation.length; j++){
+					for(var j=0; j < sc_model_obj.sc_evaluation_set.length; j++){
 						
 						// separates evaluation_id from reference
-						cur_raw_eval_id = sc_model_obj.sc_evaluation[j].split("_")[0];
-						cur_eval_ref = sc_model_obj.sc_evaluation[j].split("_")[1];
+						cur_raw_eval_id = sc_model_obj.sc_evaluation_set[j].split("_")[0];
+						cur_eval_ref = sc_model_obj.sc_evaluation_set[j].split("_")[1];
 						
 						if (cur_raw_eval_id == cur_menu_item.evaluation){
 							// alert(cur_raw_eval_id + " == " + cur_menu_item.evaluation);
@@ -446,12 +445,12 @@ function onchange_model_main_sbox(){
 			var count_reprcomb;
 			count_reprcomb = 0;
 			
-			if ((GLB_vars.prototype.webmenu.combination != undefined) && (sc_model_obj.sc_represcomb != undefined)){
+			if ((GLB_vars.prototype.webmenu.combination != undefined) && (sc_model_obj.sc_represcomb_set != undefined)){
 				for(var i = 0; i < GLB_vars.prototype.webmenu.combination.length; i++){
 					cur_menu_item = GLB_vars.prototype.webmenu.combination[i];
 					if(cur_menu_item.reprcomb != undefined){
 						var menu_reprcomb_id = cur_menu_item.reprcomb;
-						for(var cur_represcomb in sc_model_obj.sc_represcomb){
+						for(var cur_represcomb in sc_model_obj.sc_represcomb_set){
 							// alert("Comparing '" + menu_reprcomb_id + "' with '" + cur_represcomb + "'.");
 							if (menu_reprcomb_id == cur_represcomb){
 								
@@ -494,7 +493,7 @@ function onchange_model_main_sbox(){
 			
 			$("#" + modelplus.ids.MENU_MODEL_ABOUT).show();
 			
-		} else if (sc_model_obj.ERROR !== 'undefined') {
+		} else if ((sc_model_obj !== undefined) && (sc_model_obj.ERROR !== 'undefined')) {
 		
 			if (this.runset_id == ''){
 				div_main_obj.append(modelplus.labels.SELECT_RUNSET);
@@ -533,7 +532,8 @@ function onchange_model_main_sbox(){
 			console.log("Hiding 'about model' button.");
 			$("#" + modelplus.ids.MENU_MODEL_ABOUT).hide();
 		}
-	})
+		
+	  });
 	
 	cur_obj = $('#'+modelplus.ids.MENU_MODEL_COMP_SBOX);
 	
@@ -1196,6 +1196,9 @@ function populate_model_main_sbox(){
 	for (var i = 0; i < GLB_vars.prototype.sc_models.length; i++){
 		// ignore hidden models
 		if (GLB_vars.prototype.sc_models[i].show_main == "F"){ continue; }
+		if (GLB_vars.prototype.sc_models[i].show_main == false){ continue; }
+		
+		console.log("Model '"+GLB_vars.prototype.sc_models[i].id+"' : '"+GLB_vars.prototype.sc_models[i].show_main+"'");
 		
 		// add option
 		cur_txt = '<option value="'+GLB_vars.prototype.sc_models[i].id+'">' + 
@@ -1233,43 +1236,6 @@ function load_init_data(func_to_run){
 	});
 }
 
-/**
- * Reads web service related to the initial data to be retrieved into global variables
- * func_to_run - Function to be executed after loading data
- * RETURN - None. Changes are performed in GLB_vars prototype
- */
-function load_model_data(){
-	var runset_id, model_id;
-	
-	runset_id = $('#'+modelplus.ids.MENU_RUNSET_SBOX).val();
-	model_id = $('#'+modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
-	
-	$.ajax({
-		url: modelplus.viewer.ws_get_metainfo_load_model(runset_id, model_id)
-	}).success(function(data) {
-		// parse data and build message
-		var parsed_json;
-		try{
-			parsed_json = JSON.parse(data);
-		} catch(err) {
-			alert("Unable to parse: " + data);
-			// alert("Error: " + err)
-		}
-		
-		GLB_vars.prototype.sc_references = parsed_json.sc_reference;
-		GLB_vars.prototype.sc_representation = parsed_json.sc_representation;
-		GLB_vars.prototype.sc_evaluation = parsed_json.sc_evaluation;
-		GLB_vars.prototype.comparison_matrix = parsed_json.comp_mtx;
-		
-		/*
-		if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
-			func_to_run();
-		}
-		*/
-		GLB_vars.prototype.webmenu = parsed_json.web_menu;
-		onchange_model_main_sbox();
-	})
-}
 
 /**
  * Check if a np_link is a group label.

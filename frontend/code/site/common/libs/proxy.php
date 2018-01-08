@@ -1,5 +1,8 @@
 <?php
 
+  error_reporting(E_ALL);
+  ini_set('display_errors', 1);
+
   require 'settings.php';
 
   $raw_url = $_GET['url']; 
@@ -77,7 +80,8 @@
     delete_curl($url);
 
   } else {
-    // build get message
+    // ugly way to escape arguments
+	$url = trim(str_replace(" ", "%20", $url));
     readfile($url);
     
   }

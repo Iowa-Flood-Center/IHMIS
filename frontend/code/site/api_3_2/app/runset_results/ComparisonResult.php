@@ -2,15 +2,22 @@
 
   namespace Results;
   
-  class ComparisonResult{
+  use Results\MetaFile as MetaFile;
+  
+  class ComparisonResult extends MetaFile{
     
-	const ROOT_ATTR = "sc_model";   // must-have
-    public $attr;                   // must-have
-    private static $app;            // must-have
-	
-	const SUB_FILE_PATH = "/metafiles/cross_matrices/Comparison_matrix.json";
+	const ROOT_ATTR = "comparison_matrix";          // must-have
+	const SUB_META_FOLDER_NAME = "cross_matrices";  // must-have
+	const FILE_BASENAME = "Comparison_matrix";
 	
 	// //////////////////// INTERFACE //////////////////// //
+	
+	/**
+	 * RETURN: Array of Strings. All representation IDs from given model.
+	 */
+	public static function withModel($runset_id, $model_id){
+      
+	}
 	
 	/**
 	 * Deletes all files from a comparison
@@ -25,13 +32,7 @@
 	public static function delete_model($model_id, $runset_id){
       // TODO
 	}
-	
-	// ///////////////////// GENERAL ///////////////////// //
-	
-	/**
-	 *
-	 */
-	public static function setApp($app) { self::$app = $app; }
+
   }
 
 ?>

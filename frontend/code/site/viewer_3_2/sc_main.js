@@ -60,10 +60,6 @@ var modelplus = modelplus || {};
     // TODO - send the following to the API - ON
 	// TODO - all modelplus.viewer.ws_* must vanish
     vw.ws = modelplus.url.proxy + modelplus.url.base_frontend_webservices;
-	vw.ws_load_runset = vw.ws + "ws_load_runset.php?runsetid=";
-    vw.ws_get_metainfo_load_model = function(runset_id, model_id){
-      return(vw.ws + "ws_load_model.php%i%runsetid="+runset_id+"%e%modelid="+model_id);
-	}
 	vw.ws_representations_ref0_timestamp = vw.ws + "ws_load_timestamp_ref0_map.php";
 	vw.ws_get_representations_ref0_timestamp_url = (runset_id, model_id, representation_id)=>{
       var args, url, arg;

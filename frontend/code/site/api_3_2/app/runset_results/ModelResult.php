@@ -50,13 +50,35 @@
      * Create an object from the root folder path
      */
     public static function withId($model_id, $runset_id){
-      $folder_path = self::$app->fss->runsets_result_folder_path;
+      // read main model meta file
+	  $folder_path = self::$app->fss->runsets_result_folder_path;
       $file_sub_path = sprintf(ModelResult::SUB_FILE_PATH_FRAME, $model_id);
       $file_path = $folder_path.$runset_id.$file_sub_path;
       $return_obj = ModelResult::fromFile($file_path);
-      // $return_obj = Array();
+	  
+	  // add evaluations
+	  if(file_exists($file_path)){
+	    MetaFile::set_app(self::$app);
+	    $return_obj["sc_evaluation_set"] = EvaluationMatrixResult::forModel($runset_id, $model_id);
+	  }
+	  
       return($return_obj);
     }
+	
+	/**
+	 *
+	 */
+	public static function withTitle($model_title, $runset_id){
+      $all_files = ModelResult::get_all_model_meta_file_path($runset_id);
+	  $model_obj = null;
+	  foreach($all_files as $cur_file_path){
+        $cur_model_obj = ModelResult::fromFile($cur_file_path);
+		if ($cur_model_obj["title"] != $model_title) continue;
+		$model_obj = $cur_model_obj;
+		break;
+      }
+	  return($model_obj);
+	}
 
     /**
      * Deletes the files associated with the model from the front end.
@@ -84,11 +106,14 @@
      *
      */
     public static function fromFile($file_path){
-      if(!file_exists($file_path)){echo($file_path."\n"); return(null);}
+      if(!file_exists($file_path)) return(null); 
       $return_obj = new self();
       $return_obj->attr = json_decode(file_get_contents($file_path));
       $root_attr = self::ROOT_ATTR;
       $return_obj = get_object_vars($return_obj->attr->$root_attr);
+	  if(!isset($return_obj['show_main'])){
+        $return_obj['show_main'] = false;
+      }
       foreach($return_obj as $key => $val){
         if (preg_match("/_script$/", $key))
           unset($return_obj[$key]);
@@ -176,6 +201,28 @@
         }
         ModelResult::delete_deep($path); 
       }
+	}
+	
+	/**
+	 *
+	 */
+	private static function get_all_model_meta_file_path($runset_id){
+      // basic check
+      if (!isset(self::$app)) return(null);
+	
+      $folder_path = self::$app->fss->runsets_result_folder_path;
+	  $folder_path .= $runset_id . ModelResult::SUB_META_FOLDER_PATH;
+      $all_files = scandir($folder_path);
+	  
+	  $all_files = array_filter($all_files, function($file_name){
+		return((($file_name == ".")||($file_name == "..")) ? false : true);
+	  });
+	  
+	  foreach($all_files as $cur_key => $cur_file_name){
+        $all_files[$cur_key] = $folder_path . $cur_file_name;
+	  }
+	  
+	  return($all_files);
 	}
   }
 

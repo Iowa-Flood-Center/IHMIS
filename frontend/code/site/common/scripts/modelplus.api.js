@@ -110,6 +110,13 @@ var modelplus = modelplus || {};
     return ($.getJSON(ws_url));
   }
   
+  // 
+  modelplus.api.get_runset_result_with_title = function(runset_title){
+    var ws_url;
+    ws_url = api_url + "sc_runset_results%i%title=" + runset_title;
+    return ($.getJSON(ws_url));
+  }
+  
   // Retrieves information from all Runset Result concurrently to another
   modelplus.api.get_concurrently_runset_results = function(runset_id){
     var ws_url;
@@ -180,6 +187,28 @@ var modelplus = modelplus || {};
     var ws_url;
 	ws_url = api_url + "sc_runset_merge_requests";
 	ws_url += "%i%from=waitingroom"
+	return($.getJSON(ws_url));
+  }
+  
+  // 
+  // runset_id : String.
+  // model_id : String.
+  modelplus.api.get_model_result = function(runset_id, model_id){
+    var ws_url;
+	ws_url = api_url + "sc_model_results";
+	ws_url += "%i%runset_id=" + runset_id;
+	ws_url += "%e%model_id=" + model_id;
+	return($.getJSON(ws_url));
+  }
+  
+  // 
+  // runset_id : String.
+  // model_title : String.
+  modelplus.api.get_model_result_with_title = function(runset_id, model_title){
+    var ws_url;
+	ws_url = api_url + "sc_model_results";
+	ws_url += "%i%runset_id=" + runset_id;
+	ws_url += "%e%model_title=" + model_title;
 	return($.getJSON(ws_url));
   }
   

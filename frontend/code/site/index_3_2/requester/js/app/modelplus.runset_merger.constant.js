@@ -107,12 +107,12 @@ var modelplus = modelplus || {};
   //ids.BUTTONS_DIV = "buttons_div"
   //ids.LABEL_NEXT_STEP_ERROR = "label_next_step_error";
   //ids.LABEL_NEXT_STEP = "label_current_step";
-  //ids.BUTTON_PREV_STEP = "button_prev_step";
+  ids.BUTTON_PREV_STEP = "button_prev_step";
   //ids.BUTTON_NEXT_STEP = "button_next_step";
-  //ids.BUTTON_SUBMIT = "button_submit";
-  //ids.SUBMIT_SUCCESS_DIV = "submit_success_div";
-  //ids.SUBMIT_FAILURE_DIV = "submit_failure_div";
-  //ids.SUBMIT_FAILURE_MSG_DIV = "submit_failure_msg_div";
+  ids.BUTTON_SUBMIT = "button_submit";
+  ids.SUBMIT_SUCCESS_DIV = "submit_success_div";
+  ids.SUBMIT_FAILURE_DIV = "submit_failure_div";
+  ids.SUBMIT_FAILURE_MSG_DIV = "submit_failure_msg_div";
   
   // define CSS classes
   

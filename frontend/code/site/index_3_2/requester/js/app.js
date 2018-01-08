@@ -247,12 +247,13 @@ var modelplus = modelplus || {};
     var data_dict = JSON.parse(submit_response);
     if(fail_label in data_dict){
       $("#"+ids.SUBMIT_SUCCESS_DIV).hide();
-      $("#"+ids.SUBMIT_FAILURE_DIV).show();
       $("#"+ids.SUBMIT_FAILURE_MSG_DIV).html(data_dict[fail_label]);
       $("#"+ids.SUBMIT_FAILURE_DIV).show();
     } else {
       $("#"+ids.SUBMIT_SUCCESS_DIV).show();
       $("#"+ids.SUBMIT_FAILURE_DIV).hide();
+	  $("#"+ids.BUTTON_PREV_STEP).hide();
+	  $("#"+ids.BUTTON_SUBMIT).hide();
     }
   }
   

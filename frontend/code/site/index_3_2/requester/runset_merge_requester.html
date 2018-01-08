@@ -31,6 +31,22 @@
               </div>
             </div>
 			
+			<!-- Success / failure messages divs -->
+			<div class="grid-x grid-padding-x begins_hidden" id="submit_success_div">
+              <div >
+                <span>SUBMISSION SUCCESSFUL.</span>
+			    <br >
+			    <span>You can submit a new runset clicking <a href="#" onclick="location.reload();" >here</a>.</span>
+		      </div>
+            </div>
+		    <div class="grid-x grid-padding-x begins_hidden" id="submit_failure_div">
+              <div >
+                <span>SUBMISSION FAILED.</span>
+			    <br>
+			    <span id="submit_failure_msg_div"></span>
+		      </div>
+            </div>
+			
 			<!-- upper_spans : INI -->
 			<div id="upper_spans_div" class="grid-container begins_hidden">
 			  <div class="grid-x grid-padding-x">
@@ -271,16 +287,6 @@
 	<script src="js/app/runset_merger_step_05.js"></script>
 	<script src="js/app/runset_merger_step_06.js"></script>
 	<script src="js/app/runset_merger_step_07.js"></script>
-	<!--
-	<script src="js/app/runset_requester_step_03.js"></script>
-	<script src="js/app/runset_requester_step_04.js"></script>
-	<script src="js/app/runset_requester_step_05.js"></script>
-	<script src="js/app/runset_requester_step_06.js"></script>
-	<script src="js/app/runset_requester_step_07.js"></script>
-	<script src="js/app/runset_requester_step_08.js"></script>
-	<script src="js/app/runset_requester_step_09.js"></script>
-	<script src="js/app/runset_requester_step_10.js"></script>
-	-->
 	<script type="text/javascript" src="../base_lib.js"></script>
   </body>
 </html>

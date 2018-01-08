@@ -39,18 +39,21 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
       	sm.next_step_error_show("Invalid flood peak date.");
             unlock_fields();
           } else {
-            $.ajax(url).done( function(data) {
-              solve(data).then(unlock_fields);
-            });
+			modelplus.api.get_runset_result_with_title($("#"+ids.RUNSET_NAME_INPUT).val())
+			  .then(solve)
+			  .then(unlock_fields);
           }
-          resolve(false);
         }));
       };
 
       // interface function 3
       var solve = function(data){
-        var solved = true;  // TODO - do it properly
-        if(solved){
+        var solved;
+		
+		if(data.length > 0){
+          solved = false;
+		} else {
+          console.log("YEAP. Returned " + data.length);
           sm.post_dict["runset_title"] = $("#"+ids.RUNSET_NAME_INPUT).val();
           var date_val = $("#"+ids.RUNSET_MID_DATE_INPUT).val();
           sm.post_dict["timestamp_mid"] = modelplus.util.datestr_to_timestamp(date_val);

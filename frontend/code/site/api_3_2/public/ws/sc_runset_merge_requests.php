@@ -2,12 +2,12 @@
 
 require_once '../../common/libs/settings.php';
 
-function process_post_request($app){
+function process_post_request($app, $req, $res){
   // error_reporting(E_ALL);
   // ini_set('display_errors', 1);
   
   // get arguments
-  $post_data = $app->request->post();
+  $post_data = $req->getParsedBody();
   
   // TODO - use logs
   
@@ -21,15 +21,15 @@ function process_post_request($app){
   fwrite($out_file, json_encode($post_data, JSON_PRETTY_PRINT));
   fclose($out_file);
   
-  echo('{"dispatch":"yes:'.$out_filepath.'"}');
+  return($app->util->show_json($res, array("dispatch" => "yes:".$out_filepath)));
 }
 
-function process_get_request($app){
+function process_get_request($app, $req, $res){
   // error_reporting(E_ALL);
   // ini_set('display_errors', 1);
   
   // get params
-  $from = $app->request->params("from");
+  $from = $app->util->get_param($req, "from");
   
   // TODO - use logs
   
@@ -49,10 +49,10 @@ function process_get_request($app){
   }
   
   // show
-  echo(json_encode($all_retrieved));
+  return($app->util->show_json($res, $all_retrieved));
 }
 
-function process_delete_request($app, $file_name){
+function process_delete_request($app, $res, $file_name){
   $waitingroom_folder_path = $app->fss->runsetmergers_waiting_room_folder_path;
   $deleted_file_path = $waitingroom_folder_path.$file_name;
   if(unlink($deleted_file_path)){
@@ -61,7 +61,7 @@ function process_delete_request($app, $file_name){
     $ret = array("error"=>$file_name);
   }
   
-  echo(json_encode($ret));
+  return($app->util->show_json($res, $ret));
 }
 
 ?>

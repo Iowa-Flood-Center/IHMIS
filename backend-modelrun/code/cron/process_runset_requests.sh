@@ -20,7 +20,7 @@ LOG_FILE_PATH=$(config_get $CONF_FILE FPH_PREF_PROCES)
 LOG_FILE_PATH=$LOG_FILE_PATH$(datelog_get)".log"
 
 # set some flags - useful for debugging - 0:no, 1:yes
-move_to_archive=0
+move_to_archive=1
 
 ### execute commands
 

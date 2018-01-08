@@ -1,6 +1,8 @@
 from libs.waitingroom_runsetmerge import WaitingRoomRunsetMergeDef
 import urllib.request
+import subprocess
 import requests
+import shutil
 import json
 import os
 
@@ -13,16 +15,16 @@ def process_runset_request_locally(json_data):
     """
 
     :param json_data:
-    :return:
+    :return: Boolean. True if possible to merge. False otherwise.
     """
 
     # basic check - both FROM and TO runsets are set
     if 'from_runset_id' not in json_data.keys():
         print("Missing core key 'from_runset_id'. Stopping script.")
-        return
+        return False
     elif 'to_runset_id' not in json_data.keys():
         print("Missing core key 'to_runset_id'. Stopping script.")
-        return
+        return False
 
     # get variables
     from_runset_id = json_data['from_runset_id']
@@ -33,18 +35,55 @@ def process_runset_request_locally(json_data):
     runset_to_folder_path = WaitingRoomRunsetMergeDef.get_runsets_archial_folder_path(to_runset_id)
     if (not os.path.exists(runset_from_folder_path)) or (not os.path.isdir(runset_from_folder_path)):
         print("Folder '{0}' does not exist.".format(runset_from_folder_path))
-        return
+        return False
     elif (not os.path.exists(runset_to_folder_path)) or (not os.path.isdir(runset_to_folder_path)):
         print("Folder '{0}' does not exist.".format(runset_to_folder_path))
-        return
+        return False
 
     # sc_models
     if 'models_id' in json_data.keys():
         for cur_model_id in json_data['models_id']:
-            cur_from_folder_path = get_model_meta_folder_path(from_runset_id, cur_model_id)
-            cur_to_folder_path = get_model_meta_folder_path(to_runset_id, cur_model_id)
-            print("Copy '{0}' to '{1}'.".format(cur_from_folder_path, cur_to_folder_path))
+            # get source and destination folders
+            cur_from_folder_path = WaitingRoomRunsetMergeDef.get_model_meta_folder_path(from_runset_id, cur_model_id)
+            cur_from_folder_path = "{0}.json".format(cur_from_folder_path)
+            cur_to_folder_path = WaitingRoomRunsetMergeDef.get_model_meta_folder_path(to_runset_id, cur_model_id)
+            cur_to_folder_path = "{0}.json".format(cur_to_folder_path)
 
+            # basic check - need to be renamed?
+            if os.path.exists(cur_to_folder_path):
+                renaming = True
+                cur_dest_model_id = "{0}{1}".format(cur_model_id, from_runset_id)
+                cur_to_folder_path = WaitingRoomRunsetMergeDef.get_model_meta_folder_path(to_runset_id,
+                                                                                          cur_dest_model_id)
+                cur_to_folder_path = "{0}.json".format(cur_to_folder_path)
+                if os.path.exists(cur_to_folder_path):
+                    print("Model was already copied (found '{0}').".format(cur_to_folder_path))
+                    return False
+            else:
+                renaming = False
+
+            print("Copy '{0}' to '{1}'.".format(cur_from_folder_path, cur_to_folder_path))
+            copy_model_meta_file(cur_from_folder_path, cur_to_folder_path, renaming)
+
+    return True
+
+def copy_model_meta_file(from_path, to_path, renamed):
+    """
+
+    :param from_path:
+    :param to_path:
+    :param renamed:
+    :return:
+    """
+    if renamed:
+        new_model_id = os.path.splitext(os.path.basename(to_path))[0]
+        with open(from_path, "r") as r_file:
+            json_data = json.load(r_file)
+        json_data["sc_model"]["id"] = new_model_id
+        with open(to_path, "w") as r_file:
+            json.dump(json_data, r_file, sort_keys=True, indent=4)
+    else:
+        shutil.copyfile(from_path, to_path)
 
 def process_runset_request_externally(json_data):
     """
@@ -54,6 +93,10 @@ def process_runset_request_externally(json_data):
     """
 
     ssh_cmd = WaitingRoomRunsetMergeDef.get_ssh_call_to_backend_postprocess(json_data)
+    print("Calling externally 1: '{0}'".format(ssh_cmd))
+    proc = subprocess.Popen(ssh_cmd, stdout=subprocess.PIPE, shell=True)
+    (out, err) = proc.communicate()
+    print("Call output: {0}.".format(out))
     os.system(ssh_cmd)
 
 # ####################################################### CALL ####################################################### #
@@ -84,8 +127,11 @@ for cur_file in json_obj:
     url_con = urllib.request.urlopen(cur_file_url)
     url_txt = str(url_con.read().decode()).strip()
     url_con.close()
-    process_runset_request_locally(json.loads(url_txt))
-    process_runset_request_externally(json.loads(url_txt))
+
+    if process_runset_request_locally(json.loads(url_txt)):
+        process_runset_request_externally(json.loads(url_txt))
+    else:
+        print("Failed calling internally")
 
     # delete file from server
     cur_del_url = WaitingRoomRunsetMergeDef.get_ws_del_url(cur_file)

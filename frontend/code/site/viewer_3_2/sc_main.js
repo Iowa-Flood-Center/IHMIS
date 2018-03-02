@@ -251,7 +251,7 @@ function sc_init() {
 		()=>{ $('#nptsc').css("background-color", '#AA9900');}, 
 		()=>{ $('#nptsc').css("background-color", '#CCBB00');});
 	$('#nptsc').show();
-	$('#logoimg').attr('src', modelplus.viewer.image_folder + 'ifis-logo-mplus.png');
+	$('#logoimg').attr('src', modelplus.viewer.image_folder + 'ihmis-logo.png');
 	$('#logoimg').parent().closest('a').attr("href", modelplus.url.base_frontend);
 
 	// load Iowa model domain map

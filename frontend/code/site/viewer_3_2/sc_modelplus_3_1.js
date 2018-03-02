@@ -74,18 +74,21 @@ function onchange_runset_main_sbox(){
 			// parse JSON content
 			try{
 				parsed_json = json_data[0];
+				
+				if (parsed_json == undefined) return;
+				
+				// set up variables
+				GLB_vars.prototype.sc_runset = {
+					"id":parsed_json.id,
+					"title":parsed_json.title,
+					"show_main":parsed_json.show_main
+				};
+				
 			} catch(err) {
-				Console.log("Unable to parse '"+ data +"'. Error: " + err);
+				console.log("Unable to parse '"+ json_data +"'. Error: " + err);
 				return;
 			}
 			
-			// set up variables
-			// GLB_vars.prototype.sc_runset = parsed_json.sc_runset;
-			GLB_vars.prototype.sc_runset = {
-				"id":parsed_json.id,
-				"title":parsed_json.title,
-				"show_main":parsed_json.show_main
-			};
 			GLB_vars.prototype.sc_models = parsed_json.sc_model;
 			GLB_vars.prototype.sc_model_combinations = parsed_json.sc_model_combination;
 			GLB_vars.prototype.sc_references = parsed_json.sc_reference;

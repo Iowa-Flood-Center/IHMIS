@@ -100,16 +100,20 @@
 		/**
 		 *
 		 * $runset_request :
+		 * $contact_lvl: String. Expected 'none', 'onfinish' or 'all'.
 		 * RETURN :
 		 */
-		public static function create_email_text_file($runset_request){
+		public static function create_email_text_file($runset_request, $contact_lvl){
 			// defines file path
-			$text_filepath = AuxFilesLib::get_local_emailtext_file_path($runset_request->current_timestamp);
+			$text_filepath = AuxFilesLib::get_local_emailtext_file_path($runset_request->current_timestamp,
+																		$contact_lvl);
 			
 			// create file
-			$fp = fopen($text_filepath, 'w');
-			fwrite($fp, $runset_request->user_email);
-			fclose($fp);
+			if(!is_null($text_filepath)){
+				$fp = fopen($text_filepath, 'w');
+				fwrite($fp, $runset_request->user_email);
+				fclose($fp);
+			}
 		}
 		
 		/**

@@ -13,6 +13,7 @@
     public $timestamp_ini;           //
     public $timestamp_end;           //
     public $user_email;              //
+	public $contact_option;          //
     public $current_timestamp;       //
     public $asynch_version;          //
     public $server_addr;             //
@@ -37,6 +38,8 @@
         $this->timestamp_ini = $posts["timestamp_ini"];
         $this->timestamp_end = $posts["timestamp_end"];
         $this->user_email = $posts["email"];
+		$this->contact_option = $posts["contact_option"];
+		$this->contact_option = str_replace("how_contact_", "", $this->contact_option);
         $this->max_models = $posts["num_models"];
         $this->what_run = $posts["what_run"];
         $this->what_do = $posts["what_do"];
@@ -65,10 +68,20 @@
       // MetaFilesCreator::create_evaluation_mtx_meta_json_file($runset_obj, $mdlreq_objs);
       // $this->create_evaluation_mtx_empty_meta_file($app);
       $this->create_evaluation_mtx_meta_file($app);
-      MetaFilesCreator::create_email_text_file($this);
+      MetaFilesCreator::create_email_text_file($this, $this->contact_option);
       MetaFilesCreator::create_metacomb_hydrographpast($this, $this->model_requests);
       MetaFilesCreator::create_metacomb_sequencemaps($this);
+	  $this->send_creation_email();
     }
+	
+	/**
+	 * $email_addr : 
+	 * $contact_opt : 
+	 */
+	public function send_creation_email(){
+		if($this->contact_option != "all") return;
+		mail($this->user_email, "Runset submitted.", "Runset '".$this->runset_title."' (id: ".$this->runset_id.") submitted.");
+	}
     
     /**
      *

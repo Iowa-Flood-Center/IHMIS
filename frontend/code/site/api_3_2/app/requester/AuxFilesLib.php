@@ -827,10 +827,26 @@
 		/**
 		 *
 		 * $current_timestamp :
+		 * $contact_lvl: String. Expected 'none', 'onfinish' or 'all'.
 		 * RETURN :
 		 */
-		public static function get_local_emailtext_file_path($current_timestamp){
-			return(AuxFilesLib::get_local_temp_folder_path($current_timestamp)."email.txt");
+		public static function get_local_emailtext_file_path($current_timestamp, $contact_lvl){
+			switch($contact_lvl){
+				case "none":
+					$fname = null;
+					break;
+				case "onfinish":
+					$fname = "email_onfinish.txt";
+					break;
+				case "all":
+					$fname = "email_all.txt";
+					break;
+				default:
+					$fname = null;
+					break;
+			}
+			if(is_null($fname)) return(null);
+			return(AuxFilesLib::get_local_temp_folder_path($current_timestamp).$fname);
 		}
 		
 		/**

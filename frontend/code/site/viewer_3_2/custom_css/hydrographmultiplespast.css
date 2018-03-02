@@ -1,1 +1,13 @@
- 
+#modal_close_span {
+    background-image: url(../imgs/close.png);
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    border: none;
+    position: absolute;
+    top: -22px;
+    right: -22px;
+    float: right;
+    outline: 0;
+    cursor: pointer;
+    z-index: 10;} 

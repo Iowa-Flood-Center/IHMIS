@@ -43,7 +43,7 @@ class HlModel extends Eloquent{
 		$return_array = array();
 		foreach($sql_result as $cur_result){
 			array_push($return_array, 
-			           new ScRepresentation($cur_result[$f_name]));
+			           new ScRepresentation($cur_result->$f_name));
 		}
 		
 		return($return_array);

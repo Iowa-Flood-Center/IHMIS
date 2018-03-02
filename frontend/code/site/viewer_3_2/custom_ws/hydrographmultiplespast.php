@@ -122,6 +122,8 @@
 	// Second part
 	//
 	
+	// echo($common_files_folder_path);
+	
 	echo("{\n");
 	$all_common_files = scandir($common_files_folder_path);
 	$links_array = array();

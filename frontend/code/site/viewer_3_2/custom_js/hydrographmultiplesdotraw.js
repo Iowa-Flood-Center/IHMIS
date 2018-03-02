@@ -1,4 +1,5 @@
 function custom_display(){
+	"use strict";
 	var runset_id, modelcomb_id, reprcomp_id;
 	var all_links_dict, gages_location_dict;
 	
@@ -9,10 +10,10 @@ function custom_display(){
 	 * RETURN :
 	 */
 	function graph_color(model_number, total_models){
-		var r_min, g_min, b_min;
+		var r_min, g_max, b_min;
 		var r_num, g_num, b_num;
 		var r_hex, g_hex, b_hex;
-		var delta, i;
+		var delta, g_delta, i;
 		
 		delta = total_models;
 		// i = delta - model_number;
@@ -73,16 +74,13 @@ function custom_display(){
 	runset_id = $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val();
 	modelcomb_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 	
-	console.log("hydrographmultiplesdotraw: for "+runset_id+"."+modelcomb_id);
-	
 	// build urls
-	root_url = modelplus.url.base_frontend_webservices;
-	icon_root_address = root_url + "imgs/map_icons/";
-	ws_data_url = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
-	ws_gages_location_url = GLB_webservices.prototype.http + "ws_gages_location.php%i%filedate=20170328";
+	var root_url = modelplus.url.base_frontend_webservices;
+	var icon_root_address = root_url + "imgs/map_icons/";
+	var ws_data_url = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
+	var ws_gages_location_url = GLB_webservices.prototype.http + "ws_gages_location.php%i%filedate=20170328";
 	
 	// load all links available
-	console.log("hydrographmultiplesdotraw: calling '"+ws_data_url+"'.");
 	$.ajax({
 		url: ws_data_url
 	}).success(function(data){
@@ -92,7 +90,6 @@ function custom_display(){
 	});
 	
 	// load all locations
-	console.log("hydrographmultiplesdotraw: calling '"+ws_gages_location_url+"'.");
 	$.ajax({
 		url: ws_gages_location_url
 	}).success(function(data){
@@ -106,7 +103,8 @@ function custom_display(){
 	 * RETURN : None.
 	 */
 	function display_when_possible(){
-		var cur_icon_address;
+		var cur_icon_address, chart_lib_url, json_gage, idx;
+		var cur_linkid, cur_latlng, cur_icon, cur_marker;
 		
 		// basic check - variables must have been set
 		if ((all_links_dict == null) || (gages_location_dict == null)){ return; }
@@ -115,11 +113,6 @@ function custom_display(){
 		if(typeof(GLB_visual.prototype.polygons[reprcomp_id]) === 'undefined'){
 			GLB_visual.prototype.polygons[reprcomp_id] = [];
 		}
-		
-		// debug
-		// keys = [];
-		// for(var k in all_links_dict) keys.push(k);
-		// console.log("Total: " + keys.length + " ("+typeof(keys[1])+"). Keys: " + keys);
 		
 		// load charts library
 		chart_lib_url = modelplus.url.base_frontend_webservices + "/custom_js/echarts/dist/echarts.js";
@@ -164,6 +157,7 @@ function custom_display(){
 			// define marker on-click action
 			google.maps.event.addListener(cur_marker, "click", function () {
 				var runset_id, model_id, link_id;
+				var json_reader_ws;
 				// var modal_ctt_div_id = 'modal_content_hidrograph_div';
 				
 				// set up variables						
@@ -173,8 +167,7 @@ function custom_display(){
 				
 				json_reader_ws = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+"_readjson.php%i%sc_runset_id="+runset_id+"%e%sc_model_id="+model_id+"%e%link_id="+link_id;
 				// display_hidrograph_block(modal_ctt_div_id);
-				modelplus.hydrograph.create();
-				console.log("hydrographmultiplesdotraw: Loaded '"+json_reader_ws+"'.");
+				modelplus.hydrograph.create_tmp();
 				
 				// configure for module loader
 				require.config({
@@ -200,9 +193,9 @@ function custom_display(){
 							var json_data, myChart, div_modal_ctt, inner_html, option;
 							var cur_stage_pair, cur_stage_index, cur_date;
 							var min_timestamp, max_timestamp;
-							var min_y_label, max_y_label;
-							var title_str, legend_array;
-							var cur_past_model_id;
+							var min_y_label, max_y_label, current_date_data;
+							var title_str, subtitle_str, legend_array;
+							var cur_past_model_id, cur_model_color;
 							
 							// read and parse data
 							json_data = JSON.parse(data);
@@ -211,15 +204,15 @@ function custom_display(){
 							subtitle_str = "Drainage Area: " + json_data["common"]["area"] + " km^2";
 							
 							// define legend, y-min, y-max 
-							series_obj = [];
+							var series_obj = [];
 							legend_array = [];
 							min_y_label = -1;
 							max_y_label = 0;
 							min_timestamp = 0;
 							max_timestamp = 0;
-							counter_mdls = 1;
-							total_mdls = Object.keys(json_data["past"]).length + Object.keys(json_data["fore"]).length;
-							max_past_timestamp = null;
+							var counter_mdls = 1;
+							var total_mdls = Object.keys(json_data["past"]).length + Object.keys(json_data["fore"]).length;
+							var max_past_timestamp = null;
 							for(var k in json_data["past"]){
 								
 								// convert dates
@@ -274,6 +267,7 @@ function custom_display(){
 								});
 								counter_mdls = counter_mdls + 1;
 							}
+							var max_fore_idx, max_fore_stg;
 							for(var k in json_data["fore"]){
 								max_fore_idx = -1;
 								max_fore_stg = -1;
@@ -384,6 +378,8 @@ function custom_display(){
 								
 								counter_mdls = counter_mdls + 1;
 							}
+							
+							var myDataThrAct, myDataThrFld, myDataThrMod, myDataThrMaj;
 							
 							// define thresholds
 							if ((json_data["common"]["stage_threshold_act"] != null) && (json_data["common"]["stage_threshold_act"] != -1)){
@@ -516,7 +512,7 @@ function custom_display(){
 							}
 							
 							// Initialize after dom ready
-							myChart = ec.init(document.getElementById('modal_content_hidrograph_div'));
+							var myChart = ec.init(document.getElementById(modelplus.ids.MODAL_HYDROGRAPH_IFISBASED));
 							
 							option = {
 								title:{
@@ -532,7 +528,7 @@ function custom_display(){
 								tooltip: {
 									show: true,
 									formatter: function(parms){
-										var stg_txt, date_txt;
+										var stg_txt, hour_txt, date_txt;
 										stg_txt = "Stage:"+parms.value[1].toFixed(2)+" ft";
 										hour_txt = force_two_digits(parms.value[0].getHours()) + ":" + force_two_digits(parms.value[0].getMinutes());
 										date_txt = force_two_digits(parms.value[0].getDate()) + "/" + force_two_digits(parms.value[0].getMonth()+1) + "/" + parms.value[0].getFullYear();
@@ -575,7 +571,9 @@ function custom_display(){
 							// Load data into the ECharts instance 
 							myChart.setOption(option);
 							
-							modelplus.hydrograph.addHeader();
+							modelplus.hydrograph.addHeader({
+						        position: 'absolute', 
+                                div_id: modelplus.ids.MODAL_HYDROGRAPH_IFISBASED});
 						});
 					}
 				);

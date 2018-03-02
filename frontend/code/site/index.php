@@ -19,10 +19,10 @@
   <head>
     <meta name="viewport" content="user-scalable=no, width=960" />
     <meta charset="UTF-8" />
-    <title>IFC MODEL PLUS - IFIS SPECIAL CASE</title>
+    <title>IHMIS - Iowa Hydrologic Model Information System</title>
     
     <script type="text/javascript" src="common/vendor/jquery-3.1.1.min.js"></script>
-	<script type="text/javascript" src="index_3_2/scripts/modelplus.url.js"></script>
+	<script type="text/javascript" src="common/scripts/modelplus.url.js"></script>
     <script type="text/javascript" src="index_3_2/base_lib.js"></script>
     
 	<link rel="stylesheet" href="index_3_2/main.css" media="screen" />

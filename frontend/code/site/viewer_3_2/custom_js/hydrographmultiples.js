@@ -1,7 +1,8 @@
 function custom_display(){
-	var modelcomb_id, runset_id, represcomb_id;
+	"use strict";
+	var modelcomb_id, reprcomp_id, runset_id, represcomb_id;
 	var all_links_dict, gages_location_dict;
-	var root_url, ws_data_url;
+	var root_url, icon_address, ws_data_url;
 	
 	/**
 	 *
@@ -10,10 +11,10 @@ function custom_display(){
 	 * RETURN :
 	 */
 	function graph_color(model_number, total_models){
-		var r_min, g_min, b_min;
+		var r_min, g_max, b_min;
 		var r_num, g_num, b_num;
 		var r_hex, g_hex, b_hex;
-		var delta, i;
+		var delta, g_delta, i;
 		
 		delta = total_models;
 		// i = delta - model_number;
@@ -76,8 +77,10 @@ function custom_display(){
 	// build URLs
 	root_url = modelplus.url.base_frontend_webservices;
 	icon_address = root_url + "imgs/map_icons/hidrog.png";
-	ws_data_url = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
-	ws_gages_location_url = GLB_webservices.prototype.http + "ws_gages_location.php";
+	ws_data_url = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+".php";
+	ws_data_url += "%i%sc_runset_id="+runset_id;
+	ws_data_url += "%e%sc_modelcomb_id="+modelcomb_id;
+	var ws_gages_location_url = modelplus.viewer.ws + "ws_gages_location.php";
 	
 	// load all links available
 	$.ajax({
@@ -108,7 +111,7 @@ function custom_display(){
 		// basic check - variables must have been set
 		if ((all_links_dict == null) || (gages_location_dict == null)){ return; }
 		
-		chart_lib_url = modelplus.url.base_frontend_webservices + "/custom_js/echarts/dist/echarts.js";
+		chart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.js";
 		
 		// create reference list for icon in global var if necessary
 		if(typeof(GLB_visual.prototype.polygons[reprcomp_id]) === 'undefined'){
@@ -117,7 +120,7 @@ function custom_display(){
 		
 		// for each link available, looks for a respective gauge location
 		json_gage = gages_location_dict["gauge"];
-		for(idx=0; idx<json_gage.length; idx++){
+		for(var idx=0; idx<json_gage.length; idx++){
 			cur_linkid = json_gage[idx]["link_id"];
 			
 			// basic check - gage location was found
@@ -139,7 +142,16 @@ function custom_display(){
 				id:json_gage[idx].link_id
 			});
 			
-			google.maps.event.addListener(cur_marker, "click", function () {
+			google.maps.event.addListener(cur_marker, "click", on_icon_click);
+			
+			// add polygon to the reference list
+			GLB_visual.prototype.polygons[reprcomp_id].push(cur_marker);
+		}
+		
+		loadScript(chart_lib_url, function(){});
+	}
+	
+	function on_icon_click() {
 				var runset_id, model_id, link_id, json_reader_ws;
 				
 				// set up variables						
@@ -147,14 +159,17 @@ function custom_display(){
 				model_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 				link_id = this.id;
 				
-				json_reader_ws = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+"_readjson.php%i%sc_runset_id="+runset_id+"%e%sc_model_id="+model_id+"%e%link_id="+link_id;
+				json_reader_ws = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+"_readjson.php"
+				json_reader_ws += "%i%sc_runset_id="+runset_id;
+				json_reader_ws += "%e%sc_model_id="+model_id;
+				json_reader_ws += "%e%link_id="+link_id;
 				
-				modelplus.hydrograph.create();
+				modelplus.hydrograph.create_tmp();
 				
 				// configure for module loader
 				require.config({
 					paths: {
-						echarts: root_url + 'custom_js/echarts/dist'
+						echarts: modelplus.url.custom_display_js_folder + '/echarts/dist'
 					}
 				});
 				
@@ -174,16 +189,16 @@ function custom_display(){
 						}).done(function(data){
 							var json_data, myChart, div_modal_ctt, inner_html, option;
 							var min_y_label, max_y_label;
-							var title_str, legend_array;
+							var title_str, subtitle_str, legend_array;
 							var cur_stage_pair, cur_stage_index, cur_date;
 							var min_timestamp, max_timestamp;
 							
-							function get_model_hidrograph_raw_data(arguments){
+							function get_model_hidrograph_raw_data(args){
 								var raw_data_url;
-								raw_data_url = get_rawdata_url(arguments["runset_id"], 
-								                               arguments["model_id"], 
-															   arguments["reprcomp_id"], 
-															   arguments["link_id"]);
+								raw_data_url = get_rawdata_url(args["runset_id"], 
+								                               args["model_id"], 
+															   args["reprcomp_id"], 
+															   args["link_id"]);
 								window.open(raw_data_url);
 							}
 							
@@ -194,15 +209,16 @@ function custom_display(){
 							subtitle_str = "Drainage Area: " + json_data["common"]["up_area"].toFixed(2) + "km^2";
 							
 							// define legend, y-min, y-max
-							series_obj = [];
+							var series_obj = [];
 							legend_array = [];
 							min_y_label = -1;
 							max_y_label = 0;
 							min_timestamp = 0;
 							max_timestamp = 0;
-							max_past_timestamp = 0;
-							counter_mdls = 1;
-							total_mdls = Object.keys(json_data["past"]).length + Object.keys(json_data["fore"]).length;
+							var max_past_timestamp = 0;
+							var counter_mdls = 1;
+							var cur_model_color, max_fore_idx, max_fore_stg;
+							var total_mdls = Object.keys(json_data["past"]).length + Object.keys(json_data["fore"]).length;
 							for(var k in json_data["past"]){ 
 								for(var cur_stage_index in json_data["past"][k]["stage_mdl"]){
 									// evaluate y value for max/min
@@ -303,6 +319,8 @@ function custom_display(){
 							}
 							
 							// define thresholds
+							var myDataThrAct, myDataThrFld, myDataThrMod, myDataThrMaj;
+							
 							if ((json_data["common"]["stage_threshold_act"] != null) && (json_data["common"]["stage_threshold_act"] > 0)){
 								// build graphic object
 								myDataThrAct = [[min_timestamp, json_data["common"]["stage_threshold_act"]],
@@ -410,6 +428,7 @@ function custom_display(){
 							min_y_label = Math.floor(min_y_label - ((max_y_label - min_y_label) * 0.1));
 							
 							// add current time delimiter
+							var current_date_data;
 							if (max_past_timestamp != null){
 								current_date_data = [[max_past_timestamp, max_y_label],
 													 [max_past_timestamp, min_y_label]];
@@ -433,7 +452,7 @@ function custom_display(){
 							}
 							
 							// Initialize after dom ready
-							myChart = ec.init(document.getElementById('modal_content_hidrograph_div'));
+							var myChart = ec.init(document.getElementById(modelplus.ids.MODAL_HYDROGRAPH_IFISBASED));
 							
 							option = {
 								title:{
@@ -449,7 +468,7 @@ function custom_display(){
 								tooltip: {
 									show: true,
 									formatter: function(parms){
-										var stg_txt, date_txt;
+										var stg_txt, hour_txt, date_txt;
 										stg_txt = "Stage:"+parms.value[1].toFixed(2)+" ft";
 										hour_txt = force_two_digits(parms.value[0].getHours()) + ":" + force_two_digits(parms.value[0].getMinutes());
 										date_txt = force_two_digits(parms.value[0].getDate()) + "/" + force_two_digits(parms.value[0].getMonth()+1) + "/" + parms.value[0].getFullYear();
@@ -493,25 +512,20 @@ function custom_display(){
 							myChart.setOption(option);
 							
 							modelplus.hydrograph.addHeader({
-									"raw_data_function":get_model_hidrograph_raw_data,
-									"raw_data_argument":{
-										"runset_id": runset_id,
-										"model_id": model_id,
-										"reprcomp_id": reprcomp_id,
-										"link_id": link_id
-									}
+								position: 'absolute', 
+								div_id: modelplus.ids.MODAL_HYDROGRAPH_IFISBASED,
+								"raw_data_function":get_model_hidrograph_raw_data,
+								"raw_data_argument":{
+									"runset_id": runset_id,
+									"model_id": model_id,
+									"reprcomp_id": reprcomp_id,
+									"link_id": link_id
+								}
 							});
 						});
 					}
 				);
-			});
-			
-			// add polygon to the reference list
-			GLB_visual.prototype.polygons[reprcomp_id].push(cur_marker);
-		}
-		
-		loadScript(chart_lib_url, function(){});
-	}
+			}
 	
 	/**
 	 *
@@ -524,9 +538,8 @@ function custom_display(){
 	 */
 	function get_rawdata_url(runset_id, model_id, reprcomp_id, link_id){
 		
-		
 		var retr_url;
-		retr_url = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+"_readjson.php";
+		retr_url = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+"_readjson.php";
 		retr_url += "%i%sc_runset_id="+runset_id;
 		retr_url += "%e%sc_model_id="+model_id;
 		retr_url += "%e%link_id="+link_id;

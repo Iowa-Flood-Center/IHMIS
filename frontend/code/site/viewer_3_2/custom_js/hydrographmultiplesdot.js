@@ -77,8 +77,8 @@ function custom_display(){
 	// build urls
 	var root_url = modelplus.url.base_frontend_webservices;
 	var icon_root_address = root_url + "imgs/map_icons/";
-	var ws_data_url = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
-	var ws_gages_location_url = GLB_webservices.prototype.http + "ws_gages_location.php%i%filedate=20170328";
+	var ws_data_url = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
+	var ws_gages_location_url = modelplus.viewer.ws + "ws_gages_location.php%i%filedate=20170328";
 	
 	// load all links available
 	$.ajax({
@@ -120,7 +120,7 @@ function custom_display(){
 		// console.log("Total: " + keys.length + " ("+typeof(keys[1])+"). Keys: " + keys);
 		
 		// load charts library
-		var chart_lib_url = modelplus.url.base_frontend_webservices + "/custom_js/echarts/dist/echarts.js";
+		var chart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.js";
 		
 		// for each link available, looks for a respective gauge location
 		var json_gage = gages_location_dict["gauge"];
@@ -181,7 +181,7 @@ function custom_display(){
 		model_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 		link_id = this.id;
 		
-		json_reader_ws = GLB_webservices.prototype.http;
+		json_reader_ws = modelplus.viewer.ws;
 		json_reader_ws += "custom_ws/"+reprcomp_id+"_readjson.php";
 		json_reader_ws += "%i%sc_runset_id="+runset_id;
 		json_reader_ws += "%e%sc_model_id="+model_id;
@@ -194,7 +194,7 @@ function custom_display(){
 		// configure for module loader
 		require.config({
 			paths: {
-				echarts: root_url + 'custom_js/echarts/dist'
+				echarts: modelplus.url.custom_display_js_folder + '/echarts/dist'
 			}
 		});
 		

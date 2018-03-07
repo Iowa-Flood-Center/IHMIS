@@ -5,7 +5,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 1;
+ var STATE_NUM = 1;
   var sm = modelplus.requester.state_machine;
   var ids = modelplus.requester.constant.id;
   
@@ -13,7 +13,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   (function () {
     sm.get_form_info_functions = sm.get_form_info_functions || {};
   
-    sm.get_form_info_functions[state_num] = function(){
+    sm.get_form_info_functions[STATE_NUM] = function(){
       
       // interface function 1
       var lock_fields = function(){
@@ -85,7 +85,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   (function () {
     sm.update_form_functions = sm.update_form_functions || {};
 	
-    sm.update_form_functions[state_num] = function(){
+    sm.update_form_functions[STATE_NUM] = function(){
       $("#"+ids.RUNSET_NAME_SPAN).html("");
       $("#"+ids.RUNSET_NAME_INPUT).show();
 	  $("#"+ids.RUNSET_BASIC_HR).show();

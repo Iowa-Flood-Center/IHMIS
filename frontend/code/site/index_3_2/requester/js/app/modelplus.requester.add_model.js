@@ -190,19 +190,23 @@ modelplus.requester = modelplus.requester || {};
     
     // fill forcings div
 	modelplus.api.get_forcing_types_for_hlm(the_hlm_id)
-      .then((all_forcings) => { load_forcings(the_hlm_id, all_forcings, model_num, 0); });
+      .then(function(all_forcings) {
+		load_forcings(the_hlm_id, all_forcings, model_num, 0); });
 
     // fill global parameters
 	modelplus.api.get_global_parameters_for_models(the_hlm_id)
-      .then((all_globalpars) => { load_global_parameters(all_globalpars, model_num); });
+      .then(function(all_globalpars){
+		load_global_parameters(all_globalpars, model_num); });
               
     // fill evaluations
     modelplus.api.get_evaluations_for_hlm(the_hlm_id, sm.post_dict["reference_ids"])
-      .then((all_evaluations) => { load_evaluations(all_evaluations, model_num); });
+      .then(function(all_evaluations) {
+		load_evaluations(all_evaluations, model_num); });
 
     // fill simple representations
     modelplus.api.get_representations_for_hlm(the_hlm_id)
-      .then((all_representations) => { load_representations(all_representations, model_num) });
+      .then(function(all_representations) {
+		load_representations(all_representations, model_num) });
   }
   
   // perform AJAX requests to fill div of forcing options

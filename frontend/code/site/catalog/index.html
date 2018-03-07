@@ -1,0 +1,533 @@
+<meta charset="UTF-8"> 
+<html>
+  <head>
+    <style>
+	
+      @font-face { 
+	    font-family: Mechanical;
+		src: url('fonts/MechanicalBd.otf');
+      }
+	  
+	  @font-face { 
+	    font-family: Courier;
+		src: url('fonts/CourierBd.otf');
+      } 
+	
+	  body {
+	    padding: 0px;
+		border: 0px;
+		margin: 0px;
+	  }
+	  
+	  h1 {
+	    font-family: Mechanical;
+	    font-size: 9vh;
+		margin: 0px;
+	  }
+	  
+	  h2 {
+	    font-family: Mechanical;
+	    font-size: 4vh;
+		margin: 0px;
+	  }
+	  
+      div{
+	    display: table
+	  }
+	  
+	  .top_header {
+	    width: 100%;
+		height: 10%;
+		background: linear-gradient(to right, #cfe7f5, #8acdff);
+	  }
+	  
+	  .top_button {
+	    float: left;
+        width: 11%;
+		height: 100%;
+		top: auto;
+		text-align: center;
+		font-size: 4vh;
+		vertical-align: middle;
+		MechanicalBd.otf
+	  }
+	  
+	  span.top_button_label {
+	    cursor:pointer;
+		color:#8497b0;
+		font-family: Courier, sans-serif;
+	  }
+	  
+	  span.top_button_label:hover{
+	    color:#405370
+	  }
+	  
+	  img.top_button_label{
+	    height: 10vh;
+		width: auto;
+		margin-bottom:0px;
+		cursor: pointer
+	  }
+	  
+	  #the_body{
+	    width:100%;
+		text-align:center;
+	  }
+	  
+	  .body_content{
+	    width: 100%;
+		height:90vh;
+		display: none;
+	  }
+	  
+	  .centered{
+	    position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 50%;
+        height: 30%;
+        margin: auto;
+	  }
+	  
+	  .body_text{
+        font-family: Arial;
+	    font-size: 4vh;
+		text-align: left;
+		width: 90vh;
+		height: 90vh;
+		margin: auto;
+	  }
+	  
+	  img.map{
+	    height:90vh;
+		width:auto;
+	  }
+	  
+	  img.plus{
+	    position: absolute;
+		top: 85%;
+        left: 14%;
+        width: auto;
+        height: 10vh;
+		cursor: pointer;
+	  }
+	  
+	  ul{
+	    margin-top:0;
+	  }
+    </style>
+  
+    <script>
+	  function click_menu(link_obj, menu_id){
+        $("#the_body").children().hide();
+		$("#"+menu_id).show();
+		$(".top_button_label").css('color', '#8497b0');
+		$(link_obj).children().css('color', '#000000');
+	  }
+	  
+	  function click_plus(plus_id){
+	    $("#the_body").children().hide();
+		$("#"+plus_id).show();
+	  }
+	</script>
+	
+	<script src="jquery-3.3.1.min.js"></script>
+  
+  </head>
+  <body>
+    
+    <div class="top_header">
+	  <div class="top_button" onclick="click_menu(this, '2008jun');" >
+	    <span class="top_button_label">
+		  2008<br>Jun
+		</span>
+	  </div>
+	  <div class="top_button" onclick="click_menu(this, '2010jul');" >
+	    <span class="top_button_label">
+	      2010<br>Jul
+		</span>
+	  </div>
+	  <div class="top_button" onclick="click_menu(this, '2010aug');" >
+	    <span class="top_button_label">
+		  2010<br>Aug
+		</span>
+	  </div>
+	  <div class="top_button" onclick="click_menu(this, '2011jun');" >
+	    <span class="top_button_label">
+		  2011<br>Jun
+		</span>
+	  </div>
+	  <div class="top_button" onclick="click_menu(this, '2013may');" >
+	    <span class="top_button_label">
+		  2013<br>May
+		</span>
+	  </div>
+	  <div class="top_button" onclick="click_menu(this, '2014jun');" >
+	    <span class="top_button_label">
+		  2014<br>Jun
+		</span>
+	  </div>
+	  <div class="top_button" onclick="click_menu(this, '2015jun');" >
+	    <span class="top_button_label">
+		  2015<br>Jun
+		</span>
+	  </div>
+	  <div class="top_button" onclick="click_menu(this, '2016sep');" >
+	    <span class="top_button_label">
+		  2016<br>Sep
+		</span>
+	  </div>
+	  <div class="top_button" onclick="click_menu(this, 'homediv');" >
+		<img src="imgs/icon_iowa.png" class="top_button_label">
+	  </div>
+	</div>
+	<div id="the_body" >
+	  <div id="homediv" class="body_content" style="display:table; margin: auto;" >
+	    <div class="centered">
+	      <h1>Flood Cathalog</h1>
+		  <br >
+		  <h2>Major Floods in Iowa since 2008</h2>
+		</div>
+	  </div>
+	  <div id="2008jun" class="body_content" >
+	    <img src="imgs/01_200806.PNG" class="map" />
+		<a onclick="click_plus('p2008jun');">
+		  <img src="imgs/icon-plus.png" class="plus" /></a>
+	  </div>
+	  <div id="p2008jun" class="body_content">
+	    <div class="body_text" >
+	      <strong>Overview:</strong><br >
+		  <ul>
+		    <li>New flow records regisered in the Cedar Basin;</li>
+			<li>About 8,000 evacuated their homes and 5,500 got without electricity in Cedar Rapids;</li>
+		    <li>Des Moines called for voluntary evacuation;</li>
+			<li>Amtrak (train) temporary stopped activities in Iowa;</li>
+		    <li>Severe damaged the Voxman Music Building;</li>
+			<li>Damages estimated in U$6 billion;</li>
+			<li>Triggered the foundation of the IFC.</li>
+			
+		  </ul>
+		  &nbsp;<br >
+		  &nbsp;<br >
+		  <strong>Sources:</strong><br >
+		  <ul>
+		    <li>
+			  <a href="http://nws.weather.gov/blog/nwsdesmoines/page/12/" target="_blank">
+			    National Weather Service</a>
+			</li>
+			<li>
+			  <a href="https://www.desmoinesregister.com/picture-gallery/news/2016/09/24/14-photos-remembering-the-2008-floods-in-waterloo-cedar-rapids/91051318/" target="_blank">
+			    Des Moines Register</a>,
+			</li>
+			<li>
+			  <a href="http://www.nytimes.com/2008/06/12/us/13cnd-flood.html" target="_blank">
+			    The New York Times</a>,
+			</li>
+			<li>
+			  <a href="https://music.uiowa.edu/coming-home/flood-2008" target="_blank">
+			    The University of Iowa Records</a>
+			</li>
+			<li>
+			  <a href="https://www.fema.gov/media-library-data/20130726-1722-25045-0903/fema_p_765.pdf" target="_blank">
+			    FEMA</a>
+			</li>
+		  </ul>
+		</div>
+		<a onclick="click_plus('2008jun');">
+		  <img src="imgs/icon-minus.png" class="plus" /></a>
+	  </div>
+	  <div id="2010jul" class="body_content" >
+	    <img src="imgs/02_201007.PNG" class="map" />
+		<a onclick="click_plus('p2010jul');">
+		  <img src="imgs/icon-plus.png" class="plus" /></a>
+	  </div>
+	  <div id="p2010jul" class="body_content">
+	    <div class="body_text" >
+	      <strong>Overview:</strong><br >
+		  <ul >
+		    <li>Record floods on Maquoketa River;</li>
+			<li>Failure of the Lake Delhi Dam;</li>
+			<li>Town of Hopkinton evacuated;</li>
+			<li>About 500 homes damaged;</li>
+			<li>Damages estimated in U$50 million.</li>
+		  </ul>
+		  &nbsp;<br >
+		  &nbsp;<br >
+		  <strong>Sources:</strong><br >
+		  <ul>
+		    <li>
+			  <a href="http://wcfcourier.com/news/local/wapsipinicon-river-crests-in-independence/article_37753936-9725-11df-ac9b-001cc4c002e0.html" target="_blank">
+			    The Courier</a>
+			</li>
+		    <li>
+			  <a href="http://www.nbcnews.com/id/38395404/ns/weather/t/homes-businesses-hit-water-dam/#.WprvKZdG02w" target="_blank">
+			    NBC News</a>
+			</li>
+			<li>
+			  <a href="http://www.nytimes.com/2010/07/26/us/26iowa.html" target="_blank">
+			    The New York Times</a>
+			</li>
+			<li>
+			  <a href="http://www.sandiegouniontribune.com/sdut-flooding-causes-millions-in-damage-in-iowa-2010jul25-story.html" target="_blank">
+			    The San Diego Union/Tribune</a>
+			</li>
+		  </ul>
+		</div>
+		<a onclick="click_plus('2010jul');">
+		  <img src="imgs/icon-minus.png" class="plus" /></a>
+	  </div>
+	  <div id="2010aug" class="body_content" >
+	    <img src="imgs/03_201008.PNG" class="map" />
+		<a onclick="click_plus('p2010aug');">
+		  <img src="imgs/icon-plus.png" class="plus" /></a>
+	  </div>
+	  <div id="p2010aug" class="body_content">
+	    <div class="body_text" >
+	      <strong>Overview:</strong><br >
+		  <ul >
+		    <li>Record floods on Skunk River;</li>
+			<li>Partial evacuation of cities of Colfax and Des Moines near Four Mile Creek;</li>
+			<li>Temporary shutdown of water in Ames;</li>
+			<li>8 buildings damaged in the Iowa State University;</li>
+			<li>Damages estimated in U$65 million.</li>
+		  </ul>
+		  &nbsp;<br >
+		  &nbsp;<br >
+		  <strong>Sources:</strong><br >
+		  <ul>
+		    <li>
+			  <a href="http://www.nbcnews.com/id/38656393/ns/weather/t/girl-dies-iowa-flooding-others-evacuate/#.Wpr5EZdG02w" target="_blank">
+			    NBC News</a>
+			</li>
+		    <li>
+			  <a href="http://www.iowastatedaily.com/news/article_8c1d9ce8-daec-11df-874c-001cc4c002e0.html" target="_blank">
+			    Iowa State Daily</a>
+			</li>
+			<li>
+			  FEMA
+			  &nbsp;
+			  [<a href="https://www.fema.gov/media-library/assets/images/57751" target="_blank">1</a>]
+			  &nbsp;
+			  [<a href="https://www.fema.gov/media-library/assets/images/57767" target="_blank">2</a>]
+			</li>
+			<li>
+			  <a href="https://www.weather.gov/media/dmx/SigEvents/2010_Summer_Floods.pdf">
+			    National Weather Service
+			  </a>
+			</li>
+		  </ul>
+		</div>
+		<a onclick="click_plus('2010aug');">
+		  <img src="imgs/icon-minus.png" class="plus" /></a>
+	  </div>
+	  <div id="2011jun" class="body_content" >
+	    <img src="imgs/04_201106.PNG" class="map" />
+		<a onclick="click_plus('p2011jun');">
+		  <img src="imgs/icon-plus.png" class="plus" /></a>
+	  </div>
+	  <div id="p2011jun" class="body_content">
+	    <div class="body_text" >
+	      <strong>Overview:</strong><br >
+		  <ul >
+		    <li>Major activities on Missouri and Big Sioux River, affecting west Iowa border;</li>
+			<li>Roads closed and sandbags needed in Sioux City;</li>
+			<li>Missouri River levee fails near Hamburg-IA on June 13<sup>th</sup>.</li>
+			<li>Around 26 bridges closed in Cherokee county, 14 severely damaged;</li>
+			<li>Damages estimated on U$18 million.</li>
+		  </ul>
+		  &nbsp;<br >
+		  &nbsp;<br >
+		  <strong>Sources:</strong><br >
+		  <ul>
+		    <li>
+			  <a href="https://www.reuters.com/article/us-flooding-plains/missouri-river-levee-near-hamburg-iowa-fails-idUSTRE75A1OX20110613" target="_blank">
+			    Reuters</a>
+		    </li>
+			<li>
+			    Sioux City Journal 
+				[<a href="siouxcityjournal.com/news/local/photos-riverfront-pavilion-flood-o-meter/collection_7fe61427-b427-5f03-807f-21c9cd3d80e5.html" target="_blank">1</a>]
+				[<a href="http://siouxcityjournal.com/news/local/severe-flooding-leaves-northwest-iowa-counties-looking-for-federal-aid/article_ffec7246-63e5-541f-a5de-d6bfc7179aed.html" target="_blank">2</a>]
+			</li>
+			<li>
+			  <a href="https://earthobservatory.nasa.gov/IOTD/view.php?id=51380">
+			    NASA - Earth Observatory</a>
+			</li>
+		  </ul>
+		</div>
+		<a onclick="click_plus('2011jun');">
+		  <img src="imgs/icon-minus.png" class="plus" /></a>
+	  </div>
+	  <div id="2013may" class="body_content" >
+	    <img src="imgs/05_201306.PNG" class="map" />
+		<a onclick="click_plus('p2013may');">
+		  <img src="imgs/icon-plus.png" class="plus" /></a>
+	  </div>
+	  <div id="p2013may" class="body_content">
+	    <div class="body_text" >
+		  <strong>Overview:</strong><br >
+		  <ul >
+		    <li>Several roads closed on minor and moderate, wide spread floods;</li>
+		    <li>Around 7 miles of protectives barriers put up at the University of Iowa;</li>
+			<li>10<sup>th</sup> highest river elevation registered on Cedar River at Cedar Rapids;</li>
+			<li>Damages estimated in U$5 million.</li>
+		  </ul>
+		  &nbsp;<br >
+		  &nbsp;<br >
+		  <strong>Sources:</strong><br >
+		  <ul>
+		    <li>
+			  <a href="http://www.thegazette.com/2013/06/02/crest-early-today-flood-response-holding" target="_blank">
+			    The Gazette</a>
+			</li>
+			<li>
+			  <a href="http://www.ktiv.com/story/22439979/2013/05/Tuesday/branstad-issues-disaster-declaration-for-13-iowa-counties-for-flooding" target="_blank">
+			    kitv.com</a>
+			</li>
+		    <li>
+			  <a href="https://www.usatoday.com/story/weather/2013/05/29/iowa-heavy-rainfall-floods/2369351/" target="_blank">
+			    USA Today
+			</li>
+			<li>
+			  <a href="http://iowapublicradio.org/post/spring-2013-iowa-floods#stream/0" target="_blank">
+				Iowa Public Radio</a>
+			</li>
+		  </ul>
+		  <a onclick="click_plus('2013may');">
+		    <img src="imgs/icon-minus.png" class="plus" /></a>
+		</div>
+	  </div>
+	  <div id="2014jun" class="body_content" >
+	    <img src="imgs/06_201406.PNG" class="map" />
+		<a onclick="click_plus('p2014jun');">
+		  <img src="imgs/icon-plus.png" class="plus" /></a>
+	  </div>
+	  <div id="p2014jun" class="body_content">
+	    <div class="body_text" >
+		  <strong>Overview:</strong><br >
+		  <ul>
+			<li>
+				Severe weather that included strong winds and heavy rain;
+			</li>
+			<li>
+				Iowa Highways 1, 64 and 175 temporarily closed due to floods;
+			</li>
+			<li>
+				Around 150 houses had major flood damages;
+			</li>
+			<li>
+				Flood damages estimated on U$11 million only for public facilities.
+			</li>
+		  </ul>
+		  &nbsp;<br >
+		  &nbsp;<br >
+		  <strong>Sources:</strong><br >
+		  <ul>
+		  <ul>
+		    <li>
+			  <a href="http://siouxcityjournal.com/news/local/flooding-city-officials-say-levee-should-keep-big-sioux-out/article_5591a2ba-a8ac-5035-a31f-a63f49b3f599.html" target="_blank">
+			    Sioux City Journal</a>
+			</li>
+			<li>
+			  <a href="http://www.foxnews.com/us/2014/07/01/crews-search-for-teen-in-flooded-iowa-storm-drain.html" target="_blank">
+			    Fox News</a>
+			</li>
+			<li>
+			  <a href="https://www.desmoinesregister.com/story/weather/2014/06/30/severe-weather-tornadoes-flooding-in-iowa/11750737/" target="_blank">
+			    Des Moines Register</a>
+			</li>
+			<li>
+			  <a href="https://www.press-citizen.com/story/news/2014/06/23/official-recent-iowa-weather-damages-exceed-15-million/11261085/" target="_blank">
+			    Press-Citizen</a>
+			</li>
+		  </ul>
+		</div>
+		<a onclick="click_plus('2014jun');">
+		  <img src="imgs/icon-minus.png" class="plus" /></a>
+	  </div>
+	  <div id="2015jun" class="body_content" >
+	    <img src="imgs/07_201506.PNG" class="map" />
+		<a onclick="click_plus('p2015jun');">
+		  <img src="imgs/icon-plus.png" class="plus" /></a>
+	  </div>
+	  <div id="p2015jun" class="body_content">
+	    <div class="body_text" >
+		  <strong>Overview:</strong><br >
+		  <ul>
+		    <li>
+			  Several roads closed, including Highway 28, Highway 169;
+			</li>
+			<li>
+			  Damages estimated on U$3 million on Guthrie County.
+			</li>
+		  </ul>
+		  &nbsp;<br >
+		  &nbsp;<br >
+		  <strong>Sources:</strong><br >
+	      <ul>
+		    <li>
+			  Des Moines Register
+			  [<a href="https://www.desmoinesregister.com/picture-gallery/news/2015/06/25/68-photos-flooding-in-des-moines-metro/29258531/" target="_blank">
+			    1
+			  </a>] 
+			  [<a href="https://www.desmoinesregister.com/media/cinematic/gallery/29285259/27-aerial-photos-flooding-in-des-moines-metro/" target="_blank">
+			    2
+			  </a>]
+			</li>
+			<li>
+			  <a href="http://raccoonvalleyradio.com/2015/07/guthrie-county-officials-assess-flood-damage/" target="_blank">
+			    Raccon Valley Radio
+			  </a>
+			</li>
+		  </ul>
+		</div>
+		<a onclick="click_plus('2015jun');">
+		  <img src="imgs/icon-minus.png" class="plus" /></a>
+	  </div>
+	  <div id="2016sep" class="body_content" >
+	    <img src="imgs/08_201609.PNG" class="map" />
+		<a onclick="click_plus('p2016sep');">
+		  <img src="imgs/icon-plus.png" class="plus" /></a>
+	  </div>
+	  <div id="p2016sep" class="body_content">
+	    <div class="body_text" >
+		  <strong>Overview:</strong><br >
+		  <ul>
+		    <li>
+			  Record high crest observed in Osage and Shell Rock;
+			</li>
+			<li>
+			  Around 5,000 homes in Cedar Rapids asked to evacuate;
+			</li>
+			<li>
+			  About 500 homes/business buildings affected, 103 assessed as destroyed;
+			</li>
+			<li>
+			  Damages estimated in U$22 million.
+			</li>
+		  </ul>
+		  &nbsp;<br >
+		  &nbsp;<br >
+		  <strong>Sources:</strong><br >
+		  <ul>
+		    <li>
+			  <a href="https://www.usatoday.com/story/news/nation-now/2016/09/23/iowa-bracing-significant-flooding/90887050/" target="_blank">
+			    USA Today</a>
+			</li>
+			<li>
+			  <a href="http://www.foxnews.com/us/2016/09/25/residents-evacuate-cedar-rapids-homes-ahead-flooding.html" target="_blank">
+			    Fox News</a>
+			</li>
+			<li>
+			  <a href="http://www.thegazette.com/subject/news/government/damage-from-cedar-river-flooding-tops-22-million-20161020" target="_blank">
+			    The Gazette</a>
+			</li>
+		  </ul>
+		</div>
+		<a onclick="click_plus('2016sep');">
+		  <img src="imgs/icon-minus.png" class="plus" /></a>
+	  </div>
+    </div>
+  </body>
+</html>

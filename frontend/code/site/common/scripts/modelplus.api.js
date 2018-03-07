@@ -152,7 +152,7 @@ var modelplus = modelplus || {};
     return(
 	  $.get(get_url)
 	    .then(function(data){
-          const PREFIX = "rset";
+          var PREFIX = "rset";
           var parsed_data, max_num_str, max_num_int, max_num_cnt;
           parsed_data = JSON.parse(data);
 		  parsed_data = parsed_data["runset_id"];

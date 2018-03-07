@@ -5,7 +5,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 2;
+  var STATE_NUM = 2;
   var sm = modelplus.requester.state_machine;
   var g_ids = modelplus.requester.constant.id;
   var s_ids = modelplus.model_requester.constant.id;
@@ -14,7 +14,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   
    sm.get_form_info_functions = sm.get_form_info_functions || {};
   
-   sm.get_form_info_functions[state_num] = function(){
+   sm.get_form_info_functions[STATE_NUM] = function(){
     
     // interface function 1
     var lock_fields = function(){
@@ -77,7 +77,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   (function () {
     sm.update_form_functions = sm.update_form_functions || {};
     
-    sm.update_form_functions[state_num] = function(){
+    sm.update_form_functions[STATE_NUM] = function(){
 
       modelplus.api.get_runset_result(sm.post_dict["from_runset_id"])
         .then(build_references_options);

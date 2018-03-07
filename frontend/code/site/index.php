@@ -2,9 +2,14 @@
     if(isset($_GET['sc']) && ($_GET['sc'] == 'open')){
 
 		if ($_SERVER['SERVER_NAME']=='s-iihr50.iihr.uiowa.edu') {
-			// for local development
 			include_once "/local/iihr/ifis.iowawis.org/sc/inc_config.php";
-			IFIS_Init(1, 'IFIS MODEL 3.2', 'test1/ihmis/dev/frontend/code/site/viewer_3_2', 1); 
+			if (strpos($_SERVER[REQUEST_URI], "/dst/")){
+				// for local distribution
+				IFIS_Init(1, 'IFIS MODEL 3.2', 'test1/ihmis/dst/viewer_3_2', 1); 
+			} else {
+				// for local development
+				IFIS_Init(1, 'IFIS MODEL 3.2', 'test1/ihmis/dev/frontend/code/site/viewer_3_2', 1); 
+			}
 		} else {
 			// for release
 			include_once "../inc_config.php"; 

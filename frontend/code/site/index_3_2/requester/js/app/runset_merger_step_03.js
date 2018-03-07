@@ -5,7 +5,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 3;
+  var STATE_NUM = 3;
   var sm = modelplus.requester.state_machine;
   var g_ids = modelplus.requester.constant.id;
   var s_ids = modelplus.model_requester.constant.id;
@@ -14,7 +14,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   
   // define get form functions
   (function () {
-   sm.get_form_info_functions[state_num] = function(){
+   sm.get_form_info_functions[STATE_NUM] = function(){
     var ids = modelplus.requester.constant.id;
     
     // interface function 1
@@ -63,7 +63,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   // define get form functions
   (function () {
     sm.update_form_functions = sm.update_form_functions || {};
-    sm.update_form_functions[state_num] = function(){
+    sm.update_form_functions[STATE_NUM] = function(){
       $("#"+s_ids.SET_MODELS_DIV + " input").prop('disabled', false);
       $("#"+s_ids.SET_MODELS_COMPAR_DIV).hide();
       modelplus.requester.form.highlight_div(s_ids.SET_MODELS_DIV);

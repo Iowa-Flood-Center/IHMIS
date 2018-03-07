@@ -5,7 +5,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 2;
+  var STATE_NUM = 2;
   var sm = modelplus.requester.state_machine;
   var ids = modelplus.requester.constant.id;
   
@@ -13,7 +13,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   
    sm.get_form_info_functions = sm.get_form_info_functions || {};
   
-   sm.get_form_info_functions[state_num] = function(){
+   sm.get_form_info_functions[STATE_NUM] = function(){
     var sm = modelplus.requester.state_machine;
     var ids = modelplus.requester.constant.id;
     
@@ -70,7 +70,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   (function () {
     sm.update_form_functions = sm.update_form_functions || {};
 	
-    sm.update_form_functions[state_num] = function(){
+    sm.update_form_functions[STATE_NUM] = function(){
       $("#"+ids.RUNSET_NAME_INPUT).hide();
       $("#"+ids.RUNSET_NAME_SPAN).html(sm.post_dict["runset_name"]);
       $("#"+ids.RUNSET_NAME_SPAN).html(sm.post_dict["runset_name"]);

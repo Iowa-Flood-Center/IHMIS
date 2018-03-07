@@ -50,9 +50,11 @@ function custom_display(reference_id_arg){
 	}
 	
 	// defines source of information
-	ws_data_url = GLB_webservices.prototype.http + "custom_ws/nashsutcliffe.php%i%sc_model_id="+model_id+"%e%sc_reference_id="+reference_id;
-	ws_data_url = ws_data_url + "%e%sc_runset_id=" + runset_id;
-	ws_gages_location_url = GLB_webservices.prototype.http + "ws_gages_location.php";
+	ws_data_url = modelplus.viewer.ws + "custom_ws/nashsutcliffe.php";
+	ws_data_url += "%i%sc_model_id="+model_id;
+	ws_data_url += "%e%sc_reference_id="+reference_id;
+	ws_data_url += "%e%sc_runset_id=" + runset_id;
+	ws_gages_location_url = modelplus.viewer.ws + "ws_gages_location.php";
 	
 	// load data
 	// alert("PHP: " + ws_data_url);

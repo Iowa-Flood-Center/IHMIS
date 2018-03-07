@@ -44,11 +44,12 @@ function custom_display(opt_timestamp){
 	});
 	
 	// defines source of information
-	ws_data_url = GLB_webservices.prototype.http + "custom_ws/disclausgssih.php%i%sc_reference_id="+reference_id;
+	ws_data_url = modelplus.viewer.ws + "custom_ws/disclausgssih.php";
+	ws_data_url += "%i%sc_reference_id="+reference_id;
 	if(used_timestamp != null){
 		ws_data_url += "%e%ref_timestamp=" + used_timestamp;
 	}
-	ws_data_url = ws_data_url + "%e%sc_runset_id=" + runset_id;
+	ws_data_url += "%e%sc_runset_id=" + runset_id;
 	
 	// load data
 	$.ajax({

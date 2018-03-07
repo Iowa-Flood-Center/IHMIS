@@ -1487,7 +1487,7 @@ function load_custom_style(style_id){
 function call_custom_display(display_id){
 	"use strict";
 	var display_address, argument, select_id, splitted_str;
-	const stylesheet_link_id = 'custom_display_css';
+	var stylesheet_link_id = 'custom_display_css';
 	
 	// check if there is argument and build it
 	if(display_id.indexOf('_') > -1){

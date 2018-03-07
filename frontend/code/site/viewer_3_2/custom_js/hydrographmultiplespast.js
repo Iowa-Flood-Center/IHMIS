@@ -77,8 +77,8 @@ function custom_display(){
 	// build URLs
 	root_url = modelplus.url.base_frontend_webservices;
 	icon_address = root_url + "imgs/map_icons/hidrog.png";
-	ws_data_url = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
-	ws_gages_location_url = GLB_webservices.prototype.http + "ws_gages_location.php";
+	ws_data_url = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
+	ws_gages_location_url = modelplus.viewer.ws + "ws_gages_location.php";
 	
 	// load all links available and locations	
 	$.when($.ajax(ws_data_url),
@@ -86,7 +86,7 @@ function custom_display(){
 	  .then(function(data_1, data_2){
         all_links_dict = JSON.parse(data_1[0]);
 		var gages_location_dict = JSON.parse(data_2[0]);
-		var chart_lib_url = modelplus.url.base_frontend_webservices + "/custom_js/echarts/dist/echarts.js";
+		var chart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.js";
 		loadScript(chart_lib_url, function(){
           display_when_possible(all_links_dict, gages_location_dict);
 		});
@@ -174,14 +174,17 @@ function custom_display(){
 		model_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 		link_id = this.id;
 		
-		json_reader_ws = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+"_readjson.php%i%sc_runset_id="+runset_id+"%e%sc_model_id="+model_id+"%e%link_id="+link_id;
+		json_reader_ws = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+"_readjson.php"
+		json_reader_ws += "%i%sc_runset_id="+runset_id;
+		json_reader_ws += "%e%sc_model_id="+model_id;
+		json_reader_ws += "%e%link_id="+link_id;
 		
 		modelplus.hydrograph.create_tmp();
 		
 		// configure for module loader
 		require.config({
 			paths: {
-				echarts: root_url + 'custom_js/echarts/dist'
+				echarts: modelplus.url.custom_display_js_folder + '/echarts/dist'
 			}
 		});
 		

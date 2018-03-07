@@ -22,12 +22,12 @@ var modelplus = modelplus || {};
   
   // TODO - review the following dirty solution
   (function(){
-    const view_folder = "viewer_3_2";
+    var VIEW_FOLDER = "viewer_3_2";
     var scripts = document.getElementsByTagName('script');
     var index = scripts.length - 1;
     var myScript = scripts[index];
-	modelplus.scripts.ubase = myScript.src.split("/"+view_folder+"/")[0]+"/";
-	modelplus.scripts.uview = modelplus.scripts.ubase + view_folder + "/";
+	modelplus.scripts.ubase = myScript.src.split("/"+VIEW_FOLDER+"/")[0]+"/";
+	modelplus.scripts.uview = modelplus.scripts.ubase + VIEW_FOLDER + "/";
   })();
   
   // define additional scripts to be loaded
@@ -61,7 +61,7 @@ var modelplus = modelplus || {};
 	// TODO - all modelplus.viewer.ws_* must vanish
     vw.ws = modelplus.url.proxy + modelplus.url.base_frontend_webservices;
 	vw.ws_representations_ref0_timestamp = vw.ws + "ws_load_timestamp_ref0_map.php";
-	vw.ws_get_representations_ref0_timestamp_url = (runset_id, model_id, representation_id)=>{
+	vw.ws_get_representations_ref0_timestamp_url = function(runset_id, model_id, representation_id){
       var args, url, arg;
       url = vw.ws_representations_ref0_timestamp;
       arg =  "%i%sc_runset_id="+runset_id;
@@ -69,11 +69,12 @@ var modelplus = modelplus || {};
 	  arg += "%e%sc_representation_id="+representation_id;
       return(url + arg);
     }
-    vw.ws_get_models_desc = (sc_runset_id, sc_model_id)=>{
+    vw.ws_get_models_desc = function(sc_runset_id, sc_model_id){
       return (vw.ws + 'ws_model_modeldesc.php%i%model_id=' + sc_model_id + '%e%runset_id=' + sc_runset_id);
     }
 	
-	GLB_webservices.prototype.http = vw.ws;
+	GLB_webservices.prototype.http = modelplus.url.api_old_v;
+	console.log("Define p.http = " + GLB_webservices.prototype.http);
 	// TODO - send the following to the API - OFF
 
     // define folders for custom javascripts and stylesheets
@@ -248,8 +249,10 @@ function sc_init() {
 	$('#nptsc').attr("src", '../sc/model/model.png');
 	$('#nptsc').css("background-color", '#CCBB00');
 	$('#nptsc').hover(
-		()=>{ $('#nptsc').css("background-color", '#AA9900');}, 
-		()=>{ $('#nptsc').css("background-color", '#CCBB00');});
+		function(){
+			$('#nptsc').css("background-color", '#AA9900');}, 
+		function(){
+			$('#nptsc').css("background-color", '#CCBB00');});
 	$('#nptsc').show();
 	$('#logoimg').attr('src', modelplus.viewer.image_folder + 'ihmis-logo.png');
 	$('#logoimg').parent().closest('a').attr("href", modelplus.url.base_frontend);

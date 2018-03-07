@@ -242,12 +242,12 @@ var modelplus = modelplus || {};
   
   // 
   modelplus.requester.state_machine.submit_post = function(submit_response){
-    const fail_label = modelplus.requester.constant.labels.SUBMIT_FAILURE;
+    var FAIL_LABEL = modelplus.requester.constant.labels.SUBMIT_FAILURE;
 	var ids = modelplus.requester.constant.id;
     var data_dict = JSON.parse(submit_response);
-    if(fail_label in data_dict){
+    if(FAIL_LABEL in data_dict){
       $("#"+ids.SUBMIT_SUCCESS_DIV).hide();
-      $("#"+ids.SUBMIT_FAILURE_MSG_DIV).html(data_dict[fail_label]);
+      $("#"+ids.SUBMIT_FAILURE_MSG_DIV).html(data_dict[FAIL_LABEL]);
       $("#"+ids.SUBMIT_FAILURE_DIV).show();
     } else {
       $("#"+ids.SUBMIT_SUCCESS_DIV).show();

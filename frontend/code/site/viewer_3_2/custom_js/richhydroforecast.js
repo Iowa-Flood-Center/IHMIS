@@ -130,9 +130,9 @@ function custom_display(){
 	 */
 	function icon_on_click(){
 		var runset_id, model_id, link_id, chart_lib_url, forecastset_url;
-		const DIV_ID = "modal_content_hidrograph_div_div";
-		const SLIDER_ID = "modal_content_hidrograph_div_slider";
-		const SPAN_ID = "modal_content_hidrograph_div_span";
+		var DIV_ID = "modal_content_hidrograph_div_div";
+		var SLIDER_ID = "modal_content_hidrograph_div_slider";
+		var SPAN_ID = "modal_content_hidrograph_div_span";
 				
 		// set up variables						
 		runset_id = $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val();
@@ -242,11 +242,13 @@ function custom_display(){
 	// build URLs
 	root_url = modelplus.url.base_frontend_webservices;
 	var icon_address = root_url + "imgs/map_icons/hidrog.png";
-	ws_data_url = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
-	var ws_gages_location_url = GLB_webservices.prototype.http + "ws_gages_location.php";
+	ws_data_url = modelplus.viewer.ws + "custom_ws/" + reprcomp_id + ".php";
+	ws_data_url += "%i%sc_runset_id=" + runset_id;
+	ws_data_url += "%e%sc_modelcomb_id=" + modelcomb_id;
+	var ws_gages_location_url = modelplus.viewer.ws + "ws_gages_location.php";
 	
-	var echart_lib_url = modelplus.url.base_frontend_webservices + "/custom_js/echarts/dist/echarts.3_7.min.js";
-	var hchart_lib_url = modelplus.url.base_frontend_webservices + "/custom_js/libs/richhydroforecast01.js"
+	var echart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.3_7.min.js";
+	var hchart_lib_url = modelplus.url.custom_display_js_folder + "/libs/richhydroforecast01.js"
 	
 	// load all links available
 	$.ajax({
@@ -339,7 +341,7 @@ function custom_display(){
 	 */
 	function get_rawdata_url(runset_id, model_id, reprcomp_id, link_id){
 		var retr_url;
-		retr_url = GLB_webservices.prototype.http + "custom_ws/"+reprcomp_id+"_readjson.php";
+		retr_url = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+"_readjson.php";
 		retr_url += "%i%sc_runset_id="+runset_id;
 		retr_url += "%e%sc_model_id="+model_id;
 		retr_url += "%e%link_id="+link_id;

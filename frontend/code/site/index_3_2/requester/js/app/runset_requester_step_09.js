@@ -5,13 +5,13 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 9;
+  var STATE_NUM = 9;
   var sm = modelplus.requester.state_machine;
   var ids = modelplus.requester.constant.id;
   
   // define get form functions
   (function () {
-   sm.get_form_info_functions[state_num] = function(){
+   sm.get_form_info_functions[STATE_NUM] = function(){
     sm.get_form_info_functions = sm.get_form_info_functions || {};
     
     // interface function 1
@@ -80,7 +80,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   (function () {
     sm.update_form_functions = sm.update_form_functions || {};
 	
-    sm.update_form_functions[state_num] = function(){
+    sm.update_form_functions[STATE_NUM] = function(){
       $("#"+ids.WHAT_DO_RADIOS_DIV).hide();
 	  $("#"+ids.HOWCONTACT_SPAN).hide();
       modelplus.requester.form.highlight_div(ids.CONTACT_INFO_DIV);

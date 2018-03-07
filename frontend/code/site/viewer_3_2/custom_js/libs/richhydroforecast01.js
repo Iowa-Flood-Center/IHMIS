@@ -20,7 +20,7 @@ richhydroforecast01.init = function(div_id, slider_id, span_id, specs){
   richhydroforecast01.chartDivId = div_id;
   richhydroforecast01.sliderId = slider_id;
   richhydroforecast01.sliderSpanId = span_id;
-  richhydroforecast01.specifications = specs;
+  richhydroforecast01.specifications = JSON.parse(specs);
 }
 
 /**
@@ -113,7 +113,7 @@ richhydroforecast01.refreshGraph = function(){
  * Main function.
  */
 richhydroforecast01.buildHydroforecast = function(){
-  const FUNC_NAME = "richhydroforecast01.buildHydroforecast()";  // dbg
+  var FUNC_NAME = "richhydroforecast01.buildHydroforecast()";  // dbg
   
   // check if it is ok to go
   var div_id = richhydroforecast01.chartDivId;
@@ -538,15 +538,15 @@ richhydroforecast01.timestampToDateLabel = function(a_timestamp, has_hours){
  * RETURN: Notthing. Calls the callback function
  */
 richhydroforecast01.ajaxCall = function(lead_timestamp, refresh, sc_model_ids, callback_function, selected_models){
-  const BASE_URL = "http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/modelplus_3_1_git_develop/frontend/viewer_3_1/custom_ws/richhydroforecast_readjson.php?";
+  var BASE_URL = modelplus.viewer.ws + "custom_ws/richhydroforecast_readjson.php%i%";
   var refresh_label = refresh ? 't' : 'f';
   var url = BASE_URL + "sc_runset_id=" + richhydroforecast01.runsetid;
-  url += "&sc_model_id=" + richhydroforecast01.modelcomb_id;
-  url += "&link_id=" + richhydroforecast01.link_id;
-  url += "&refresh=" + refresh_label;
-  url += ((selected_models == null)||(!refresh_label)) ? "" : "&sc_models_only="+selected_models.join(",");
+  url += "%e%sc_model_id=" + richhydroforecast01.modelcomb_id;
+  url += "%e%link_id=" + richhydroforecast01.link_id;
+  url += "%e%refresh=" + refresh_label;
+  url += ((selected_models == null)||(!refresh_label)) ? "" : "%e%sc_models_only="+selected_models.join(",");
   if(lead_timestamp != null){
-    url += "&lead_timestamp="+lead_timestamp;
+    url += "%e%lead_timestamp="+lead_timestamp;
   }
   $.ajax({url: url, success: callback_function});
 }

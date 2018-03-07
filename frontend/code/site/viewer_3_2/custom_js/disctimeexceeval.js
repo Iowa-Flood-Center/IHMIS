@@ -45,7 +45,7 @@ function custom_display(opt_timestamp){
 	});
 	
 	// defines source of information
-	ws_data_url = GLB_webservices.prototype.http + "custom_ws/disctimeexceeval.php%i%sc_model_id="+model_id+"%e%sc_reference_id="+reference_id;
+	ws_data_url = modelplus.viewer.ws + "custom_ws/disctimeexceeval.php%i%sc_model_id="+model_id+"%e%sc_reference_id="+reference_id;
 	if(used_timestamp != null){
 		ws_data_url += "%e%ref_timestamp=" + used_timestamp;
 	}

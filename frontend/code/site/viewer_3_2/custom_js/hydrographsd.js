@@ -39,7 +39,7 @@ function custom_display(){
 	  .then(function(data_1, data_2){
         all_images_dict = JSON.parse(data_1[0]);
 		var gages_location_dict = JSON.parse(data_2[0]);
-		var chart_lib_url = modelplus.url.base_frontend_webservices + "/custom_js/echarts/dist/echarts.js";
+		var chart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.js";
 		loadScript(chart_lib_url, function(){
 		  display_when_possible(all_images_dict, gages_location_dict);
 		})
@@ -158,7 +158,7 @@ function custom_display(){
 		// configure for module loader
 		require.config({
 			paths: {
-				echarts: base_url + 'custom_js/echarts/dist'
+				echarts: modelplus.url.custom_display_js_folder + '/echarts/dist'
 			}
 		});
 		

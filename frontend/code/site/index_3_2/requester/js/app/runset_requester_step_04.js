@@ -5,7 +5,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 (function () {
   "use strict";
   
-  const state_num = 4;
+  var STATE_NUM = 4;
   var sm = modelplus.requester.state_machine;
   var ids = modelplus.requester.constant.id;
   var labels = modelplus.requester.constant.labels;
@@ -14,7 +14,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   // define get form functions
   (function () {
    sm.get_form_info_functions = sm.get_form_info_functions || {};
-   sm.get_form_info_functions[state_num] = function(){
+   sm.get_form_info_functions[STATE_NUM] = function(){
     var sm = modelplus.requester.state_machine;
     var ids = modelplus.requester.constant.id;
     
@@ -191,7 +191,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   (function () {
     sm.update_form_functions = sm.update_form_functions || {};
     
-    sm.update_form_functions[state_num] = function(){
+    sm.update_form_functions[STATE_NUM] = function(){
       hide_models_list_span();
       modelplus.requester.form.highlight_div(ids.SET_MODELS_DIV);
       $("#"+ids.SET_MODELS_REPR_COMBINED_DIV).hide();
@@ -298,20 +298,24 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 	// fill forcings div
 	ws_url = 'forcing_types%i%from_hlmodel='+the_hlm_id;
 	$.getJSON(ws_api_url + ws_url)
-	  .then((all_forcings) => { load_forcings(the_hlm_id, all_forcings, model_num, 0); });
+	  .then(function(all_forcings){
+		load_forcings(the_hlm_id, all_forcings, model_num, 0); });
 
     // fill global parameters
     ws_url = 'hl_models_global_parameters%i%from_hlmodel='+the_hlm_id;
 	$.getJSON(ws_api_url + ws_url)
-	  .then((all_globalpars) => { load_global_parameters(all_globalpars, model_num); });
+	  .then(function(all_globalpars){
+		load_global_parameters(all_globalpars, model_num); });
 			  
     // fill evaluations
     modelplus.api.get_evaluations_for_hlm(the_hlm_id, sm.post_dict["reference_ids"])
-      .then((all_evaluations) => { load_evaluations(all_evaluations, model_num); });
+      .then(function(all_evaluations){
+		load_evaluations(all_evaluations, model_num); });
 
     // fill simple representations
     modelplus.api.get_representations_for_hlm(the_hlm_id)
-      .then((all_representations) => { load_representations(all_representations, model_num) });
+      .then(function(all_representations) {
+		load_representations(all_representations, model_num) });
   }
   
   // perform AJAX requests to fill div of forcing options

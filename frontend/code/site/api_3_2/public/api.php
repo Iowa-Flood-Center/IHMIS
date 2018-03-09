@@ -179,9 +179,10 @@ $app->delete('/sc_runset_model_results/:sc_runset_id/:sc_model_id', function($sc
 // --- Others
 
 // list all Points Of Interest (POIs)
-$app->get('/pois/', function() use ($app) {
+$app->get('/pois', 
+          function(Request $req,  Response $res, $args = []) use ($app) {
 	require './ws/pois.php';
-	process_get_request($app);
+	return(process_get_request($app, $req, $res));
 });
 
 // 

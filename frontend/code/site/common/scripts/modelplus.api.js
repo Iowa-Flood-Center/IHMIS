@@ -222,6 +222,41 @@ var modelplus = modelplus || {};
 	ws_url += "/" + model_id;
 	return($.delete(ws_url));
   }
+  
+  //  
+  // types : Array of Integers.
+  // clean_description: Boolean.
+  modelplus.api.get_gages_by_type = function(types, clean_description, with_link_id){
+    var ws_url;
+	var clean_sub_url, connected_to_sub_url;
+
+	// define 'types' URL argument
+    var types_sub_array = [];
+    for(var i=0; i<types.length; i++){
+      types_sub_array.push("type[]="+types[i])
+    }
+    var types_sub_url = types_sub_array.join('%e%');
+	
+	// define 'clean desc' URL argument
+	if((typeof(clean_description) != "undefined") && (clean_description == true)){
+      clean_sub_url = "clean_description=on";
+	} else {
+      clean_sub_url = "clean_description=off";
+	}
+	
+	if((typeof(clean_description) != "undefined") && (clean_description == true)){
+	  connected_to_sub_url = "connected_to=link_id";
+	} else {
+      connected_to_sub_url = false;
+    }
+    
+	// perform call
+	ws_url = api_url + "pois";
+	ws_url += "%i%" + types_sub_url;
+	ws_url += "%e%" + clean_sub_url;
+	ws_url += (connected_to_sub_url ? "%e%" + connected_to_sub_url : ""); 
+	return($.getJSON(ws_url));
+  }
 
 })();
 

@@ -36,7 +36,7 @@ var modelplus = modelplus || {};
                              modelplus.scripts.uview + "scripts/modelplus.constants.js", 
                              modelplus.scripts.uview + "scripts/modelplus.main.js",
                              modelplus.scripts.uview + "scripts/modelplus.hydrograph.js"];
-  modelplus.scripts.uview_main = modelplus.scripts.uview + "sc_modelplus_3_1.js";
+  modelplus.scripts.uview_main = modelplus.scripts.uview + "modelplus.js";
 })();
 
 /*************************************** GLOBAL VARS ****************************************/
@@ -58,23 +58,7 @@ var modelplus = modelplus || {};
 	                                          "kmls/iowa_water_domain_03_large_truncated.kml";
 	
     // TODO - send the following to the API - ON
-	// TODO - all modelplus.viewer.ws_* must vanish
-    vw.ws = modelplus.url.proxy + modelplus.url.base_frontend_webservices;
-	vw.ws_representations_ref0_timestamp = vw.ws + "ws_load_timestamp_ref0_map.php";
-	vw.ws_get_representations_ref0_timestamp_url = function(runset_id, model_id, representation_id){
-      var args, url, arg;
-      url = vw.ws_representations_ref0_timestamp;
-      arg =  "%i%sc_runset_id="+runset_id;
-	  arg += "%e%sc_model_id="+model_id;
-	  arg += "%e%sc_representation_id="+representation_id;
-      return(url + arg);
-    }
-    vw.ws_get_models_desc = function(sc_runset_id, sc_model_id){
-      return (vw.ws + 'ws_model_modeldesc.php%i%model_id=' + sc_model_id + '%e%runset_id=' + sc_runset_id);
-    }
-	
 	GLB_webservices.prototype.http = modelplus.url.api_old_v;
-	console.log("Define p.http = " + GLB_webservices.prototype.http);
 	// TODO - send the following to the API - OFF
 
     // define folders for custom javascripts and stylesheets
@@ -655,20 +639,6 @@ function build_current_dateformat(time_shift, current_date_object){
 	return(today);
 }
 
-/*
-function read_reference_timestamp0(){
-	// uses AJAX function to read files containing reference timestamp value for realtime value of zero
-	// (last timestamp retrived from database)
-	
-	// TODO 
-	$.ajax({
-		url: GLB_timestamp0
-	}).success(function(data) {
-		last_timestamp = data;
-	});
-}
-*/
-
 /**
  *
  * RETURN - None. Display message in the interface.
@@ -692,29 +662,19 @@ function load_runset_desc(){
  * RETURN - None. Display message in the interface.
  */
 function load_model_desc(){
-	var sc_model_id, sc_runset_id, web_service_add;
+	"use strict";
+	var sc_model_id, sc_runset_id, web_service_add, msg_string;
 	
-	sc_model_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 	sc_runset_id = $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val();
-	web_service_add = modelplus.viewer.ws_get_models_desc(sc_runset_id, sc_model_id);
+	sc_model_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 	
-	$.ajax({
-		url: web_service_add
-	}).success(function(data) {
-		var msg_string, inner_html;
-		
-		// parse data and build message
-		json_obj = JSON.parse(data);
-		if(typeof(json_obj.sc_model) !== 'undefined'){
-			msg_string = "<strong>Title:</strong> " + json_obj.sc_model.title + "<br />";
-			msg_string += "<strong>Description:</strong> " + json_obj.sc_model.description + "<br />";
-			/*
-			msg_string += "<strong>Parameters:</strong> " + json_obj.parameters + "<br />";
-			msg_string += "<strong>Time interval:</strong> " + json_obj.time_interval + "<br />";
-			msg_string += "<strong>Data format:</strong> " + json_obj.data_format;
-			*/
-		} else if (json_obj.error !== 'undefined') {
-			msg_string = "<strong>Error:</strong> " + json_obj.error;
+	modelplus.api.get_model_result(sc_runset_id, sc_model_id)
+	  .then(function(data){
+		if(data.length > 0){
+			msg_string = "<strong>Title:</strong> " + data[0].title + "<br />";
+			msg_string += "<strong>Description:</strong> " + data[0].description + "<br />";
+		} else if (data.error !== 'undefined') {
+			msg_string = "<strong>Error:</strong> " + data.error;
 		} else {
 			msg_string = "<strong>Error:</strong> No description available.";
 		}
@@ -755,7 +715,6 @@ function display_hidrograph_block(msg_html){
 	inner_html += "<p>" + msg_html + "</p>";
 	div_modal_ctt.html(inner_html);
 	
-	console.log("Add function for button '27'.");
 	GLB_keypress.prototype.keys[27] = function(){
 		alert("ESC button pressed.");
 		close_model_hidrograph_desc();

@@ -33,6 +33,8 @@ function load_utils($app){
 					array_push($return_array, $cur_item);
 				} elseif(is_string($cur_item) || is_bool($cur_item)) {
 					$return_array[$cur_key] = $cur_item;
+				} elseif(is_integer($cur_item)) {
+					$return_array[$cur_key] = $cur_item;
 				} else {
 					$error_tag = "ERROR";
 					$error_msg = "Invalid object format (".gettype($cur_item).").";

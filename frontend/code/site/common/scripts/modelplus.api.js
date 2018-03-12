@@ -257,6 +257,21 @@ var modelplus = modelplus || {};
 	ws_url += (connected_to_sub_url ? "%e%" + connected_to_sub_url : ""); 
 	return($.getJSON(ws_url));
   }
+  
+  // 
+  // runset_id : String.
+  // model_id : String.
+  // result_id : String.
+  modelplus.api.get_timestamp_ref0 = function(runset_id,
+                                              model_id,
+                                              result_id){
+    var ws_url;
+	ws_url = api_url + "timestamp_ref0";
+	ws_url += "%i%sc_runset_id=" + runset_id;
+	ws_url += "%e%sc_model_id=" + model_id;
+	ws_url += "%e%sc_result_id=" + result_id;
+	return($.getJSON(ws_url));
+  }
 
 })();
 

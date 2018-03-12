@@ -80,36 +80,21 @@ function custom_display(){
 	ws_data_url = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+".php";
 	ws_data_url += "%i%sc_runset_id="+runset_id;
 	ws_data_url += "%e%sc_modelcomb_id="+modelcomb_id;
-	var ws_gages_location_url = modelplus.viewer.ws + "ws_gages_location.php";
 	
-	// load all links available
-	$.ajax({
-		url: ws_data_url
-	}).success(function(data){
-		all_links_dict = JSON.parse(data);
-		display_when_possible();
-	});
-	
-	// load all locations
-	$.ajax({
-		url: ws_gages_location_url
-	}).success(function(data){
-		gages_location_dict = JSON.parse(data);
-		display_when_possible();
-	});
+	// perform web services calls
+	$.when($.getJSON(ws_data_url),
+	       modelplus.api.get_gages_by_type([2, 3], true, true))
+      .then(function(data_1, data_2){
+		display_when_possible(data_1[0], data_2[0]);
+      });
 	
 	/**
 	 * Function that only works properly when global vars 'all_links_dict' and 'gages_location_dict' are not null
 	 * RETURN : None.
 	 */
-	function display_when_possible(){
-		var chart_lib_url;
-		var json_gage, cur_linkid;
+	function display_when_possible(all_links_dict, gages_location_dict){
+		var chart_lib_url, cur_linkid;
 		var cur_latlng, cur_icon, cur_marker;
-		// var count_found=0, count_missed=0;
-		
-		// basic check - variables must have been set
-		if ((all_links_dict == null) || (gages_location_dict == null)){ return; }
 		
 		chart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.js";
 		
@@ -119,16 +104,15 @@ function custom_display(){
 		}
 		
 		// for each link available, looks for a respective gauge location
-		json_gage = gages_location_dict["gauge"];
-		for(var idx=0; idx<json_gage.length; idx++){
-			cur_linkid = json_gage[idx]["link_id"];
+		for(var idx=0; idx<gages_location_dict.length; idx++){
+			cur_linkid = gages_location_dict[idx]["link_id"];
 			
 			// basic check - gage location was found
 			if(typeof(all_links_dict[cur_linkid]) === 'undefined'){ continue; }
 			
 			// define icon, marker and its action
-			cur_latlng = {lat:parseFloat(json_gage[idx]["lat"]),
-			              lng:parseFloat(json_gage[idx]["lng"])};
+			cur_latlng = {lat:parseFloat(gages_location_dict[idx]["lat"]),
+			              lng:parseFloat(gages_location_dict[idx]["lng"])};
 			cur_icon = {
 				url: icon_address,
 				origin: new google.maps.Point(0,0),
@@ -138,8 +122,8 @@ function custom_display(){
 				position:cur_latlng,
 				map:map,
 				icon:cur_icon,
-				title:json_gage[idx].desc,
-				id:json_gage[idx].link_id
+				title:gages_location_dict[idx].description,
+				id:gages_location_dict[idx].link_id
 			});
 			
 			google.maps.event.addListener(cur_marker, "click", on_icon_click);

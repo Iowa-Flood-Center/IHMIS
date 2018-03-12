@@ -11,48 +11,6 @@ function custom_display(){
 	
 	/**
 	 *
-	 * model_number :
-	 * total_models
-	 * RETURN :
-	 */
-	/*
-	function graph_color(model_number, total_models){
-		var r_min, g_min, b_min;
-		var r_num, g_num, b_num;
-		var r_hex, g_hex, b_hex;
-		var delta, i;
-		
-		delta = total_models;
-		// i = delta - model_number;
-		i = model_number;
-		
-		r_min = 5;
-		g_max = 14;  g_delta = 6;
-		b_min = 15;
-		
-		if (delta == 1){
-			r_num = r_min;
-			g_num = g_max - g_delta;
-			b_num = b_min;
-		} else {
-			g_delta = ((model_number - 1)/(delta - 1)) * g_delta;
-			r_num = Math.round((i/delta) * r_min);
-			g_num = Math.round(g_max - g_delta);
-			b_num = Math.round((i/delta) * b_min);
-		}
-		
-		r_hex = color_num_to_hex(r_num);
-		g_hex = color_num_to_hex(g_num);
-		b_hex = color_num_to_hex(b_num);
-		
-		return("#" + r_hex + r_hex + g_hex + g_hex + b_hex + b_hex);
-	}
-	*/
-	
-	
-	
-	/**
-	 *
 	 * color_value :
 	 * RETURN :
 	 */
@@ -245,27 +203,18 @@ function custom_display(){
 	ws_data_url = modelplus.viewer.ws + "custom_ws/" + reprcomp_id + ".php";
 	ws_data_url += "%i%sc_runset_id=" + runset_id;
 	ws_data_url += "%e%sc_modelcomb_id=" + modelcomb_id;
-	var ws_gages_location_url = modelplus.viewer.ws + "ws_gages_location.php";
 	
 	var echart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.3_7.min.js";
 	var hchart_lib_url = modelplus.url.custom_display_js_folder + "/libs/richhydroforecast01.js"
 	
-	// load all links available
-	$.ajax({
-		url: ws_data_url
-	}).success(function(data){
-		all_links_dict = JSON.parse(data);
-		console.log("Got links: " + data);
+	// perform web services calls
+	$.when($.getJSON(ws_data_url),
+	       modelplus.api.get_gages_by_type([2, 3], true, true))
+      .then(function(data_1, data_2){
+		all_links_dict = data_1[0];
+		gages_location_dict = data_2[0];
 		display_when_possible();
-	});
-	
-	// load all locations
-	$.ajax({
-		url: ws_gages_location_url
-	}).success(function(data){
-		gages_location_dict = JSON.parse(data);
-		display_when_possible();
-	});
+      });
 	
 	// build graphic after loading library
 	loadScript(echart_lib_url, function(){
@@ -280,9 +229,7 @@ function custom_display(){
 	 * RETURN : None.
 	 */
 	function display_when_possible(){
-		var json_gage, cur_linkid;
-		var cur_latlng, cur_icon, cur_marker;
-		// var count_found=0, count_missed=0;
+		var cur_linkid, cur_latlng, cur_icon, cur_marker;
 		
 		// basic check - variables must have been set
 		console.log("Is it possible to call?");
@@ -296,20 +243,16 @@ function custom_display(){
 		}
 		
 		// for each link available, looks for a respective gauge location
-		json_gage = gages_location_dict["gauge"];
-		console.log("Showing "+json_gage.length+" icons.");
-		for(var idx=0; idx<json_gage.length; idx++){
-			cur_linkid = json_gage[idx]["link_id"];
+		for(var idx=0; idx<gages_location_dict.length; idx++){
+			cur_linkid = gages_location_dict[idx]["link_id"];
 			
 			// basic check - gage location was found
-			if(typeof(all_links_dict[cur_linkid]) === 'undefined'){ 
-			  console.log("Ignoring idx "+idx+".");
+			if(typeof(all_links_dict[cur_linkid]) === 'undefined')
 			  continue;
-			}
 			
 			// define icon, marker and its action
-			cur_latlng = {lat:parseFloat(json_gage[idx]["lat"]),
-			              lng:parseFloat(json_gage[idx]["lng"])};
+			cur_latlng = {lat:parseFloat(gages_location_dict[idx]["lat"]),
+			              lng:parseFloat(gages_location_dict[idx]["lng"])};
 			cur_icon = {
 				url: icon_address,
 				origin: new google.maps.Point(0,0),
@@ -319,8 +262,8 @@ function custom_display(){
 				position:cur_latlng,
 				map:map,
 				icon:cur_icon,
-				title:json_gage[idx].desc,
-				id:json_gage[idx].link_id
+				title:gages_location_dict[idx].description,
+				id:gages_location_dict[idx].link_id
 			});
 			
 			google.maps.event.addListener(cur_marker, "click", icon_on_click);

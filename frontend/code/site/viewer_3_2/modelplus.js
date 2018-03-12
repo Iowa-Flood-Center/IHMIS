@@ -1066,38 +1066,25 @@ function load_ifis_rain(the_id, vis){
  * sc_runset_id -
  * sc_model1_id -
  * sc_model2_id - String or null (if not a comparison)
- * sc_representation_id -
+ * sc_result_id -
  * callback_function - function(int timestamp). Function that will be executed after reading the file.
  * RETURN - None.
  */
-function read_reference_timestamp0_map(sc_runset_id, sc_model1_id, sc_model2_id, sc_representation_id, callback_function){
+function read_reference_timestamp0_map(sc_runset_id, sc_model1_id, sc_model2_id, sc_result_id, callback_function){
+	"use strict";
 	// retrieve the timestamp reference for all models
 	// return : Into 'last_timestamps' global variable
 	var sc_model_id, ws_url;
 	
-	// build accessed URL
-	if(sc_model2_id == null){
+	// build model combination if needed
+	if(sc_model2_id == null)
 		sc_model_id = sc_model1_id;
-	} else {
+	else
 		sc_model_id = sc_model1_id + "_" + sc_model2_id;
-	}
-	ws_url = modelplus.viewer.ws_get_representations_ref0_timestamp_url(sc_runset_id, sc_model_id, sc_representation_id);
 	
-	// 
-	$.ajax({
-		url: ws_url
-	}).success(function(data) {
-		// alert("Inside. " + data);
-		callback_function(data);
-		/*
-		all_pairs = data.split(";");
-		for(count = 0; count < all_pairs.length; count++){
-			cur_pair = all_pairs[count].split(":");
-			if (cur_pair.length > 1){
-				last_timestamps[cur_pair[0]] = cur_pair[1];
-			}
-		}
-		*/ 
+	modelplus.api.get_timestamp_ref0(sc_runset_id, sc_model_id, sc_result_id)
+		.then(function (data){
+			callback_function(data[0]); 
 	});
 }
 
@@ -1113,7 +1100,6 @@ function build_folder_path(prefix, parameter_acronym, runset_id){
 	var models_displayed;
 	var cur_http;
 	
-	// cur_http = "http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/ssc_model/images_realtime/";
 	cur_http = modelplus.url.base_realtime_folder + runset_id + '/repres_displayed/';
 	
 	model1_id = $("#"+modelplus.ids.MENU_MODEL_MAIN_SBOX).val();

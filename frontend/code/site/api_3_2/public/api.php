@@ -178,6 +178,13 @@ $app->delete('/sc_runset_model_results/:sc_runset_id/:sc_model_id', function($sc
 
 // --- Others
 
+// get a timestamp reference 0 value
+$app->get('/timestamp_ref0', 
+          function(Request $req,  Response $res, $args = []) use ($app) {
+	require './ws/timestamp_ref0.php';
+	return(process_get_request($app, $req, $res));
+});
+
 // list all Points Of Interest (POIs)
 $app->get('/pois', 
           function(Request $req,  Response $res, $args = []) use ($app) {

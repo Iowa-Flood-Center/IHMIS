@@ -72,20 +72,18 @@ function custom_display(){
 	reprcomp_id = "hydrographmultiplespast";
 	
 	all_links_dict = null;
-	// gages_location_dict = null;
 	
 	// build URLs
 	root_url = modelplus.url.base_frontend_webservices;
 	icon_address = root_url + "imgs/map_icons/hidrog.png";
 	ws_data_url = modelplus.viewer.ws + "custom_ws/"+reprcomp_id+".php%i%sc_runset_id="+runset_id+"%e%sc_modelcomb_id="+modelcomb_id;
-	ws_gages_location_url = modelplus.viewer.ws + "ws_gages_location.php";
 	
 	// load all links available and locations	
-	$.when($.ajax(ws_data_url),
-	       $.ajax(ws_gages_location_url))
+	$.when($.getJSON(ws_data_url),
+	       modelplus.api.get_gages_by_type([2, 3], true, true))
 	  .then(function(data_1, data_2){
-        all_links_dict = JSON.parse(data_1[0]);
-		var gages_location_dict = JSON.parse(data_2[0]);
+        all_links_dict = data_1[0];
+		var gages_location_dict = data_2[0];
 		var chart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.js";
 		loadScript(chart_lib_url, function(){
           display_when_possible(all_links_dict, gages_location_dict);
@@ -97,12 +95,8 @@ function custom_display(){
 	 * RETURN : None.
 	 */
 	function display_when_possible(all_links_dict, gages_location_dict){
-		var idx, json_gage, cur_linkid;
+		var idx, cur_linkid;
 		var cur_latlng, cur_icon, cur_marker;
-		// var count_found=0, count_missed=0;
-		
-		// basic check - variables must have been set
-		if ((all_links_dict == null) || (gages_location_dict == null)){ return; }
 		
 		// create reference list for icon in global var if necessary
 		if(typeof(GLB_visual.prototype.polygons[reprcomp_id]) === 'undefined'){
@@ -110,16 +104,15 @@ function custom_display(){
 		}
 		
 		// for each link available, looks for a respective gauge location
-		json_gage = gages_location_dict["gauge"];
-		for(idx=0; idx<json_gage.length; idx++){
-			cur_linkid = json_gage[idx]["link_id"];
+		for(idx=0; idx<gages_location_dict.length; idx++){
+			cur_linkid = gages_location_dict[idx]["link_id"];
 			
 			// basic check - gage location was found
 			if(typeof(all_links_dict[cur_linkid]) === 'undefined'){ continue; }
 			
 			// define icon, marker and its action
-			cur_latlng = {lat:parseFloat(json_gage[idx]["lat"]),
-			              lng:parseFloat(json_gage[idx]["lng"])};
+			cur_latlng = {lat:parseFloat(gages_location_dict[idx]["lat"]),
+			              lng:parseFloat(gages_location_dict[idx]["lng"])};
 			cur_icon = {
 				url: icon_address,
 				origin: new google.maps.Point(0,0),
@@ -129,8 +122,8 @@ function custom_display(){
 				position:cur_latlng,
 				map:map,
 				icon:cur_icon,
-				title:json_gage[idx].desc,
-				id:json_gage[idx].link_id
+				title:gages_location_dict[idx].description,
+				id:gages_location_dict[idx].link_id
 			});
 			
 			google.maps.event.addListener(cur_marker, "click", on_icon_click);

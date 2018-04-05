@@ -151,7 +151,7 @@ function custom_display(opt_timestamp){
 					// alert("Link id: " + this.id);
 					/*
 					var img_url = single_image_folder_address + build_image_name(this.id, all_images_dict[this.id]);
-					display_hidrograph_block(img_url);
+					modelplus.dom.display_hidrograph_block(img_url);
 					*/
 				});
 				
@@ -307,7 +307,7 @@ function goa_click(){
 	
 	delete custom_display;
 	hide_custom_display("disclausgssih");
-	loadScript(display_address, function(){
+	modelplus.scripts.load(display_address, function(){
 		if(typeof custom_display !== 'undefined'){
 			custom_display(GLB_vars.prototype.disclausgssih);
 		} else {

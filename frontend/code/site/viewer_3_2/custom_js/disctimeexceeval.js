@@ -19,11 +19,7 @@ function custom_display(opt_timestamp){
 	}
 	
 	// defines statically image URL and div style
-	legend_url = root_url + "imgs/legends/disctimeexceeval.png";  // TODO - update it
-	second_legend_style_css = "display:block; left:50%; margin-left:-145px; top:0; z-index:100; position:absolute; border: 1px solid grey; " +
-							  "text-align:center; font-family:PFDinTextCompProMedium,Helvetica,Arial,sans-serif; font-size:15px; " +
-							  "background-color:#FFFFFF;"
-	second_legend_style_css_a = "cursor: pointer;";
+	legend_url = root_url + "imgs/legends/disctimeexceeval.png";
 	second_legend_style_css_noa = "color:#999999";
 	
 	// get reference_id from selected radio button  -  TODO - transfer to a common place
@@ -162,7 +158,7 @@ function custom_display(opt_timestamp){
 					// alert("Link id: " + this.id);
 					/*
 					var img_url = single_image_folder_address + build_image_name(this.id, all_images_dict[this.id]);
-					display_hidrograph_block(img_url);
+					modelplus.dom.display_hidrograph_block(img_url);
 					*/
 				});
 				
@@ -188,16 +184,14 @@ function custom_display(opt_timestamp){
 			img_html = "<img src='"+legend_url+"' />";
 			
 			nbsps = "&nbsp;&nbsp;&nbsp;";
-			gobad_html = define_gobad_html(second_legend_style_css_a, second_legend_style_css_noa);  // go-back-arrow
-			gobah_html = define_gobah_html(second_legend_style_css_a, second_legend_style_css_noa);  // go-back-arrow
-			gofah_html = define_gofah_html(second_legend_style_css_a, second_legend_style_css_noa);  // go-forward-arrow-hourly
-			gofad_html = define_gofad_html(second_legend_style_css_a, second_legend_style_css_noa);  // go-forward-arrow-daily
+			gobad_html = define_gobad_html(second_legend_style_css_noa);  // go-back-arrow
+			gobah_html = define_gobah_html(second_legend_style_css_noa);  // go-back-arrow
+			gofah_html = define_gofah_html(second_legend_style_css_noa);  // go-forward-arrow-hourly
+			gofad_html = define_gofad_html(second_legend_style_css_noa);  // go-forward-arrow-daily
 			date_html = gobad_html + nbsps + gobah_html + nbsps + "At " + cur_time_hr + ", " + cur_date_hr + "." + nbsps + gofah_html + nbsps + gofad_html;
 			div_html = img_html + "<br />" + date_html;
-			div_obj = $('<div id="'+modelplus.ids.LEGEND_TOP_DIV+'" style="'+second_legend_style_css+'">'+div_html+'</div>');
-			div_hid = $('<input type="hidden" id="'+modelplus.ids.LEGEND_TOP_HID+'" value="'+sc_evaluation_id+'" />');
-			div_obj.append(div_hid);
-			$("body").append(div_obj);
+			
+			modelplus.dom.show_legend_top(sc_evaluation_id, div_html);
 		}
 	}
 }
@@ -208,7 +202,7 @@ function custom_display(opt_timestamp){
  * style_css_noa :
  * RETURN : String.
  */
-function define_gobad_html(style_css_a, style_css_noa){
+function define_gobad_html(style_css_noa){
 	var return_html;
 	
 	return_html = "";
@@ -216,7 +210,7 @@ function define_gobad_html(style_css_a, style_css_noa){
 		// case 'no next hour available'
 		return_html = "<span style='"+style_css_noa+"' >&lt;&lt;</span>";
 	} else {
-		return_html = "<a onclick='gobad_click();' style='"+style_css_a+"' >&lt;&lt;</a>";
+		return_html = "<a onclick='gobad_click();' >&lt;&lt;</a>";
 	}
 	return (return_html);
 }
@@ -227,7 +221,7 @@ function define_gobad_html(style_css_a, style_css_noa){
  * style_css_noa :
  * RETURN : String.
  */
-function define_gobah_html(style_css_a, style_css_noa){
+function define_gobah_html(style_css_noa){
 	var return_html;
 	
 	return_html = "";
@@ -235,7 +229,7 @@ function define_gobah_html(style_css_a, style_css_noa){
 		// case 'no next hour available'
 		return_html = "<span style='"+style_css_noa+"' >&lt;</span>";
 	} else {
-		return_html = "<a onclick='gobah_click();' style='"+style_css_a+"' >&lt;</a>";
+		return_html = "<a onclick='gobah_click();' >&lt;</a>";
 	}
 	return (return_html);
 }
@@ -244,7 +238,7 @@ function define_gobah_html(style_css_a, style_css_noa){
  *
  * RETURN : String.
  */
-function define_gofah_html(style_css_a, style_css_noa){
+function define_gofah_html(style_css_noa){
 	var return_html;
 	
 	return_html = "";
@@ -252,7 +246,7 @@ function define_gofah_html(style_css_a, style_css_noa){
 		// case 'no next hour available'
 		return_html = "<span style='"+style_css_noa+"' >&gt;</span>";
 	} else {
-		return_html = "<a onclick='gofah_click();' style='"+style_css_a+"' >&gt;</a>";
+		return_html = "<a onclick='gofah_click();' >&gt;</a>";
 	}
 	return (return_html);
 }
@@ -261,7 +255,7 @@ function define_gofah_html(style_css_a, style_css_noa){
  *
  * RETURN : String.
  */
-function define_gofad_html(style_css_a, style_css_noa){
+function define_gofad_html(style_css_noa){
 	var return_html;
 	
 	return_html = "";
@@ -269,7 +263,7 @@ function define_gofad_html(style_css_a, style_css_noa){
 		// case 'no next hour available'
 		return_html = "<span style='"+style_css_noa+"' >&gt;&gt;</span>";
 	} else {
-		return_html = "<a onclick='gofad_click();' style='"+style_css_a+"' >&gt;&gt;</a>";
+		return_html = "<a onclick='gofad_click();' >&gt;&gt;</a>";
 	}
 	return (return_html);
 }
@@ -321,7 +315,7 @@ function goa_click(){
 	
 	delete custom_display;
 	hide_custom_display("disctimeexceeval");
-	loadScript(display_address, function(){
+	modelplus.scripts.load(display_address, function(){
 		if(typeof custom_display !== 'undefined'){
 			custom_display(GLB_vars.prototype.disctimeexceeval.timestamp);
 		} else {

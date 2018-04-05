@@ -586,6 +586,6 @@ function custom_display(){
 			GLB_visual.prototype.polygons[reprcomp_id].push(cur_marker);
 		}
 		
-		loadScript(chart_lib_url, function(){});
+		modelplus.scripts.load(chart_lib_url, function(){});
 	}
 }

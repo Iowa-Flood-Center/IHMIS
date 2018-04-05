@@ -2,8 +2,8 @@ function custom_display(reference_id_arg){
 	"use strict";
 	
 	var sc_evaluation_id = "nashsutcliffe";
-	var second_legend_style_css, second_legend_style_css_a, second_legend_style_css_noa;
-	var model_id, runset_id
+	var second_legend_style_css_noa;
+	var model_id, runset_id;
 	var all_images_dict = null;
 	var used_timestamp;
 	var reference_id;
@@ -17,10 +17,6 @@ function custom_display(reference_id_arg){
 	
 	// defines statically image URL and div style
 	legend_url = root_url + "imgs/legends/nashsutcliffe.png";
-	second_legend_style_css = "display:block; left:50%; margin-left:-145px; top:0; z-index:100; position:absolute; border: 1px solid grey; " +
-							  "text-align:center; font-family:PFDinTextCompProMedium,Helvetica,Arial,sans-serif; font-size:15px; " +
-							  "background-color:#FFFFFF;"
-	second_legend_style_css_a = "cursor: pointer;";
 	second_legend_style_css_noa = "color:#999999";
 	
 	// get reference_id from argument or from selected radio button
@@ -40,8 +36,6 @@ function custom_display(reference_id_arg){
 					reference_id = splitted_radio[1];
 				}
 			} else {
-				console.log("Getting standard reference_id because cur_radio_id = '" + cur_radio_id + "'.");
-				console.log("Inner html: " + $(this).html());
 				reference_id = "usgsgagesstage";  // TODO - update it
 			}
 		});
@@ -166,7 +160,7 @@ function custom_display(reference_id_arg){
 				message:cur_message
 			});
 			google.maps.event.addListener(cur_marker, "click", function () {
-				display_message_block(this.message);
+				modelplus.dom.display_message_block(this.message);
 			});
 			
 			// create reference list for icon in global var if necessary
@@ -192,9 +186,7 @@ function custom_display(reference_id_arg){
 		
 		var date_html = "";
 		var div_html = img_html + date_html;
-		var div_obj = $('<div id="'+modelplus.ids.LEGEND_TOP_DIV+'" style="'+second_legend_style_css+'">'+div_html+'</div>');
-		var div_hid = $('<input type="hidden" id="'+modelplus.ids.LEGEND_TOP_HID+'" value="'+sc_evaluation_id+'" />');
-		div_obj.append(div_hid);
-		$("body").append(div_obj);
+		
+		modelplus.dom.show_legend_top(sc_evaluation_id, div_html);
 	}
 }

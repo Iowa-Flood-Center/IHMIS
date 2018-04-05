@@ -39,7 +39,7 @@ function custom_display(){
         all_images_dict = data_1[0];
 		var gages_location_dict = data_2[0];
 		var chart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.js";
-		loadScript(chart_lib_url, function(){
+		modelplus.scripts.load(chart_lib_url, function(){
 		  display_when_possible(all_images_dict, gages_location_dict);
 		})
 	  });

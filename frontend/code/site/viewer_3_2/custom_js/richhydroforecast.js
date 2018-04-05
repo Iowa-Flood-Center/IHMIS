@@ -217,10 +217,10 @@ function custom_display(){
       });
 	
 	// build graphic after loading library
-	loadScript(echart_lib_url, function(){
+	modelplus.scripts.load(echart_lib_url, function(){
 		display_when_possible();
 	});
-	loadScript(hchart_lib_url, function(){
+	modelplus.scripts.load(hchart_lib_url, function(){
 		display_when_possible();
 	});
 	

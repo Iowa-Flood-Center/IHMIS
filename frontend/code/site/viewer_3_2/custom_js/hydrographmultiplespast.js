@@ -85,7 +85,7 @@ function custom_display(){
         all_links_dict = data_1[0];
 		var gages_location_dict = data_2[0];
 		var chart_lib_url = modelplus.url.custom_display_js_folder + "/echarts/dist/echarts.js";
-		loadScript(chart_lib_url, function(){
+		modelplus.scripts.load(chart_lib_url, function(){
           display_when_possible(all_links_dict, gages_location_dict);
 		});
       })
@@ -131,31 +131,6 @@ function custom_display(){
 			// add polygon to the reference list
 			GLB_visual.prototype.polygons[reprcomp_id].push(cur_marker);
 		}
-	}
-	
-	/**
-	 *
-	 * msg_html :
-	 * RETURN :
-	 */
-	function display_hidrograph_block(hidrograph_img_url){
-		var div_modal = document.getElementById('modal_hidrograph_div');
-		var div_modal_ctt = $('#modal_content_hidrograph_div');
-		var inner_html;
-	
-		div_modal.style.display = "block";
-		// div_modal.style.height = "400px";
-		// div_modal.style.width = "800px";
-		//div_modal.style.backgroundColor="#FFFFFF";
-		div_modal_ctt.css("background-color", "white");
-		div_modal_ctt.height("500px");
-		div_modal_ctt.width("850px");
-		
-		/*
-		inner_html = "<p><span id='modal_close_span' onclick='close_model_hidrograph_desc()'>&#10799;</span></p>";
-		inner_html += "<img src='" + hidrograph_img_url + "' />";
-		div_modal_ctt.html(inner_html);
-		*/
 	}
 	
 	
@@ -533,14 +508,6 @@ function custom_display(){
 					
 					// Load data into the ECharts instance 
 					myChart.setOption(option);
-				
-					// alert("Found "+ count_found +", missed "+ count_missed +" out of "+ ws_data_url.length + ".");
-					/*
-					div_modal_ctt = $('#modal_content_hidrograph_div');
-					inner_html = "<p style='background-color:#FFFFFF'><span id='modal_close_span' onclick='close_model_hidrograph_desc()'>Close</span></p>";
-					div_modal_ctt.append(inner_html);
-					*/
-					// modelplus.hydrograph.addHeader();
 				
 					
 					// add header to the hydrograph modal

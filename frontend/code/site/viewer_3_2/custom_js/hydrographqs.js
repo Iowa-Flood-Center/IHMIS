@@ -57,31 +57,6 @@ function custom_display(){
 	}
 	
 	/**
-	 *
-	 * msg_html :
-	 * RETURN :
-	 */
-	function display_hidrograph_block(hidrograph_img_url){
-		var div_modal = document.getElementById('modal_hidrograph_div');
-		var div_modal_ctt = $('#modal_content_hidrograph_div');
-		var inner_html;
-	
-		div_modal.style.display = "block";
-		inner_html = "<p><span id='modal_close_span' onclick='close_model_hidrograph_desc()'>&#10799;</span></p>";
-		inner_html += "<img src='" + hidrograph_img_url + "' />";
-		div_modal_ctt.html(inner_html);
-	}
-	
-	/**
-	 *
-	 * RETURN :
-	 */
-	function close_model_hidrograph_desc(){
-		var modal_div;
-		modal_div = $("#modal_hidrograph_div").hide();
-	}
-	
-	/**
 	 * Function that only works properly when global vars 'all_images_dict' and 'gages_location_dict' are not null
 	 * RETURN : None.
 	 */
@@ -112,7 +87,7 @@ function custom_display(){
 					});
 					google.maps.event.addListener(cur_marker, "click", function () {
 						var img_url = single_image_folder_address + build_image_name(this.id, all_images_dict[this.id]);
-						display_hidrograph_block(img_url);
+						modelplus.dom.display_hidrograph_block(img_url);
 					});
 					// create reference list for icon in global var if necessary
 					if(typeof(GLB_visual.prototype.polygons[sc_evaluation_id]) === 'undefined'){

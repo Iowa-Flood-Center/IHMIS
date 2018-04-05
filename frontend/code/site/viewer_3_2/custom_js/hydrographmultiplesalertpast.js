@@ -121,10 +121,8 @@ function custom_display(){
 			cur_linkid = json_gage[idx]["link_id"].toString();
 			
 			// basic check - gage location and alert was found
-			if(typeof(all_links_dict[cur_linkid]) === 'undefined'){ 
-				console.log("hydrographmultiplesalert: Not found link id " + cur_linkid + " in alert flags.");
+			if(typeof(all_links_dict[cur_linkid]) === 'undefined')
 				continue;
-			}
 			
 			// define icon image
 			if (all_links_dict[cur_linkid] == 0){
@@ -156,7 +154,7 @@ function custom_display(){
 			GLB_visual.prototype.polygons[reprcomp_id].push(cur_marker);
 		}
 		
-		loadScript(chart_lib_url, function(){});
+		modelplus.scripts.load(chart_lib_url, function(){});
 	}
 	
 	function on_icon_click() {

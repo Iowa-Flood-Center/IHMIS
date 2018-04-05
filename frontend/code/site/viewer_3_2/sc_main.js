@@ -59,6 +59,7 @@ var modelplus = modelplus || {};
 	
     // TODO - send the following to the API - ON
 	GLB_webservices.prototype.http = modelplus.url.api_old_v;
+	vw.ws = modelplus.url.proxy + modelplus.url.base_frontend_webservices;
 	// TODO - send the following to the API - OFF
 
     // define folders for custom javascripts and stylesheets
@@ -177,6 +178,81 @@ var GLB_map_domain_zoom = false;
 function GLB_map_objects(){};
 GLB_map_objects.prototype.kml_object = null;
 
+/******************************** modelplus.X.load FUNCTIONS ********************************/
+
+(function () {
+  "use strict";
+
+  modelplus.scripts = modelplus.scripts || {};
+  modelplus.styles = modelplus.styles || {};
+
+  /**
+   * Load a script dynamically (copied from internet)
+   * url - Imported script url
+   * callback - Function o be called on callback
+   * RETURN - None
+   */
+  modelplus.scripts.load = function(url, callback, callback_arg){
+
+    var script = document.createElement("script")
+    script.type = "text/javascript";
+
+    if (script.readyState){  //IE
+      script.onreadystatechange = function(){
+        if (script.readyState == "loaded" || 
+            script.readyState == "complete"){
+          script.onreadystatechange = null;
+          callback(callback_arg);
+        }
+      };
+    } else {  //Others
+      script.onload = function(){
+        callback(callback_arg);
+      };
+    }
+
+    script.src = url;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  }
+
+  /**
+   * Load a list of scripts dynamically
+   * urls - List of imported script urls
+   * callback - Function to be called on final callback
+   * RETURN - None
+   */
+  modelplus.scripts.loadQueue = function(callbackFunction){
+    var cur_script;
+  
+    // when finished, trigger sequence
+    if(modelplus.scripts.queue.length == 0){
+      if(callbackFunction != null){ 
+        callbackFunction()
+      }
+      return;
+    }
+  
+    cur_script = modelplus.scripts.queue[0];
+    modelplus.scripts.queue.shift();
+    modelplus.scripts.load(cur_script,
+                           modelplus.scripts.loadQueue,
+                           callbackFunction);
+  }
+  
+  /**
+   * Load a .css stylesheet
+   */
+  modelplus.styles.load = function(filename){
+    var fileref = document.createElement("link");
+    fileref.setAttribute("rel", "stylesheet");
+    fileref.setAttribute("type", "text/css");
+    fileref.setAttribute("href", modelplus.url.base_frontend_viewer + filename);
+    if (typeof fileref != "undefined")
+        document.getElementsByTagName("head")[0].appendChild(fileref);
+  }
+  
+})();
+
 /************************************* IFIS FUNCTIONS ***************************************/
 function sc_init() {
 	// read_reference_timestamp0();
@@ -187,11 +263,11 @@ function sc_init() {
 		'<div class="np_title np_blue" style="clear: both; width:100%">IFIS MODEL-PLUS</div>',
 		'<div style="width:100%">Runset:' + 
 			'<select id="'+modelplus.ids.MENU_RUNSET_SBOX+'" class="sbox" ></select>' +
-			'<input id="'+modelplus.ids.MENU_RUNSET_ABOUT+'" type="button" value="About" onclick="load_runset_desc();" class="sbox" />' +
+			'<input id="'+modelplus.ids.MENU_RUNSET_ABOUT+'" type="button" value="About" onclick="modelplus.dom.load_runset_desc();" class="sbox" />' +
 		'</div>',
 		'<div style="width:100%">Model:' + 
 			'<select id="'+modelplus.ids.MENU_MODEL_MAIN_SBOX+'" class="sbox" style="width:200px" ></select>' +
-			'<input id="'+modelplus.ids.MENU_MODEL_ABOUT+'" type="button" value="About" onclick="load_model_desc();" class="sbox" />' +
+			'<input id="'+modelplus.ids.MENU_MODEL_ABOUT+'" type="button" value="About" onclick="modelplus.dom.load_model_desc();" class="sbox" />' +
 		'</div>',
 		'<div id="' + modelplus.ids.MENU_MAIN_ALERT_DIV + '" style="display:none" class="npsub" ></div>',
 		'<div class="np_title np_sep" id="'+modelplus.ids.MENU_MODEL_MAIN_RADIO_DIV+'" style="width:150px">' +
@@ -223,7 +299,7 @@ function sc_init() {
 				'<a href="#" id="np'+opt_tool_vec_domain+'" >Domain mask</a>',
 				'<div id="div'+opt_tool_us_map+'" style="display:inline-block; width:100%">' +
 					'<a href="#" id="np'+opt_tool_us_map+'" style="display:inline-block; width:200px" >USGS Discharge Map</a>' +
-					'<img src="' + modelplus.viewer.image_folder + 'question_mark3.png" class="qicon" onclick="load_parameter_about(\'quni_usgs\', $(this));" />' +
+					'<img src="' + modelplus.viewer.image_folder + 'question_mark3.png" class="qicon" onclick="modelplus.dom.load_parameter_about(\'quni_usgs\', $(this));" />' +
 				'</div>',
 			'</div>'
 		);
@@ -242,7 +318,6 @@ function sc_init() {
 	$('#logoimg').parent().closest('a').attr("href", modelplus.url.base_frontend);
 
 	// load Iowa model domain map
-	console.log("Loading: " + modelplus.viewer.map_objects.domain_kml);
 	GLB_map_objects.prototype.kml_object = new google.maps.KmlLayer({
         url: modelplus.viewer.map_objects.domain_kml,
         map: null,
@@ -271,8 +346,6 @@ function sc_init() {
 			// GLB_map_objects.prototype.kml_object.setMap(map);
 		}
 	});
-	
-	modelplus.dom.create_modals();
 	
 	/**
 	 * onAdd is called when the map's panes are ready and the overlay has been
@@ -323,11 +396,11 @@ function sc_init_community() {
 	modelplus.styles.load("styles.css");
 	communityselected(0, 'State of Iowa', 43.0, -92.6,'',0,0);
     modelplus.scripts.load(modelplus.scripts.uview_main, function(){
-      load_init_data(populate_runset_main_sbox);
+      modelplus.dom.load_init_data(populate_runset_main_sbox);
 	  var domain_mask = $("#np" + opt_tool_vec_domain);
-      if (domain_mask.length != 0){
+      if (domain_mask.length != 0)
         domain_mask.click();
-      }
+      modelplus.dom.create_modals();
     });
   });
 }
@@ -335,13 +408,13 @@ function sc_init_community() {
 function sc_np_links(type, vis) {
 	
 	if (is_np_link_group_label(type)){
-		on_menu_1_click('np'+type);
+		modelplus.dom.on_menu_1_click('np'+type);
 		return;
 	}
 	
 	// close dialogues possible (if open)
 	modelplus.main.hide_message_block();
-	close_model_hidrograph_desc();
+	modelplus.dom.close_model_hidrograph_desc();
 	
 	switch (type) {
 		// external IFIS tools
@@ -406,7 +479,7 @@ function sc_np_links(type, vis) {
 			var display_address = modelplus.url.custom_display_js_folder + "disclausgssih.js";
 			if ($("#np" + type).hasClass("npact")){
 				delete custom_display;
-				loadScript(display_address, function(){
+				modelplus.scripts.load(display_address, function(){
 					if(typeof custom_display !== 'undefined'){
 						custom_display();
 					} else {
@@ -433,22 +506,12 @@ function sc_np_links(type, vis) {
 				toggle_river_map(type);
 			} else {
 				
-				// if it is evaluation, clean others
-				// if (is_evaluation(type)){
-				//	uncheck_other_evaluations(type);
-				//}
-				
-				uncheck_other_evaluations(type);
-				
-				// if it is representation combined, clean others
-				if (is_representation_combined(type)){
-					// alert("Show representation combined");
-				}
+				modelplus.dom.uncheck_other_evaluations(type);
 				
 				// if it is hydrograph, clean others
 				if((is_hydrograph(type))||(is_comparison_modelcomb(type))){
 					console.log("Unchecking all '"+type+"'.");
-					uncheck_all_other_custom_displays(type);
+					modelplus.dom.uncheck_all_other_custom_displays(type);
 				}
 				
 				// manage custom display
@@ -475,7 +538,7 @@ function sc_rainobj(type) {
 		modelplus.main.persist.hold_select = null;
     }
 	
-	delete_current_parameter_title();
+	modelplus.dom.delete_current_parameter_title();
 	
 	// newer
 	rain = new IFIS_Rain({
@@ -496,7 +559,7 @@ function sc_rainobj(type) {
 		time: build_current_dateformat(0, new Date(GLB_ifisrain_callback.prototype.ref_timestamp0*1000))
 	});
 	
-	update_current_parameter_title(GLB_ifisrain_callback.prototype.type);
+	modelplus.dom.update_current_parameter_title(GLB_ifisrain_callback.prototype.type);
 	
 	setTimeout(function() {   //calls click event after a certain time
 		function myself() {
@@ -514,107 +577,6 @@ function sc_rainobj(type) {
 
 
 /************************************* OWN FUNCTIONS ***************************************/
-
-
-/**
- * Function called to display options for mono model or dual model comparison.
- * @param menu_1_id_clicked
- * @return None
- */
-function on_menu_1_click(menu_1_id_clicked){
-	// identifies clicked radio button and searches for corresponding content box to display it, hiding others.
-	
-	// 
-	for(count = 0; count < GLB_menu_label_id_1.length; count++){
-		var cur_element_id = "#" + modelplus.ids.MENU_CONTENTS[count];
-		if (GLB_menu_label_id_1[count] == menu_1_id_clicked){
-			if ($("#" + menu_1_id_clicked).hasClass("npact")){
-				$(cur_element_id).css("visibility", "visible");
-				$(cur_element_id).css("display", "block");
-			} else {
-				$(cur_element_id).css("visibility", "hidden");
-				$(cur_element_id).css("display", "none");
-			}
-		} else {
-			$("#" + GLB_menu_label_id_1[count]).removeClass("npact");
-			$(cur_element_id).css("visibility", "hidden");
-			$(cur_element_id).css("display", "none");
-		}
-	}
-}
-
-function on_model_1_select(){
-	update_model2_list();
-	reclick_item();
-}
-
-function on_model_2_select(){
-	reclick_item();
-}
-
-/**
- *
- * TODO - adapt to the new flexible version of the code
- */
-function reclick_item(){
-	// this function is called when model 1 is changed.
-	// basically it searched for the selected element and calls its "click" function once again
-	
-	var radio_ids = ['np'+opt_mono_r_flin, 'np'+opt_mono_r_prec, 'np'+opt_mono_r_soim, 'np'+opt_mono_r_sois, 'np'+opt_mono_r_quni, 'np'+opt_mono_f_qsel, 'np'+opt_mono_r_runo, 'np'+opt_mono_r_pree, 'np'+opt_mono_r_prac,
-					 'np'+opt_comp_r_flin, 'np'+opt_comp_r_prec, 'np'+opt_comp_r_soim, 'np'+opt_comp_r_sois, 'np'+opt_comp_r_quni, 'np'+opt_comp_f_qrel, 'np'+opt_comp_r_runo, 'np'+opt_comp_r_pree, 'np'+opt_comp_r_prac];
-	
-	var current_date = null;
-	
-	// store current rain date if possible
-	if (rain !== undefined){
-		current_date = rain.arr_val;
-	}
-	
-	// re click the information type
-	for (count_id = 0; count_id < radio_ids.length; count_id++){
-		if ($("#" + radio_ids[count_id]).hasClass("npact")){
-			$("#" + radio_ids[count_id]).removeClass("npact"),
-			// alert("#" + radio_ids[count_id] + " is selected.");
-			$("#" + radio_ids[count_id]).click();
-			break;
-		}
-	}
-	
-	// store current rain date if possible
-	if (current_date != null){
-		rain.arr_val = current_date;
-		timeline_anim();
-		rain.slide();
-	}
-}
-
-function display_submenu(submenu, parent_object){
-	// the element 'submenu' is going to be displayed to the left side of 'parent_object'
-	
-	$(parent_object).mouseover(function() {
-		// .position() uses position relative to the offset parent, 
-		var pos = $(this).position();
-
-		// .outerWidth() takes into account border and padding.
-		var width = $(submenu).outerWidth();
-
-		$(parent_object).css({
-			overflowX: 'visible'
-		});
-
-		//show the menu directly over the placeholder
-		$(submenu).css({
-			position: "absolute",
-			top: pos.top + "px",
-			left: (pos.left - width) + "px"
-		}).show();
-	});
-}
-
-function force_two_digits(the_number){
-	if(the_number<10) { the_number='0'+the_number; }
-	return(the_number);
-}
 
 function build_current_dateformat(time_shift, current_date_object){
 	//
@@ -639,275 +601,6 @@ function build_current_dateformat(time_shift, current_date_object){
 	return(today);
 }
 
-/**
- *
- * RETURN - None. Display message in the interface.
- */
-function load_runset_desc(){
-	var select_value;
-	var web_service_add;
-	
-	select_value = $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val();
-	// web_service_add = GLB_runsets_desc_url + select_value;
-	
-	// display blocks
-	div_modal.style.display = "block";
-	inner_html = "<p><span id='modal_close_span' onclick='modelplus.main.hide_message_block()'>×</span></p>";
-	inner_html += "<p>" + msg_string + "</p>";
-	div_modal_ctt.html(inner_html);
-}
-
-/**
- *
- * RETURN - None. Display message in the interface.
- */
-function load_model_desc(){
-	"use strict";
-	var sc_model_id, sc_runset_id, web_service_add, msg_string;
-	
-	sc_runset_id = $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val();
-	sc_model_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
-	
-	modelplus.api.get_model_result(sc_runset_id, sc_model_id)
-	  .then(function(data){
-		if(data.length > 0){
-			msg_string = "<strong>Title:</strong> " + data[0].title + "<br />";
-			msg_string += "<strong>Description:</strong> " + data[0].description + "<br />";
-		} else if (data.error !== 'undefined') {
-			msg_string = "<strong>Error:</strong> " + data.error;
-		} else {
-			msg_string = "<strong>Error:</strong> No description available.";
-		}
-		
-		// display block
-		modelplus.main.display_message_block(msg_string);
-	});
-}
-
-/**
- * TODO - replace by modelplus.main.display_message_block
- * msg_html - Message to be displayed in HTML format.
- * RETURN - None. Display message in the interface.
- */
-function display_message_block(msg_html){
-	var div_modal = document.getElementById('modal_div');
-	var div_modal_ctt = $('#modal_content_div');
-	var inner_html;
-	
-	div_modal.style.display = "block";
-	inner_html = "<p><span id='modal_close_span' onclick='modelplus.main.hide_message_block()'>×</span></p>";
-	inner_html += "<p>" + msg_html + "</p>";
-	div_modal_ctt.html(inner_html);
-}
-
-/**
- *
- * msg_html - Message to be displayed in HTML format.
- * RETURN - None. Display message in the interface.
- */
-function display_hidrograph_block(msg_html){
-	var div_modal = document.getElementById('modal_hidrograph_div');
-	var div_modal_ctt = $('#modal_content_hidrograph_div');
-	var inner_html;
-	
-	div_modal.style.display = "block";
-	inner_html = "<p><span id='modal_close_span' onclick='close_model_hidrograph_desc()'>×</span></p>";
-	inner_html += "<p>" + msg_html + "</p>";
-	div_modal_ctt.html(inner_html);
-	
-	GLB_keypress.prototype.keys[27] = function(){
-		alert("ESC button pressed.");
-		close_model_hidrograph_desc();
-	};
-}
-
-/**
- *
- * RETURN - None. Changes are performed in the interface.
- */
-function close_model_hidrograph_desc(){
-	$("#modal_hidrograph_div").hide();
-	delete GLB_keypress.prototype.keys[27];
-}
-
-/**
- *
- * RETURN - None. Changes are performed in the interface.
- */
-function load_parameter_about(parameter_acronym, about_obj){
-	var html_content;
-	switch(parameter_acronym){
-		case 'quni_usgs':
-			html_content = "<strong>USGS Discharge Map</strong><br />Real time updated water discharge in each USGS flow gage.<br />For more information: <a href='http://waterwatch.usgs.gov/index.php?id=real&sid=w__kml' target='_blank'>access the website.</a> ";
-			modelplus.main.display_message_block(html_content);
-			// alert("USGS Discharge Map: real time updated water discharge in each USGS flow gage. For more information: http://waterwatch.usgs.gov/index.php?id=real&sid=w__kml");
-			break;
-		default:
-			// check if a select box exists for given menu_id
-			var sel_input_id;
-			var representation_id;
-			var html_content;
-			sel_input_id = "#np" + parameter_acronym + "_sel";
-			if($(sel_input_id).length){
-				representation_id = $(sel_input_id).val();
-				json_representation = get_json_representation(representation_id);
-				if (json_representation != null){
-					if (json_representation.description != undefined){
-						html_content = "<strong>"+json_representation.call_radio+"</strong><br />";
-						html_content += json_representation.description;
-						modelplus.main.display_message_block(html_content);
-					} else {
-						html_content = "<strong>"+json_representation.id+"</strong><br />";
-						html_content += "No description available.";
-						modelplus.main.display_message_block(html_content);
-					}
-				} else {
-					// TODO - search for tools
-					alert(representation_id + " is not a representation.");
-				}
-			} else {
-				// 
-				json_representation = get_json_representation(parameter_acronym);
-				json_evaluation = get_json_evaluation(parameter_acronym);
-				json_obj = null;
-				if (json_representation != null){
-					json_obj = json_representation;
-				} else if(json_evaluation != null) {
-					json_obj = json_evaluation;
-				}
-
-				if (json_obj == null) {
-					html_content = "<strong>"+modelplus.main.get_clicked_about_label(about_obj)+"</strong><br />";
-					html_content += "No description available.";
-					modelplus.main.display_message_block(html_content);
-				} else if (json_obj.description != undefined){
-					var replaced_text, html_content;
-					html_content = "<strong>"+modelplus.main.get_clicked_about_label(about_obj)+"</strong><br />";
-					replaced_text = json_obj.description.replace(GLB_const.prototype.scrunsetid_tag, 
-																 $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val());
-					replaced_text = replaced_text.replace(GLB_const.prototype.scmodelid_tag, 
-														  $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val());
-					replaced_text = replaced_text.replace(GLB_const.prototype.screferenceid_tag, 
-														  ""); // TODO - make this work
-					replaced_text = replaced_text.replace(GLB_const.prototype.urlviewerbase_tag, 
-														  modelplus.url.base_frontend_webservices);
-					html_content += replaced_text;
-					modelplus.main.display_message_block(html_content);
-				} else {
-					html_content = "<strong>"+json_obj.id+"</strong><br />";
-					html_content += "No description available.";
-					modelplus.main.display_message_block(html_content);
-				}
-			}
-			break;
-	}
-}
-
-/**
- *
- *
- */
-function delete_current_parameter_title(){
-	var div_comps_id = "#" + modelplus.ids.LEGEND_BOTTOM_MODELS_DIV;
-	var div_comps_obj;
-	
-	div_comps_obj = $(div_comps_id);
-	
-	div_comps_obj.remove();
-}
-
-/**
- * 
- * TODO - Make it be called
- * TODO - Make it flexible for the meta files
- */
-function update_current_parameter_title(repr_id){
-	var map_title = null;
-	var sub_type = null;
-	var div_comps_id = "#" + modelplus.ids.LEGEND_BOTTOM_MODELS_DIV;
-	var div_comps_mdl1_id = "#" + modelplus.ids.LEGEND_BOTTOM_MODEL1_DIV;
-	var div_comps_mdl2_id = "#" + modelplus.ids.LEGEND_BOTTOM_MODEL2_DIV;
-	var div_comps_obj, div_comps_mdl1_obj, div_comps_mdl2_obj, leg_div_obj;
-	var mdl_1_name, mdl_2_name;
-	
-	// add title
-	update_legend_title(GLB_vars.prototype.get_legend_title(repr_id));
-	
-	// 
-	div_comps_obj = $(div_comps_id);
-	
-	if(!is_menu_id_comparison_repr(repr_id)){
-		
-		// hide legend comparison model titles if they exist
-		if (div_comps_obj.length > 0) {
-			console.log("Hidding...");
-			div_comps_obj.hide();
-		}
-		
-		// move legend image bellow
-		leg_div_obj = $("#" + modelplus.ids.LEGEND_BOTTOM_DIV);
-		leg_div_obj.append($("#colorscalezoom"));
-		
-		$('#colorscalezoom').css({'margin-top':'1px'});
-		
-		return;
-	}
-	
-	// get models names
-	mdl_1_name = $('#' + modelplus.ids.MENU_MODEL_MAIN_SBOX).find(":selected").text();
-	mdl_2_name = $('#' + modelplus.ids.MENU_MODEL_COMP_SBOX).find(":selected").text();
-	
-	// create comparisons title div if necessary
-	div_comps_mdl1_obj = $("<div id='"+modelplus.ids.LEGEND_BOTTOM_MODEL1_DIV+"'></div>");
-	div_comps_mdl2_obj = $("<div id='"+modelplus.ids.LEGEND_BOTTOM_MODEL2_DIV+"'></div>");
-	if (div_comps_obj.length <= 0) {
-		
-		// add it to the dom
-		div_comps_obj = $("<div id='"+modelplus.ids.LEGEND_BOTTOM_MODELS_DIV+"'></div>");
-		
-		// fill each
-		div_comps_mdl1_obj.html(mdl_1_name);
-		div_comps_mdl2_obj.html(mdl_2_name);
-		
-		// add each legend to the big div
-		div_comps_obj.append(div_comps_mdl1_obj);
-		div_comps_obj.append(div_comps_mdl2_obj);
-		
-		// add titles to the legend div
-		leg_div_obj = $("#" + modelplus.ids.LEGEND_BOTTOM_DIV);
-		leg_div_obj.append(div_comps_obj);
-	} else {
-		div_comps_obj.show();
-		div_comps_mdl1_obj.html(mdl_1_name);
-		div_comps_mdl2_obj.html(mdl_2_name);
-	}
-	
-	// move legend image bellow
-	leg_div_obj = $("#" + modelplus.ids.LEGEND_BOTTOM_DIV);
-	leg_div_obj.append($("#colorscalezoom"));
-	
-	$('#colorscalezoom').css({'margin-top':'1px'});
-}
-
-/**
- *
- *
- *
- */
-function update_legend_title(legend_title){
-	var div_leg_title_obj, leg_div_obj;
-	
-	// create object if necessary
-	div_leg_title_obj = $("#" + modelplus.ids.LEGEND_BOTTOM_TITLE_DIV);
-	if (div_leg_title_obj.length == 0){
-		div_leg_title_obj = $("<div id='"+modelplus.ids.LEGEND_BOTTOM_TITLE_DIV+"'></div>");
-		leg_div_obj = $("#" + modelplus.ids.LEGEND_BOTTOM_DIV);
-		leg_div_obj.append(div_leg_title_obj);
-	}
-	
-	div_leg_title_obj.html(legend_title);
-}
-
 /* ************************************ ONLY FUNCTION HERE ************************************** */
 
 /**
@@ -916,101 +609,10 @@ function update_legend_title(legend_title){
  * RETURN - String.
  */
 function twoDigits(a_number){
-	return a_number > 9 ? "" + a_number: "0" + a_number;
+  return a_number > 9 ? "" + a_number: "0" + a_number;
 }
 
-/**
- *
- */
-modelplus.dom.create_modals = function(){
-	"use strict";
-	
-	// TODO - replace it
-	var mdl_div = $("<div id='" + modelplus.ids.MODAL_DIV+ "'></div>");
-	var mdl_ctt_div = $("<div id='modal_content_div'></div>");
-	mdl_div.appendTo("body");
-	mdl_ctt_div.appendTo(mdl_div);
-	
-	// TODO - replace it
-	mdl_div = $("<div id='" + modelplus.ids.MODAL_HYDROGRAPH + "'></div>");
-	mdl_ctt_div = $("<div id='" + modelplus.ids.MODAL_HYDROGRAPH_CONTENT + "'></div>");
-	mdl_div.appendTo("body");
-	mdl_ctt_div.appendTo(mdl_div);
-	
-	// use only this approach
-	mdl_div = $("<div id='" + modelplus.ids.MODAL_HYDROGRAPH_IFISBASED + "'></div>");
-	mdl_div.appendTo("body");
-}
-
-/**
- *
- */
-modelplus.styles.load = function(filename){
-	"use strict";
-    
-    var fileref = document.createElement("link");
-    fileref.setAttribute("rel", "stylesheet");
-    fileref.setAttribute("type", "text/css");
-    fileref.setAttribute("href", modelplus.url.base_frontend_viewer + filename);
-    if (typeof fileref != "undefined")
-        document.getElementsByTagName("head")[0].appendChild(fileref);
-}
-
-/**
- * Load a script dynamically (copied from internet)
- * url - Imported script url
- * callback - Function o be called on callback
- * RETURN - None
- */
-function loadScript(url, callback, callback_arg){
-
-    var script = document.createElement("script")
-    script.type = "text/javascript";
-
-    if (script.readyState){  //IE
-        script.onreadystatechange = function(){
-            if (script.readyState == "loaded" ||
-                    script.readyState == "complete"){
-                script.onreadystatechange = null;
-                callback(callback_arg);
-            }
-        };
-    } else {  //Others
-        script.onload = function(){
-            callback(callback_arg);
-        };
-    }
-
-    script.src = url;
-    document.getElementsByTagName("head")[0].appendChild(script);
-}
-
-// TODO - remove global function
-modelplus.scripts.load = loadScript;  // TODO - remove global function
-
-/**
- * Load a list of scripts dynamically
- * urls - List of imported script urls
- * callback - Function to be called on final callback
- * RETURN - None
- */
-modelplus.scripts.loadQueue = function(callbackFunction){
-  "use strict";
-  
-  var cur_script;
-  
-  // when finished, trigger sequence
-  if(modelplus.scripts.queue.length == 0){
-    if(callbackFunction != null){ 
-      callbackFunction()
-    }
-    return;
-  }
-  
-  cur_script = modelplus.scripts.queue[0];
-  modelplus.scripts.queue.shift();
-  console.log("Loading: " + cur_script);
-  modelplus.scripts.load(cur_script,
-                         modelplus.scripts.loadQueue,
-						 callbackFunction);
+function force_two_digits(the_number){
+	if(the_number<10) { the_number='0'+the_number; }
+	return(the_number);
 }

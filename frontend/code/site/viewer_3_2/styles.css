@@ -42,7 +42,12 @@
     margin: auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 40%;}
+    width: 40%;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    -khtml-border-radius: 10px;}
 
 #modal_content_hidrograph_div { 
     font-family:PFDinTextCompProMedium,Helvetica,Arial,sans-serif;font-size:20px;
@@ -96,6 +101,24 @@
     padding-top:10px; 
     padding-right:10px;
     display:block; float:right }
+
+#legend_top_div {
+  display:block; 
+  left:50%; 
+  margin-left:-145px; 
+  top:0; 
+  z-index:100; 
+  position:absolute; 
+  border: 1px solid grey;
+  text-align:center; 
+  font-family:PFDinTextCompProMedium,Helvetica,Arial,sans-serif; 
+  font-size:15px;
+  background-color:#FFFFFF;
+}
+
+#legend_top_div a{
+  cursor: pointer;
+}
 
 #legend_bot_titl_div {
     font-family:PFDinTextCompProMedium,Helvetica,Arial,sans-serif;font-size:18px;

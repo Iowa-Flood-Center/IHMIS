@@ -66,34 +66,6 @@ function custom_display(){
 		return(timestamp + "_" + link_id + ".png");
 	}
 	
-	/**
-	 *
-	 * msg_html :
-	 * RETURN :
-	 */
-	function display_hidrograph_block(hidrograph_img_url){
-		var div_modal = document.getElementById('modal_hidrograph_div');
-		var div_modal_ctt = $('#modal_content_hidrograph_div');
-		var inner_html;
-	
-		div_modal.style.display = "block";
-		div_modal_ctt.height("500px");
-		div_modal_ctt.width("1240px");
-		
-		inner_html = "<p><span id='modal_close_span' onclick='close_model_hidrograph_desc()'>&#10799;</span></p>";
-		inner_html += "<img src='" + hidrograph_img_url + "' />";
-		div_modal_ctt.html(inner_html);
-	}
-	
-	/**
-	 *
-	 * RETURN :
-	 */
-	function close_model_hidrograph_desc(){
-		var modal_div;
-		modal_div = $("#modal_hidrograph_div").hide();
-	}
-	
 	// load one
 	// alert("Ajaxing: " + ws_all_images_url);
 	$.ajax({
@@ -147,7 +119,7 @@ function custom_display(){
 					});
 					google.maps.event.addListener(cur_marker, "click", function () {
 						var img_url = single_image_folder_address + build_image_name(this.id, all_images_dict[this.id]);
-						display_hidrograph_block(img_url);
+						modelplus.dom.display_hidrograph_block(img_url);
 					});
 					// create reference list for icon in global var if necessary
 					if(typeof(GLB_visual.prototype.polygons[sc_evaluation_id]) === 'undefined'){

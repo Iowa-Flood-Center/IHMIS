@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Executes a bash script, saving the previous existing log files and logging into an specific new file
+# $1: String. Log folder path finished with '/'
+# $2: String. Base file name
+# $3: String. Bash script file name
+mini_log_rotate(){
+  # get arguments
+  LOG_FOLDERPATH=$1
+  LOG_BASENAME=$2
+  BASH_FILEPATH=$3
+
+  # set up file names
+  LOG_FILENAME_STD_NOW=${LOG_BASENAME}"_o.txt"
+  LOG_FILENAME_STD_LAST=${LOG_BASENAME}"_o_last.txt"
+  LOG_FILENAME_ERR_NOW=${LOG_BASENAME}"_e.txt"
+  LOG_FILENAME_ERR_LAST=${LOG_BASENAME}"_e_last.txt"
+
+  # set up absolute paths
+  LOG_FILEPATH_STD_NOW=${LOG_FOLDERPATH}${LOG_FILENAME_STD_NOW}
+  LOG_FILEPATH_STD_LAST=${LOG_FOLDERPATH}${LOG_FILENAME_STD_LAST}
+  LOG_FILEPATH_ERR_NOW=${LOG_FOLDERPATH}${LOG_FILENAME_ERR_NOW}
+  LOG_FILEPATH_ERR_LAST=${LOG_FOLDERPATH}${LOG_FILENAME_ERR_LAST}
+
+  # remove old files if they exist
+  if [ -f ${LOG_FILEPATH_STD_LAST} ]; then
+    rm ${LOG_FILEPATH_STD_LAST}
+  fi
+  if [ -f ${LOG_FILEPATH_ERR_LAST} ]; then
+    rm ${LOG_FILEPATH_ERR_LAST}
+  fi
+
+  # make the most recent ones the last ones
+  if [ -f ${LOG_FILEPATH_STD_NOW} ]; then
+    mv ${LOG_FILEPATH_STD_NOW} ${LOG_FILEPATH_STD_LAST}
+  fi
+  if [ -f ${LOG_FILEPATH_ERR_NOW} ]; then
+    mv ${LOG_FILEPATH_ERR_NOW} ${LOG_FILEPATH_ERR_LAST}
+  fi
+
+  # call script
+  bash ${BASH_FILEPATH} 1> ${LOG_FILEPATH_STD_NOW} 2> ${LOG_FILEPATH_ERR_NOW}
+}

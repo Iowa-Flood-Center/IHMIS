@@ -170,11 +170,6 @@ function custom_display(reference_id_arg){
 			GLB_visual.prototype.polygons[sc_evaluation_id].push(cur_marker);
 		}
 		
-		// define human readable date and time
-		var cur_date = new Date(GLB_vars.prototype.nashsutcliffe.timestamp * 1000);
-		var cur_date_hr = twoDigits(cur_date.getMonth()+1)+"/"+twoDigits(cur_date.getDate())+"/"+cur_date.getFullYear();
-		var cur_time_hr = twoDigits(cur_date.getHours())+":"+twoDigits(cur_date.getMinutes());
-		
 		// replace or create top legend if necessary
 		if ($("#"+modelplus.ids.LEGEND_TOP_DIV).length > 0){
 			$('#'+modelplus.ids.LEGEND_TOP_DIV).remove();

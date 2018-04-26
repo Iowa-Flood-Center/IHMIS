@@ -31,7 +31,8 @@ var modelplus = modelplus || {};
   })();
   
   // define additional scripts to be loaded
-  modelplus.scripts.queue = [modelplus.scripts.ubase + "common/scripts/modelplus.url.js",
+  modelplus.scripts.queue = [modelplus.scripts.ubase + "common/scripts/modelplus.util.js",
+                             modelplus.scripts.ubase + "common/scripts/modelplus.url.js",
                              modelplus.scripts.ubase + "common/scripts/modelplus.api.js",
                              modelplus.scripts.uview + "scripts/modelplus.constants.js", 
                              modelplus.scripts.uview + "scripts/modelplus.main.js",
@@ -579,6 +580,9 @@ function sc_rainobj(type) {
 /************************************* OWN FUNCTIONS ***************************************/
 
 function build_current_dateformat(time_shift, current_date_object){
+	"use strict";
+	var mpu = modelplus.util;
+	
 	//
 	// time_shift: time shift in hours
 	// return: 2015-10-13 14:15:00-05
@@ -590,29 +594,13 @@ function build_current_dateformat(time_shift, current_date_object){
 		today = new Date();  // consider argument if it was given
 	}
 	today.setHours(today.getHours() + time_shift);
-	var dd = force_two_digits(today.getDate());
-	var mm = force_two_digits(today.getMonth()+1); //January is 0!
+	var dd = mpu.two_digits(today.getDate());
+	var mm = mpu.two_digits(today.getMonth()+1); //January is 0!
 	var yyyy = today.getFullYear();
-	var hr = force_two_digits(today.getHours());
-	var mn = force_two_digits(today.getMinutes());
-	var sc = force_two_digits(today.getSeconds());
+	var hr = mpu.two_digits(today.getHours());
+	var mn = mpu.two_digits(today.getMinutes());
+	var sc = mpu.two_digits(today.getSeconds());
 
 	today = yyyy+'-'+mm+'-'+dd+' '+hr+':'+mn+':'+sc+'-05';
 	return(today);
-}
-
-/* ************************************ ONLY FUNCTION HERE ************************************** */
-
-/**
- * Gets the two-digit format of a number (e.g.: 3 -> "03").
- * a_number: A number.
- * RETURN - String.
- */
-function twoDigits(a_number){
-  return a_number > 9 ? "" + a_number: "0" + a_number;
-}
-
-function force_two_digits(the_number){
-	if(the_number<10) { the_number='0'+the_number; }
-	return(the_number);
 }

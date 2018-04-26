@@ -127,9 +127,6 @@ function custom_display(){
 	}
 	
 	
-	
-	
-	
 	function on_icon_click() {
 
 		var json_reader_ws, runset_id, model_id, reference_id, link_id, timestamp;
@@ -211,14 +208,6 @@ function custom_display(){
 						window.open(raw_data_url);
 					}
 					
-					function build_date_txt(date_obj){
-						var hour_txt, date_txt, label_txt;
-						hour_txt = force_two_digits(date_obj.getHours()) + ":" + force_two_digits(date_obj.getMinutes());
-						date_txt = force_two_digits(date_obj.getDate()) + "/" + force_two_digits(date_obj.getMonth()+1) + "/" + date_obj.getFullYear();
-						label_txt = date_txt + " " + hour_txt;
-						return(label_txt);
-					}
-					
 					// fill model list object
 					max_mdl_val = 0;
 					max_mdl_idx = null;
@@ -276,15 +265,7 @@ function custom_display(){
 					if (max_mdl_idx != null){
 						var mark_x = myDataMdl[max_mdl_idx][0];
 						var mark_y = myDataMdl[max_mdl_idx][1];
-						
-						/*
-						var mark_stg = mark_y;
-						var date_txt, hour_txt, label_txt;
-						hour_txt = force_two_digits(mark_x.getHours()) + ":" + force_two_digits(mark_x.getMinutes());
-						date_txt = force_two_digits(mark_x.getDate()) + "/" + force_two_digits(mark_x.getMonth()+1) + "/" + mark_x.getFullYear();
-						label_txt = date_txt + " " + hour_txt;
-						*/
-						myDataMdl[max_mdl_idx] = [mark_x, mark_y, 20, build_date_txt(mark_x)];
+						myDataMdl[max_mdl_idx] = [mark_x, mark_y, 20, modelplus.util.date_to_datetimestr(mark_x)];
 					}
 					
 					// fill observed list object
@@ -292,7 +273,7 @@ function custom_display(){
 						var mark_x;
 						mark_x = new Date(json_data.stage_obs[count][0] * 1000);
 						cur_element = [mark_x, json_data.stage_obs[count][1], 
-									   20, build_date_txt(mark_x)];
+									   20, modelplus.util.date_to_datetimestr(mark_x)];
 						myDataObs.push(cur_element);
 						
 						if ((min_timestamp_obs == null) || (min_timestamp_obs > json_data.stage_obs[count][0])){

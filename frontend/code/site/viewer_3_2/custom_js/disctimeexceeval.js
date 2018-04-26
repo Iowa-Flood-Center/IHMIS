@@ -48,7 +48,6 @@ function custom_display(opt_timestamp){
 	ws_data_url += "%e%sc_runset_id=" + runset_id;
 	
 	// load data
-	// alert("PHP: " + ws_data_url);
 	$.ajax({
 		url: ws_data_url
 	}).success(function(data){
@@ -103,96 +102,87 @@ function custom_display(opt_timestamp){
 	 * RETURN : None.
 	 */
 	function display_when_possible(){
+		"use strict";
 		var cur_lat, cur_lng, cur_linkid;
 		var cur_latlng, cur_marker, cur_class;
 		var cur_class;
 		var nbsps;
-		if (all_points_classification == null){
-			// alert("Still waiting for data.");
-		} else {
+		
+		if (all_points_classification == null)
+			return;
 			
-			if (typeof(GLB_vars.prototype.disctimeexceeval) === 'undefined'){
-				GLB_vars.prototype.disctimeexceeval = {};
-			}
-			
-			// for each link_id, plots a stuff with its colour
-			for(cur_linkid in all_points_classification){
-				// case when element is the timestamp
-				if(cur_linkid == 'timestamp'){
-					GLB_vars.prototype.disctimeexceeval.timestamp = all_points_classification[cur_linkid];
-					continue;
-				} else if (cur_linkid == 'timestamp_prev_d'){
-					GLB_vars.prototype.disctimeexceeval.prev_d = all_points_classification[cur_linkid];
-					continue;
-				} else if (cur_linkid == 'timestamp_prev_h'){
-					GLB_vars.prototype.disctimeexceeval.prev_h = all_points_classification[cur_linkid];
-					continue;
-				} else if (cur_linkid == 'timestamp_next_h'){
-					GLB_vars.prototype.disctimeexceeval.next_h = all_points_classification[cur_linkid];
-					continue;
-				} else if (cur_linkid == 'timestamp_next_d'){
-					GLB_vars.prototype.disctimeexceeval.next_d = all_points_classification[cur_linkid];
-					continue;
-				}
-				
-				// case when element is a link_id
-				cur_lat = all_points_classification[cur_linkid]['lat'];
-				cur_lng = all_points_classification[cur_linkid]['lng'];
-				cur_latlng = {lat:parseFloat(cur_lat), lng:parseFloat(cur_lng)};
-				cur_class = get_color_of_usgs_class(all_points_classification[cur_linkid]['eval']);
-				cur_marker = new google.maps.Marker({
-					position:cur_latlng,
-					map:map,
-					icon:{path: google.maps.SymbolPath.CIRCLE,
-						fillColor: cur_class,
-						strokeColor: "#777777",
-						strokeWeight: 1,
-						fillOpacity: 1,
-						scale: 5
-					},
-					zIndex: 10,
-					draggable: false,
-					id:cur_linkid
-				});
-				google.maps.event.addListener(cur_marker, "click", function () {
-					// alert("Link id: " + this.id);
-					/*
-					var img_url = single_image_folder_address + build_image_name(this.id, all_images_dict[this.id]);
-					modelplus.dom.display_hidrograph_block(img_url);
-					*/
-				});
-				
-				// create reference list for icon in global var if necessary
-				if(typeof(GLB_visual.prototype.polygons[sc_evaluation_id]) === 'undefined'){
-					GLB_visual.prototype.polygons[sc_evaluation_id] = [];
-				}
-				GLB_visual.prototype.polygons[sc_evaluation_id].push(cur_marker);
-				// alert(cur_linkid + " -> " + all_points_classification[cur_linkid]);
-			}
-			
-			
-			// define human readable date and time
-			cur_date = new Date(GLB_vars.prototype.disctimeexceeval.timestamp * 1000),
-			cur_date_hr = twoDigits(cur_date.getMonth()+1)+"/"+twoDigits(cur_date.getDate())+"/"+cur_date.getFullYear();
-			cur_time_hr = twoDigits(cur_date.getHours())+":"+twoDigits(cur_date.getMinutes());
-			
-			// replace or create top legend if necessary
-			if ($("#"+modelplus.ids.LEGEND_TOP_DIV).length > 0){
-				$('#'+modelplus.ids.LEGEND_TOP_DIV).remove();
-				delete $("#"+modelplus.ids.LEGEND_TOP_DIV);
-			}
-			img_html = "<img src='"+legend_url+"' />";
-			
-			nbsps = "&nbsp;&nbsp;&nbsp;";
-			gobad_html = define_gobad_html(second_legend_style_css_noa);  // go-back-arrow
-			gobah_html = define_gobah_html(second_legend_style_css_noa);  // go-back-arrow
-			gofah_html = define_gofah_html(second_legend_style_css_noa);  // go-forward-arrow-hourly
-			gofad_html = define_gofad_html(second_legend_style_css_noa);  // go-forward-arrow-daily
-			date_html = gobad_html + nbsps + gobah_html + nbsps + "At " + cur_time_hr + ", " + cur_date_hr + "." + nbsps + gofah_html + nbsps + gofad_html;
-			div_html = img_html + "<br />" + date_html;
-			
-			modelplus.dom.show_legend_top(sc_evaluation_id, div_html);
+		if (typeof(GLB_vars.prototype.disctimeexceeval) === 'undefined'){
+			GLB_vars.prototype.disctimeexceeval = {};
 		}
+			
+		// for each link_id, plots a stuff with its colour
+		for(cur_linkid in all_points_classification){
+			// case when element is the timestamp
+			if(cur_linkid == 'timestamp'){
+				GLB_vars.prototype.disctimeexceeval.timestamp = all_points_classification[cur_linkid];
+				continue;
+			} else if (cur_linkid == 'timestamp_prev_d'){
+				GLB_vars.prototype.disctimeexceeval.prev_d = all_points_classification[cur_linkid];
+				continue;
+			} else if (cur_linkid == 'timestamp_prev_h'){
+				GLB_vars.prototype.disctimeexceeval.prev_h = all_points_classification[cur_linkid];
+				continue;
+			} else if (cur_linkid == 'timestamp_next_h'){
+				GLB_vars.prototype.disctimeexceeval.next_h = all_points_classification[cur_linkid];
+				continue;
+			} else if (cur_linkid == 'timestamp_next_d'){
+				GLB_vars.prototype.disctimeexceeval.next_d = all_points_classification[cur_linkid];
+				continue;
+			}
+				
+			// case when element is a link_id
+			cur_lat = all_points_classification[cur_linkid]['lat'];
+			cur_lng = all_points_classification[cur_linkid]['lng'];
+			cur_latlng = {lat:parseFloat(cur_lat), lng:parseFloat(cur_lng)};
+			cur_class = get_color_of_usgs_class(all_points_classification[cur_linkid]['eval']);
+			cur_marker = new google.maps.Marker({
+				position:cur_latlng,
+				map:map,
+				icon:{path: google.maps.SymbolPath.CIRCLE,
+					fillColor: cur_class,
+					strokeColor: "#777777",
+					strokeWeight: 1,
+					fillOpacity: 1,
+					scale: 5
+				},
+				zIndex: 10,
+				draggable: false,
+				id:cur_linkid
+			});
+				
+			// create reference list for icon in global var if necessary
+			if(typeof(GLB_visual.prototype.polygons[sc_evaluation_id]) === 'undefined'){
+				GLB_visual.prototype.polygons[sc_evaluation_id] = [];
+			}
+			GLB_visual.prototype.polygons[sc_evaluation_id].push(cur_marker);
+		}
+			
+		// define human readable date and time
+		var cur_date = new Date(GLB_vars.prototype.disctimeexceeval.timestamp * 1000);
+		var cur_datetime_str = modelplus.util.date_to_datetimestr(cur_date);
+			
+		// replace or create top legend if necessary
+		if ($("#"+modelplus.ids.LEGEND_TOP_DIV).length > 0){
+			$('#'+modelplus.ids.LEGEND_TOP_DIV).remove();
+			delete $("#"+modelplus.ids.LEGEND_TOP_DIV);
+		}
+		var img_html = "<img src='"+legend_url+"' />";
+			
+		nbsps = "&nbsp;&nbsp;&nbsp;";
+		var gobad_html = define_gobad_html(second_legend_style_css_noa);  // go-back-arrow
+		var gobah_html = define_gobah_html(second_legend_style_css_noa);  // go-back-arrow
+		var gofah_html = define_gofah_html(second_legend_style_css_noa);  // go-forward-arrow-hourly
+		var gofad_html = define_gofad_html(second_legend_style_css_noa);  // go-forward-arrow-daily
+		var date_html = gobad_html + nbsps + gobah_html + nbsps + "At " + cur_datetime_str + "." + nbsps + gofah_html + nbsps + gofad_html;
+		var div_html = img_html + "<br />" + date_html;
+		
+		modelplus.dom.show_legend_top(sc_evaluation_id, div_html);
+
 	}
 }
 
@@ -318,8 +308,6 @@ function goa_click(){
 	modelplus.scripts.load(display_address, function(){
 		if(typeof custom_display !== 'undefined'){
 			custom_display(GLB_vars.prototype.disctimeexceeval.timestamp);
-		} else {
-			// alert("'custom_display' undefined for 'disclausgssih'");
 		}
 	});
 }

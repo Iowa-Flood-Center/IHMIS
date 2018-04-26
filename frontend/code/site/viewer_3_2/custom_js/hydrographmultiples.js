@@ -452,11 +452,10 @@ function custom_display(){
 								tooltip: {
 									show: true,
 									formatter: function(parms){
-										var stg_txt, hour_txt, date_txt;
+										var stg_txt, datetime_txt;
 										stg_txt = "Stage:"+parms.value[1].toFixed(2)+" ft";
-										hour_txt = force_two_digits(parms.value[0].getHours()) + ":" + force_two_digits(parms.value[0].getMinutes());
-										date_txt = force_two_digits(parms.value[0].getDate()) + "/" + force_two_digits(parms.value[0].getMonth()+1) + "/" + parms.value[0].getFullYear();
-										return(stg_txt + " at " + hour_txt + ", " + date_txt);
+										datetime_txt = modelplus.util.date_to_datetimestr(parms.value[0]);
+										return(stg_txt + " at " + datetime_txt);
 									}
 								},
 								legend: {

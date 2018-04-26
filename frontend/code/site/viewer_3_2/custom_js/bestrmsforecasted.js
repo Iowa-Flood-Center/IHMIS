@@ -11,7 +11,7 @@ function custom_display(){
 	
 	// get basic data
 	var modelcomb_id = $('#'+ modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
-	var reprcomp_id = "bestrms10dayspast";
+	var reprcomp_id = "bestrmsforecasted";
 	
 	// /////////////// FUNC /////////////// //
 	
@@ -48,7 +48,7 @@ function custom_display(){
               cur_best_model_idx = null;
             else
               cur_best_model_idx = models_idx[cur_best_model_id];
-			
+
 			cur_marker = new google.maps.Marker({
 				position: cur_latlng,
 				map: map,
@@ -74,7 +74,7 @@ function custom_display(){
      * RETURN: None.
      */
 	var display_legend = function(models_icons){
-      var div_html = "Best R.M.S.E. - Last 10 days<br>";
+      var div_html = "Best R.M.S.E. - Earliest forecast<br>";
       var sub_html = [];
       
       Object.keys(models_icons).forEach(function(key, index){
@@ -111,30 +111,30 @@ function custom_display(){
 		
 		return(all_models);
 	}
-
-    /**
+	
+	/**
      * 
      * details:
      * RETURN:
      */
-    var find_best_model_id = function(details){
+	var find_best_model_id = function(details){
       var lower_error = null;
       var best_model = null;
-      if(!details.success)
+	  if(!details.success)
         return(null);
       for(var cur_model in details['models']){
         if((lower_error != null) && (details['models'][cur_model] > lower_error))
           continue;
         best_model = cur_model;
         lower_error = details['models'][cur_model];
-      }
-      return(best_model);
+	  }
+	  return(best_model);
     }
 
 	/**
 	 * 
 	 */
-    var get_icon_url = function(idx){
+	var get_icon_url = function(idx){
       var icon_file_name, root_url, icon_address;
       root_url = modelplus.url.base_frontend_webservices;
       icon_address = root_url + "imgs/map_icons/";
@@ -151,6 +151,7 @@ function custom_display(){
 	var show_message = function(){
       var cur_model_id, cur_rmse, cur_model_title, msg_txt;
       var cur_high, cur_obj;
+	  var mpu = modelplus.util;
 
       if (this.details['success']){
         msg_txt = this.title + "<br >";
@@ -170,6 +171,8 @@ function custom_display(){
         }
         msg_txt += "</table>";
         msg_txt += "Number of points: " + this.details['num_points'];
+		msg_txt += ", from " + mpu.timestamp_to_datetimestr(this.details.timestamp_min) + " to ";
+		msg_txt += " to " + mpu.timestamp_to_datetimestr(this.details.timestamp_max) + ".";
       } else {
         msg_txt = this.title + "<br >";
         msg_txt += "Unable to calculate: " + this.details.diagnosis.comment + "<br>";
@@ -185,16 +188,16 @@ function custom_display(){
           cur_obj = this.details.diagnosis.models[cur_model_id];
           msg_txt += "<tr >";
           msg_txt += "<td class='col_model'>" + cur_model_title + "</td>";
-          msg_txt += "<td class='col_date'>" + get_human_datetime(cur_obj.timestamp_min) + "</td>";
-          msg_txt += "<td class='col_date'>" + get_human_datetime(cur_obj.timestamp_max) + "</td>";
+          msg_txt += "<td class='col_date'>" + mpu.timestamp_to_datetimestr(cur_obj.timestamp_min) + "</td>";
+          msg_txt += "<td class='col_date'>" + mpu.timestamp_to_datetimestr(cur_obj.timestamp_max) + "</td>";
           msg_txt += "<td class='col_points'>" + cur_obj.num_points + "</td>";
           msg_txt += "</tr>";
         }
 		cur_obj = this.details.diagnosis.reference;
         msg_txt += "<tr >";
         msg_txt += "<td class='col_model'>Reference</td>";
-        msg_txt += "<td class='col_date'>" + get_human_datetime(cur_obj.timestamp_min) + "</td>";
-        msg_txt += "<td class='col_date'>" + get_human_datetime(cur_obj.timestamp_max) + "</td>";
+        msg_txt += "<td class='col_date'>" + mpu.timestamp_to_datetimestr(cur_obj.timestamp_min) + "</td>";
+        msg_txt += "<td class='col_date'>" + mpu.timestamp_to_datetimestr(cur_obj.timestamp_max) + "</td>";
         msg_txt += "<td class='col_points'>" + cur_obj.num_points + "</td>";
         msg_txt += "</tr>";
         msg_txt += "</table>";
@@ -202,21 +205,6 @@ function custom_display(){
 		
       modelplus.dom.display_message_block(msg_txt);
 	}
-	
-    /**
-     * Converts timestamp to human date-time string
-     */
-    var get_human_datetime = function(timestamp){
-      var d = new Date(timestamp * 1000);
-	  var return_txt;
-	  var mpu = modelplus.util;
-	  return_txt = mpu.two_digits(d.getMonth()+1) + '/';
-	  return_txt += mpu.two_digits(d.getDate()) + '/';
-	  return_txt += d.getFullYear() + ', ';
-	  return_txt += mpu.two_digits(d.getHours()) + ':';
-	  return_txt += mpu.two_digits(d.getMinutes());
-      return(return_txt);
-    }
 	
 	// /////////////// CALL /////////////// //
 	

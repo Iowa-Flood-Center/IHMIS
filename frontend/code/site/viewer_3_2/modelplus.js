@@ -420,6 +420,7 @@
 		.then(function(json_data){
 			var div_main_obj;
 			var parsed_json = json_data[0];
+			var glb = GLB_vars.prototype;
 		
 			// parse JSON content
 			try{
@@ -428,7 +429,7 @@
 				if (parsed_json == undefined) return;
 				
 				// set up variables
-				GLB_vars.prototype.sc_runset = {
+				glb.sc_runset = {
 					"id":parsed_json.id,
 					"title":parsed_json.title,
 					"show_main":parsed_json.show_main
@@ -439,36 +440,37 @@
 				return;
 			}
 			
-			GLB_vars.prototype.sc_models = parsed_json.sc_model;
-			GLB_vars.prototype.sc_model_combinations = parsed_json.sc_model_combination;
-			GLB_vars.prototype.sc_references = parsed_json.sc_reference;
-			GLB_vars.prototype.sc_representation = parsed_json.sc_representation;
-			GLB_vars.prototype.sc_evaluation = parsed_json.sc_evaluation;
-			GLB_vars.prototype.comparison_matrix = parsed_json.comp_mtx;
+			glb.sc_models = parsed_json.sc_model;
+			glb.sc_model_combinations = parsed_json.sc_model_combination;
+			glb.sc_references = parsed_json.sc_reference;
+			glb.sc_representation = parsed_json.sc_representation;
+			glb.sc_evaluation = parsed_json.sc_evaluation;
+			glb.forecast_set = parsed_json.forecast_set;
+			glb.comparison_matrix = parsed_json.comp_mtx;
 			if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
 				func_to_run();
 			}
-			GLB_vars.prototype.webmenu = parsed_json.web_menu;
+			glb.webmenu = parsed_json.web_menu;
 			
 			// set up functions
-			GLB_vars.prototype.get_runset_ini = function(){
-				if (GLB_vars.prototype.sc_runset.timestamp_ini !== undefined){
-					return(parseInt(GLB_vars.prototype.sc_runset.timestamp_ini));
+			glb.get_runset_ini = function(){
+				if (glb.sc_runset.timestamp_ini !== undefined){
+					return(parseInt(glb.sc_runset.timestamp_ini));
 				} else {
 					return(null);
 				}
 			}
-			GLB_vars.prototype.get_runset_end = function(){
-				if (GLB_vars.prototype.sc_runset.timestamp_end !== undefined){
-					return(parseInt(GLB_vars.prototype.sc_runset.timestamp_end));
+			glb.get_runset_end = function(){
+				if (glb.sc_runset.timestamp_end !== undefined){
+					return(parseInt(glb.sc_runset.timestamp_end));
 				} else {
 					return(null);
 				}
 			}
-			GLB_vars.prototype.get_runset_timediff = function(){
+			glb.get_runset_timediff = function(){
 				var timestamp_ini, timestamp_end;
-				timestamp_ini = GLB_vars.prototype.get_runset_ini();
-				timestamp_end = GLB_vars.prototype.get_runset_end();
+				timestamp_ini = glb.get_runset_ini();
+				timestamp_end = glb.get_runset_end();
 				if((timestamp_ini != null) && (timestamp_end != null)){
 					return(timestamp_end - timestamp_ini);
 				} else {
@@ -477,7 +479,7 @@
 			}
 			
 			// basic check
-			if (Object.keys(GLB_vars.prototype.webmenu).length == 0){
+			if (Object.keys(glb.webmenu).length == 0){
 				if ($('#'+modelplus.ids.MENU_RUNSET_SBOX).val() !== ""){
 					alert("Missing meta files for menu.");
 				}
@@ -1254,18 +1256,42 @@
   
   /***----------------------------------------------- DOM GET FUNCS -----------------------------------------------***/
   
+  var mpd = modelplus.dom;
+  
   /**
    * 
    * RETURN - The name of the model if it was found, 'null' otherwise.
    */
   modelplus.dom.get_model_name = function(model_id){
     var i;
-    for (i = 0; i < GLB_vars.prototype.sc_models.length; i++){
-      if (GLB_vars.prototype.sc_models[i].id == model_id){
-        return(GLB_vars.prototype.sc_models[i].title);
+	var glb = GLB_vars.prototype;
+    for (i = 0; i < glb.sc_models.length; i++){
+      if (glb.sc_models[i].id == model_id){
+        return(glb.sc_models[i].title);
       }
     }
     return(null);
+  }
+  
+  /**
+   *
+   * model_forecast_id -
+   * RETURN -
+   */
+  mpd.get_forecast_model_name = function(model_forecast_id){
+    // TODO it
+    var s_id, f_i, cur_s_o, cur_f_o;
+    var glb = GLB_vars.prototype;
+
+    // search for the state that has the searched forecast
+    for(s_id in glb.forecast_set){
+      cur_s_o = glb.forecast_set[s_id];
+      if(cur_s_o.scenarios.hasOwnProperty(model_forecast_id)){
+        cur_f_o = cur_s_o.scenarios[model_forecast_id];
+        return(cur_s_o.title + ":" + cur_f_o.title);
+      }
+    }
+	return(null);
   }
   
   /**

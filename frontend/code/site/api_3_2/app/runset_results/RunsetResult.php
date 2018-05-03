@@ -190,6 +190,7 @@
 	  $this->attr['sc_representation'] = RepresentationResult::all($runset_id);
 	  $this->attr['sc_model_combination'] = ModelCombinationResult::all($runset_id);
 	  $this->attr['sc_evaluation'] = EvaluationResult::all($runset_id);
+	  $this->attr['forecast_set'] = ForecastSet::get_base($runset_id);
       $this->attr['comp_mtx'] = ComparisonResult::get_base($runset_id);
       $this->attr['web_menu'] = Menu::get_base($runset_id);
     }

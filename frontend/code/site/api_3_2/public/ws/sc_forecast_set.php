@@ -17,7 +17,7 @@ function process_get_request($app, $req, $res){
 		return;
 	}
 	
-	ForecastSet::setApp($app);
+	ForecastSet::set_app($app);
 	if(!is_null($model_id)){
 		// $all_retrieved = Array(ModelResult::withId($model_id, $runset_id));
 	} else {

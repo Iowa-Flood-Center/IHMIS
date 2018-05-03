@@ -79,7 +79,8 @@ function custom_display(){
       
       Object.keys(models_icons).forEach(function(key, index){
         var mdl_icon = get_icon_url(index);
-        var mdl_name = modelplus.dom.get_model_name(key);
+        // var mdl_name = modelplus.dom.get_model_name(key);
+		var mdl_name = modelplus.dom.get_forecast_model_name(key);
         var html_icon = "<img src='"+mdl_icon+"'>";
         sub_html.push(html_icon + mdl_name);
       });

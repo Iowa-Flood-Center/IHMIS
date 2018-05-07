@@ -27,6 +27,80 @@
 }
 	
 /**
+ * General divs
+ */
+
+#modal_content_hidrograph_div_div {
+  width:850px;
+  height:460px;
+  display:block;
+}
+
+#modal_hidrograph_ifisbased_div div.navigation_div{
+  width:100%; 
+  display:block; 
+  padding-top:30px
+}
+
+#modal_hidrograph_ifisbased_div div.navigation_div div.span_div{
+  float:right;
+  padding-right:10px
+}
+
+#modal_content_hidrograph_div_slider{
+  width:400px; 
+  margin-left:40px
+}
+
+#modal_hidrograph_ifisbased_div div.panel_div{
+  position:absolute;
+  width:730px;
+  display:block;
+  margin-left:60px;
+  bottom:0px;
+  background-color:#ddd
+}
+
+#modal_hidrograph_ifisbased_div div.panel_div div.header{
+  background-color:#bbb;
+  padding-left:15px;
+  cursor:pointer
+}
+
+#modal_content_hidrograph_modelsconf_div{
+  display:none;
+  padding-left:25px;
+  padding-right:22px;
+  height:400px;
+}
+
+#modal_content_hidrograph_modelsconf_div div.body{
+  display:table-row; 
+  height:362px
+}
+
+#modal_content_hidrograph_modelsconf_div div.body div.left{
+  float:left; 
+  text-align:left; 
+  padding-top:5px;
+}
+
+#modal_content_hidrograph_modelsconf_div div.body div.right{
+  float:left;
+  text-align:left;
+}
+
+#modal_content_hidrograph_modelsconf_div div.footer{
+  display:table-row;
+  text-align:right;
+  float:right;
+  margin-bottom:22px;
+  cursor:pointer;
+  bottom:0px;
+  right:15px;
+}
+
+/**
  * Makes the input-range stylesheet-less
  */
 

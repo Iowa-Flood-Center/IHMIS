@@ -90,7 +90,9 @@ function custom_display(){
 		var runset_id, model_id, link_id, chart_lib_url, forecastset_url;
 		var DIV_ID = "modal_content_hidrograph_div_div";
 		var SLIDER_ID = "modal_content_hidrograph_div_slider";
+		var SPANDIV_CLASS = "span_div";
 		var SPAN_ID = "modal_content_hidrograph_div_span";
+		var glb = GLB_vars.prototype;
 				
 		// set up variables						
 		runset_id = $('#'+ modelplus.ids.MENU_RUNSET_SBOX).val();
@@ -99,30 +101,30 @@ function custom_display(){
 
 		// create popup div and add 
 		modelplus.hydrograph.create_tmp();
-		$('#'+modelplus.ids.MODAL_HYDROGRAPH_IFISBASED).append("<div id='"+DIV_ID+"' style='width:850px; height:460px; display:block;'></div>");
+		$('#'+modelplus.ids.MODAL_HYDROGRAPH_IFISBASED).append("<div id='"+DIV_ID+"'></div>");
 		$('#'+modelplus.ids.MODAL_HYDROGRAPH_IFISBASED).append(
-		  "<div style='width:100%; display:block; padding-top:30px'>\
-		     <input id='"+SLIDER_ID+"' type='range' style='width:400px; margin-left:40px' onchange='richhydroforecast01.onSlideChange()' oninput='richhydroforecast01.onSlideInput()'/> \
-		     <div style='float:right; padding-right:10px'>Issue time: <span id='"+SPAN_ID+"'></div> \
+		  "<div class='navigation_div'>\
+		     <input id='"+SLIDER_ID+"' type='range' onchange='richhydroforecast01.onSlideChange()' oninput='richhydroforecast01.onSlideInput()'/> \
+		     <div class='span_div'>Issue time: <span id='"+SPAN_ID+"'></div> \
 		   </div> \
-		   <div style='position:absolute; width:730px; display:block; margin-left:60px; bottom:0px; background-color:#ddd'> \
-		     <div style='background-color:#bbb; padding-left:15px; cursor:pointer' onclick='modelplus.custom_display.config_on_click();'> \
+		   <div class='panel_div'> \
+		     <div class='header' onclick='modelplus.custom_display.config_on_click();'> \
 		       <span >Model selection</span> \
 			 </div> \
-			 <div id='"+modelplus.ids.MODAL_HYDROGRAPH_CONTENT_MODELSCONF+"' style='display:none; padding-left:25px; padding-right:22px; height:400px;'> \
-			   <div style='display:table-row; height:362px'> \
-                 <div id='"+modelplus.ids.MODAL_HYDROGRAPH_CONTENT_MODELSCONF+"_left' style='float:left; text-align:left; padding-top:5px'></div> \
-                 <div id='"+modelplus.ids.MODAL_HYDROGRAPH_CONTENT_MODELSCONF+"_right' style='float:left; text-align:left'></div> \
+			 <div id='"+modelplus.ids.MODAL_HYDROGRAPH_CONTENT_MODELSCONF+"' > \
+			   <div class='body'> \
+                 <div id='"+modelplus.ids.MODAL_HYDROGRAPH_CONTENT_MODELSCONF+"_left' class='left'></div> \
+                 <div id='"+modelplus.ids.MODAL_HYDROGRAPH_CONTENT_MODELSCONF+"_right' class='right'></div> \
                </div> \
-			   <div style='display:table-row; text-align:right; float:right; margin-bottom:22px; cursor:pointer; bottom:0px; right:15px'> \
+			   <div class='footer'> \
 			     <a id='config_update_button' onclick='modelplus.custom_display.config_update()'>Update Graph</a>\
 			   </div> \
 			 </div> \
 		   </div>");
 		
-		richhydroforecast01.runsetid = "realtime";           // TODO - make it variable
+		richhydroforecast01.runsetid = glb.sc_runset.id;
 		richhydroforecast01.modelcomb_id = "richforecasts";  // TODO - make it variable
-		richhydroforecast01.link_id = link_id;               // 
+		richhydroforecast01.link_id = link_id;
 		richhydroforecast01.only_models = null;
 		
 		var cb_build_hydrograph = function(data){
@@ -232,7 +234,6 @@ function custom_display(){
 		var cur_linkid, cur_latlng, cur_icon, cur_marker;
 		
 		// basic check - variables must have been set
-		console.log("Is it possible to call?");
 		if ((all_links_dict == null) || (gages_location_dict == null)){ return; }
 		if (typeof(richhydroforecast01) === 'undefined') { return; }
 		if (typeof(echarts) === 'undefined') { return; }

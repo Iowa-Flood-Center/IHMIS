@@ -48,6 +48,8 @@
 		$is_refresh = false;
 	}
 	
+	$is_snapshot = ($sc_runset_id != 'realtime' ? True : False);  // TODO - move to settings
+	
 	/*********************************************** CONS **********************************************/
 	
 	$sc_represcomb_id = "richhydroforecast";
@@ -185,13 +187,16 @@
 	/**
 	 * No return. Changes resume object.
 	 */
-	function fill_resume_with_commons(&$resume_obj, $common_folder_path, $link_id, $is_refresh){
+	function fill_resume_with_commons(&$resume_obj, $common_folder_path, $link_id, $is_refresh, $is_snapshot){
 		if($is_refresh){ return; }
 		
 		// read file
 		$file_name = $link_id.".json";
 		$file_path = $common_folder_path.$file_name;
 		$file_content = json_decode(file_get_contents($file_path), true);
+		
+		// 
+		$resume_obj["metadata"]["is_snapshot"] = $is_snapshot;
 		
 		// set description and drainage area values
 		if(array_key_exists("description", $file_content)){
@@ -327,7 +332,7 @@
 	$resume_obj = create_empty_resume($timestamp_cur, $before_days, $after_days);
 	
 	// 4 - fill with site description and thresholds
-	fill_resume_with_commons($resume_obj, $common_folder_path, $link_id, $is_refresh);
+	fill_resume_with_commons($resume_obj, $common_folder_path, $link_id, $is_refresh, $is_snapshot);
 	
 	// 5 - fill with observed data
 	fill_resume_with_observed($resume_obj, $ref_folder_path, $timestamp_cur, $link_id, $is_refresh);

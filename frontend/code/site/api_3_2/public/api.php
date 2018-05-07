@@ -163,6 +163,7 @@ $app->delete('/sc_runset_results/:sc_runset_id',
 	process_delete_request($app, $sc_runset_id);
 });
 
+
 $app->get('/sc_forecast_set', 
     function(Request $req,  Response $res, $args = []) use ($app) {
 	require './ws/sc_forecast_set.php';
@@ -175,6 +176,14 @@ $app->delete('/sc_runset_model_results/:sc_runset_id/:sc_model_id', function($sc
 	process_delete_request($app, $sc_runset_id, $sc_model_id);
 });
 
+// --- Runset Snapshot
+
+// saves current realtime snapshot
+$app->post('/sc_runset_snapshot/new',
+           function (Request $req,  Response $res, $args = []) use ($app) {
+	require './ws/sc_runset_snapshot.php';
+	return(process_post_request($app, $req, $res));
+});
 
 // --- Others
 

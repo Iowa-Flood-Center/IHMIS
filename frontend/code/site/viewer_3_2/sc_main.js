@@ -19,6 +19,7 @@ var modelplus = modelplus || {};
   
   // define other scripts
   modelplus.scripts = modelplus.scripts || {};
+  var mps = modelplus.scripts;
   
   // TODO - review the following dirty solution
   (function(){
@@ -31,13 +32,13 @@ var modelplus = modelplus || {};
   })();
   
   // define additional scripts to be loaded
-  modelplus.scripts.queue = [modelplus.scripts.ubase + "common/scripts/modelplus.util.js",
-                             modelplus.scripts.ubase + "common/scripts/modelplus.url.js",
-                             modelplus.scripts.ubase + "common/scripts/modelplus.api.js",
-                             modelplus.scripts.uview + "scripts/modelplus.constants.js", 
-                             modelplus.scripts.uview + "scripts/modelplus.main.js",
-                             modelplus.scripts.uview + "scripts/modelplus.hydrograph.js"];
-  modelplus.scripts.uview_main = modelplus.scripts.uview + "modelplus.js";
+  modelplus.scripts.queue = [mps.ubase + "common/scripts/modelplus.util.js",
+                             mps.ubase + "common/scripts/modelplus.url.js",
+                             mps.ubase + "common/scripts/modelplus.api.js",
+                             mps.uview + "scripts/modelplus.constants.js", 
+                             mps.uview + "scripts/modelplus.main.js",
+                             mps.uview + "scripts/modelplus.hydrograph.js"];
+  mps.uview_main = mps.uview + "modelplus.js";
 })();
 
 /*************************************** GLOBAL VARS ****************************************/
@@ -529,38 +530,40 @@ function sc_np_links(type, vis) {
 function sc_rainobj(type) {
 	var design_id;
 	var repr_id, repr_obj, map_type;
+	var gbl_cbk = GLB_ifisrain_callback.prototype;
+	var mpm = modelplus.main;
 	
 	// overlay: 'ifisoverlay'      // georeferenced, high z-index
 	// overlay: 'groundoverlay',   // non-georeferenced, low z-index
 
     // re-select element
-    if(modelplus.main.persist.hold_select != null){
-		$("#"+modelplus.main.persist.hold_select).addClass(modelplus.ids.MENU_SELECT_CLASS);
-		modelplus.main.persist.hold_select = null;
+    if(mpm.persist.hold_select != null){
+		$("#"+mpm.persist.hold_select).addClass(modelplus.ids.MENU_SELECT_CLASS);
+		mpm.persist.hold_select = null;
     }
 	
 	modelplus.dom.delete_current_parameter_title();
 	
 	// newer
 	rain = new IFIS_Rain({
-		type: GLB_ifisrain_callback.prototype.type,
-		legend: GLB_ifisrain_callback.prototype.legend,
+		type: gbl_cbk.type,
+		legend: gbl_cbk.legend,
 		name: 'forecastmap',
 		overlay: 'ifisoverlay', 
-		array_init: GLB_ifisrain_callback.prototype.array_init,
+		array_init: gbl_cbk.array_init,
 		array_start: 0,
-		array_end: GLB_ifisrain_callback.prototype.array_end,
+		array_end: gbl_cbk.array_end,
 		array_direction: 1,
 		array_value: 0,
 		array_interval: 60,
-		design: GLB_ifisrain_callback.prototype.design,
-		url1: GLB_ifisrain_callback.prototype.url1,
-		url2: GLB_ifisrain_callback.prototype.url2,
+		design: gbl_cbk.design,
+		url1: gbl_cbk.url1,
+		url2: gbl_cbk.url2,
 		bound: GLB_const.prototype.rainBounds,
-		time: build_current_dateformat(0, new Date(GLB_ifisrain_callback.prototype.ref_timestamp0*1000))
+		time: build_current_dateformat(0, new Date(gbl_cbk.ref_timestamp0*1000))
 	});
 	
-	modelplus.dom.update_current_parameter_title(GLB_ifisrain_callback.prototype.type);
+	modelplus.dom.update_current_parameter_title(gbl_cbk.type);
 	
 	setTimeout(function() {   //calls click event after a certain time
 		function myself() {

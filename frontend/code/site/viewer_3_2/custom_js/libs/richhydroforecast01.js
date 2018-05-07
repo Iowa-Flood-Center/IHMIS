@@ -447,11 +447,25 @@ richhydroforecast01.buildGraphOptions = function(specs){
  * 
  */
 richhydroforecast01.onSlideUpdateLabel = function(issue_timestamp){
-  var lead_time = richhydroforecast01.specifications.metadata["current_time"] - issue_timestamp;
+  var lead_time;
   var lead_label = richhydroforecast01.timestampToDateLabel(issue_timestamp, true);
   var spanId = richhydroforecast01.sliderSpanId;
-  lead_time = Math.round(lead_time / 3600);
-  document.getElementById(spanId).innerHTML = lead_time + " hours ago (around " + lead_label + ")";
+  var spanObj = document.getElementById(spanId);
+
+  // define message
+  if(richhydroforecast01.specifications.metadata["is_snapshot"]){
+    spanObj.innerHTML = " around " + lead_label;
+  } else {
+    lead_time = richhydroforecast01.specifications.metadata["current_time"] - issue_timestamp;
+	lead_time = Math.round(lead_time / 3600);
+    if(lead_time > 48){
+      lead_time = Math.round(lead_time / 24);
+      spanObj.innerHTML = lead_time + " days ago (around " + lead_label + ")";
+	} else {
+      spanObj.innerHTML = lead_time + " hours ago (around " + lead_label + ")";
+    }
+  }
+  console.log("...hours ago.");
 }
 
 /**

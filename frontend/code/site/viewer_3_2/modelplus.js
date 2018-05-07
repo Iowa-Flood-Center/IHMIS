@@ -62,9 +62,7 @@
    *
    * TODO - adapt to the new flexible version of the code
    */
-  modelplus.dom.reclick_item = function(){
-	"use strict";
-	
+  modelplus.dom.reclick_item = function(){	
 	// this function is called when model 1 is changed.
 	// basically it searched for the selected element and calls its "click" function once again
 	
@@ -347,7 +345,6 @@
    *
    */
   modelplus.dom.create_modals = function(){
-	"use strict";
 	
 	// TODO - replace it
 	var mdl_div = $("<div id='" + modelplus.ids.MODAL_DIV+ "'></div>");
@@ -391,109 +388,109 @@
    * RETURN - Null. Changes are performed in interface.
    */
   modelplus.dom.onchange_runset_main_sbox = function(){
-	var main_runset_id, div_main_obj;
+    var main_runset_id, div_main_obj;
 	
-	main_runset_id = $('#'+modelplus.ids.MENU_RUNSET_SBOX).val();
+    main_runset_id = $('#'+modelplus.ids.MENU_RUNSET_SBOX).val();
 	
-	if(main_runset_id == ''){
-		$("#" + modelplus.ids.MENU_RUNSET_ABOUT).hide();
-		$("#" + modelplus.ids.MENU_MODEL_ABOUT).hide();
-		div_main_obj = $("#" + modelplus.ids.MENU_MAIN_ALERT_DIV);
-		div_main_obj.append(modelplus.labels.SELECT_MODEL);
-		div_main_obj.show();
-	} else {
-		// $("#" + modelplus.ids.MENU_RUNSET_ABOUT).show();
-		$("#" + modelplus.ids.MENU_RUNSET_ABOUT).hide();
+    if(main_runset_id == ''){
+      $("#" + modelplus.ids.MENU_RUNSET_ABOUT).hide();
+      $("#" + modelplus.ids.MENU_MODEL_ABOUT).hide();
+      div_main_obj = $("#" + modelplus.ids.MENU_MAIN_ALERT_DIV);
+      div_main_obj.append(modelplus.labels.SELECT_MODEL);
+      div_main_obj.show();
+    } else {
+      // $("#" + modelplus.ids.MENU_RUNSET_ABOUT).show();
+      $("#" + modelplus.ids.MENU_RUNSET_ABOUT).hide();
 	}
 	
-	// close dialogues possible (if open)
-	modelplus.main.hide_message_block();
-	modelplus.dom.close_model_hidrograph_desc();
+    // close dialogues possible (if open)
+    modelplus.main.hide_message_block();
+    modelplus.dom.close_model_hidrograph_desc();
 	
-	// hide current loaded map
-	if ($("#np" + GLB_map_type).hasClass("npact")){
-		reclick_id = "#np" + GLB_map_type;
-		$("#np" + GLB_map_type).click();
-	}
+    // hide current loaded map
+    if ($("#np" + GLB_map_type).hasClass("npact")){
+      reclick_id = "#np" + GLB_map_type;
+      $("#np" + GLB_map_type).click();
+    }
 	
-	modelplus.api.get_runset_result(main_runset_id)
-		.then(function(json_data){
-			var div_main_obj;
-			var parsed_json = json_data[0];
-			var glb = GLB_vars.prototype;
-		
-			// parse JSON content
-			try{
-				parsed_json = json_data[0];
-				
-				if (parsed_json == undefined) return;
-				
-				// set up variables
-				glb.sc_runset = {
-					"id":parsed_json.id,
-					"title":parsed_json.title,
-					"show_main":parsed_json.show_main
-				};
-				
-			} catch(err) {
-				console.log("Unable to parse '"+ json_data +"'. Error: " + err);
-				return;
-			}
+    modelplus.api.get_runset_result(main_runset_id)
+      .then(function(json_data){
+        var div_main_obj;
+        var parsed_json = json_data[0];
+        var glb = GLB_vars.prototype;
+
+        // parse JSON content
+        try{
+          if (parsed_json == undefined) return;
+
+          // set up variables
+          glb.sc_runset = {
+            "id":parsed_json.id,
+            "title":parsed_json.title,
+            "show_main":parsed_json.show_main,
+            "timestamp_ini":parsed_json.timestamp_ini,
+            "timestamp_end":parsed_json.timestamp_end
+          };
+
+        } catch(err) {
+          console.log("Unable to parse '"+ json_data +"'. Error: " + err);
+          return;
+        }
+
+        glb.sc_models = parsed_json.sc_model;
+        glb.sc_model_combinations = parsed_json.sc_model_combination;
+        glb.sc_references = parsed_json.sc_reference;
+        glb.sc_representation = parsed_json.sc_representation;
+        glb.sc_evaluation = parsed_json.sc_evaluation;
+        glb.forecast_set = parsed_json.forecast_set;
+        glb.comparison_matrix = parsed_json.comp_mtx;
+        if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
+          func_to_run();
+        }
+		glb.webmenu = parsed_json.web_menu;
 			
-			glb.sc_models = parsed_json.sc_model;
-			glb.sc_model_combinations = parsed_json.sc_model_combination;
-			glb.sc_references = parsed_json.sc_reference;
-			glb.sc_representation = parsed_json.sc_representation;
-			glb.sc_evaluation = parsed_json.sc_evaluation;
-			glb.forecast_set = parsed_json.forecast_set;
-			glb.comparison_matrix = parsed_json.comp_mtx;
-			if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
-				func_to_run();
-			}
-			glb.webmenu = parsed_json.web_menu;
-			
-			// set up functions
-			glb.get_runset_ini = function(){
-				if (glb.sc_runset.timestamp_ini !== undefined){
-					return(parseInt(glb.sc_runset.timestamp_ini));
-				} else {
-					return(null);
-				}
-			}
-			glb.get_runset_end = function(){
-				if (glb.sc_runset.timestamp_end !== undefined){
-					return(parseInt(glb.sc_runset.timestamp_end));
-				} else {
-					return(null);
-				}
-			}
-			glb.get_runset_timediff = function(){
-				var timestamp_ini, timestamp_end;
-				timestamp_ini = glb.get_runset_ini();
-				timestamp_end = glb.get_runset_end();
-				if((timestamp_ini != null) && (timestamp_end != null)){
-					return(timestamp_end - timestamp_ini);
-				} else {
-					return(null);
-				}
-			}
-			
-			// basic check
-			if (Object.keys(glb.webmenu).length == 0){
-				if ($('#'+modelplus.ids.MENU_RUNSET_SBOX).val() !== ""){
-					alert("Missing meta files for menu.");
-				}
-			}
-			
-			modelplus.dom.populate_model_main_sbox();
-			
-			//
-			if (this.runset_id == ''){
-				div_main_obj = $("#" + modelplus.ids.MENU_MAIN_ALERT_DIV);
-				div_main_obj.append(modelplus.labels.SELECT_RUNSET);
-				div_main_obj.show();
-			}
-		});
+		// set up functions
+		glb.get_runset_ini = function(){
+          if (glb.sc_runset.timestamp_ini !== undefined){
+            return(parseInt(glb.sc_runset.timestamp_ini));
+          } else {
+            return(null);
+          }
+        }
+        glb.get_runset_end = function(){
+          if (glb.sc_runset.timestamp_end !== undefined)
+            return(parseInt(glb.sc_runset.timestamp_end));
+          else
+            return(null);
+        }
+        glb.get_runset_timediff = function(){
+          var timestamp_ini, timestamp_end;
+          timestamp_ini = glb.get_runset_ini();
+          timestamp_end = glb.get_runset_end();
+          if((timestamp_ini != null) && (timestamp_end != null)){
+            return(timestamp_end - timestamp_ini);
+          } else {
+            console.log("Someone is null: " + timestamp_ini + " or " + timestamp_end);
+            return(null);
+          }
+        }
+
+        // basic check
+        if (Object.keys(glb.webmenu).length == 0){
+          if ($('#'+modelplus.ids.MENU_RUNSET_SBOX).val() !== ""){
+            alert("Missing meta files for menu.");
+          }
+        }
+
+        modelplus.dom.populate_model_main_sbox();
+
+        //
+        if (this.runset_id == ''){
+          div_main_obj = $("#" + modelplus.ids.MENU_MAIN_ALERT_DIV);
+          div_main_obj.append(modelplus.labels.SELECT_RUNSET);
+          div_main_obj.show();
+        }
+      });
   }
   
   /**
@@ -501,42 +498,43 @@
    * RETURN - Null. Changes are performed in interface.
    */
   modelplus.dom.populate_model_main_sbox = function(){
-	var cur_obj, cur_txt;
-	
-	// clean previous content
-	$('#'+modelplus.ids.MENU_MODEL_MAIN_SBOX).find('option').remove().end();
-		
-	// populate it with empty option
-	cur_obj = $('#'+modelplus.ids.MENU_MODEL_MAIN_SBOX);
-	cur_obj.append('<option value="" selected>Select...</option>');
-	
-	// populate it with models
-	for (var i = 0; i < GLB_vars.prototype.sc_models.length; i++){
-		// ignore hidden models
-		if (GLB_vars.prototype.sc_models[i].show_main == "F"){ continue; }
-		if (GLB_vars.prototype.sc_models[i].show_main == false){ continue; }
-		
-		console.log("Model '"+GLB_vars.prototype.sc_models[i].id+"' : '"+GLB_vars.prototype.sc_models[i].show_main+"'");
-		
-		// add option
-		cur_txt = '<option value="'+GLB_vars.prototype.sc_models[i].id+'">' + 
-						GLB_vars.prototype.sc_models[i].title + 
-					'</option>';
-		cur_obj.append(cur_txt);
-	}
-	
-	// populate it with model combinations
-	for (var i = 0; i < GLB_vars.prototype.sc_model_combinations.length; i++){
-		cur_txt = '<option value="' + GLB_vars.prototype.sc_model_combinations[i].id + '">' + 
-						GLB_vars.prototype.sc_model_combinations[i].title + 
-					'</option>';
-		cur_obj.append(cur_txt);
-	}
-	
-	// define function to be run on change
-	$('#'+modelplus.ids.MENU_MODEL_MAIN_SBOX).change(modelplus.dom.onchange_model_main_sbox);
-	$('#'+modelplus.ids.MENU_MODEL_COMP_SBOX).change(modelplus.dom.onchange_model_comp_sbox);
-	$('#'+modelplus.ids.MENU_MODEL_MAIN_SBOX).change();
+    var cur_obj, cur_txt, gbl, mpi, mpd;
+    gbl = GLB_vars.prototype;
+    mpi = modelplus.ids;
+    mpd = modelplus.dom;
+
+    // clean previous content
+    $('#'+mpi.MENU_MODEL_MAIN_SBOX).find('option').remove().end();
+
+    // populate it with empty option
+    cur_obj = $('#'+mpi.MENU_MODEL_MAIN_SBOX);
+    cur_obj.append('<option value="" selected>Select...</option>');
+
+    // populate it with models
+    for (var i = 0; i < gbl.sc_models.length; i++){
+      // ignore hidden models
+      if (gbl.sc_models[i].show_main == "F"){ continue; }
+      if (gbl.sc_models[i].show_main == false){ continue; }
+
+      // add option
+      cur_txt = '<option value="'+gbl.sc_models[i].id+'">' + 
+                  gbl.sc_models[i].title + 
+                '</option>';
+      cur_obj.append(cur_txt);
+    }
+
+    // populate it with model combinations
+    for (var i = 0; i < gbl.sc_model_combinations.length; i++){
+      cur_txt = '<option value="' + gbl.sc_model_combinations[i].id + '">' + 
+                  gbl.sc_model_combinations[i].title + 
+                '</option>';
+      cur_obj.append(cur_txt);
+    }
+
+    // define function to be run on change
+    $('#'+mpi.MENU_MODEL_MAIN_SBOX).change(mpd.onchange_model_main_sbox);
+    $('#'+mpi.MENU_MODEL_COMP_SBOX).change(mpd.onchange_model_comp_sbox);
+    $('#'+mpi.MENU_MODEL_MAIN_SBOX).change();
   }
   
   /**
@@ -1454,8 +1452,9 @@ function load_ifis_rain(the_id, vis){
 	var legend_url;
 	
 	// some constants
-	GLB_ifisrain_callback.prototype.design_sc = 11;                                                            // TODO - make it come from meta files
-	GLB_ifisrain_callback.prototype.design_rt = 5;                                                             // TODO - make it come from meta files
+	var gbl_cbk = GLB_ifisrain_callback.prototype;
+	gbl_cbk.design_sc = 11;                                                            // TODO - make it come from meta files
+	gbl_cbk.design_rt = 5;                                                             // TODO - make it come from meta files
 	
 	// get parameter id that is going to be shown
 	/*
@@ -1478,20 +1477,20 @@ function load_ifis_rain(the_id, vis){
 	}
 	
 	// build arguments object
-	GLB_ifisrain_callback.prototype.call = function(last_timestamp){
+	gbl_cbk.call = function(last_timestamp){
 		var check_before, check_after;
 		
-		GLB_ifisrain_callback.prototype.ref_timestamp0 = last_timestamp;
-		check_before = $("#np" + GLB_ifisrain_callback.prototype.id).hasClass("npact");
-		ifis_rain_maps(GLB_ifisrain_callback.prototype.vis, GLB_ifisrain_callback.prototype.type);
-		check_after = $("#np" + GLB_ifisrain_callback.prototype.id).hasClass("npact");
+		gbl_cbk.ref_timestamp0 = last_timestamp;
+		check_before = $("#np" + gbl_cbk.id).hasClass("npact");
+		ifis_rain_maps(gbl_cbk.vis, gbl_cbk.type);
+		check_after = $("#np" + gbl_cbk.id).hasClass("npact");
 		
 		if (check_before != check_after){
-			$("#np" + GLB_ifisrain_callback.prototype.id).addClass("npact");
+			$("#np" + gbl_cbk.id).addClass("npact");
 		}
 	}
-	GLB_ifisrain_callback.prototype.url1 = build_folder_path(prefix, sc_representation_id, sc_runset_id);
-	GLB_ifisrain_callback.prototype.url2 = sc_representation_id + '.png';
+	gbl_cbk.url1 = build_folder_path(prefix, sc_representation_id, sc_runset_id);
+	gbl_cbk.url2 = sc_representation_id + '.png';
 	//GLB_ifisrain_callback.prototype.legend = GLB_urls.prototype.base_image_folder + 'cscale_qindexn.png';  // TODO - make it come from meta files
 	
 	// get JSON object
@@ -1515,73 +1514,47 @@ function load_ifis_rain(the_id, vis){
 		}
 	}
 	if(legend_id == null){ legend_id = "nolegend"; }
-	GLB_ifisrain_callback.prototype.legend = modelplus.viewer.image_legend_folder + legend_id + '.png';
+	gbl_cbk.legend = modelplus.viewer.image_legend_folder + legend_id + '.png';
 	
 	// set up calendar type, design, 
-	GLB_ifisrain_callback.prototype.id = the_id;
+	gbl_cbk.id = the_id;
 	if (json_repr_obj.calendar_type == "daily"){
-		GLB_ifisrain_callback.prototype.type = 10118;
-		GLB_ifisrain_callback.prototype.design = null;
+		gbl_cbk.type = 10118;
+		gbl_cbk.design = null;
 	} else {
-		GLB_ifisrain_callback.prototype.type = the_id;
+		gbl_cbk.type = the_id;
 		runset_time_interval = GLB_vars.prototype.get_runset_timediff();
 		var eval_ini, eval_end;
 		eval_ini = 9 * 24 * 60 * 60;   // 10-days min threshold
 		eval_end = 11 * 24 * 60 * 60;  // 10-days max threshold
-		
-		// olds
-		/*
-		if ((sc_runset_id == 'realtime') || 
-			((runset_time_interval != null)&&(runset_time_interval >= eval_ini)&&(runset_time_interval <= eval_end))){
-			console.log("  Fits [" + eval_ini + " < " + runset_time_interval + " < " + eval_end + "].");
-			GLB_ifisrain_callback.prototype.design = GLB_ifisrain_callback.prototype.design_rt;
-			GLB_ifisrain_callback.prototype.array_end = 240;
-		} else {
-			console.log("  FAIL [" + eval_ini + " < " + runset_time_interval + " < " + eval_end + "].");
-			GLB_ifisrain_callback.prototype.design = GLB_ifisrain_callback.prototype.design_sc;
-			GLB_ifisrain_callback.prototype.array_end = 480;
-		}
-		*/
 
 		// news
 		// for hourly
 		if (GLB_vars.prototype.is_model_combination(sc_model1_id)){
-			GLB_ifisrain_callback.prototype.design = GLB_ifisrain_callback.prototype.design_sc;
-			GLB_ifisrain_callback.prototype.array_end = 480;
-			// GLB_ifisrain_callback.prototype.array_start = 240;
-			GLB_ifisrain_callback.prototype.array_init = 240;
+			gbl_cbk.design = gbl_cbk.design_sc;
+			gbl_cbk.array_end = 480;
+			gbl_cbk.array_init = 240;
 		} else {
 			// TODO - use another most appropriate condition - based on representation information
 			if ((sc_runset_id == 'realtime') || 
 				((runset_time_interval != null)&&(runset_time_interval >= eval_ini)&&(runset_time_interval <= eval_end)) ||
 				(((sc_model1_id.indexOf('fore') !== -1) || (sc_model1_id.indexOf('past') !== -1)) && (sc_model1_id.indexOf('pastfore') == -1))){
-				GLB_ifisrain_callback.prototype.design = GLB_ifisrain_callback.prototype.design_rt;
-				GLB_ifisrain_callback.prototype.array_end = 240;
-				// GLB_ifisrain_callback.prototype.array_start = 0;
-				GLB_ifisrain_callback.prototype.array_init = 0;
+				gbl_cbk.design = gbl_cbk.design_rt;
+				gbl_cbk.array_end = 240;
+				gbl_cbk.array_init = 0;
 			} else {
 				console.log("  FAIL [" + eval_ini + " < " + runset_time_interval + " < " + eval_end + "].");
-				GLB_ifisrain_callback.prototype.design = GLB_ifisrain_callback.prototype.design_sc;
-				GLB_ifisrain_callback.prototype.array_end = 480;
-				// GLB_ifisrain_callback.prototype.array_start = 0;
-				GLB_ifisrain_callback.prototype.array_init = 0;
+				gbl_cbk.design = gbl_cbk.design_sc;
+				gbl_cbk.array_end = 480;
+				gbl_cbk.array_init = 0;
 			}
 		}
 		
 	}
 	
 	// set up other variables
-	GLB_ifisrain_callback.prototype.vis = vis;
-	GLB_ifisrain_callback.prototype.representation_id = sc_representation_id;
-	
-	// set up total interval
-	/*
-	if ($('#'+modelplus.ids.MENU_RUNSET_SBOX).val() == 'realtime'){
-		GLB_ifisrain_callback.prototype.array_end = 240;
-	} else {
-		GLB_ifisrain_callback.prototype.array_end = 480;
-	}
-	*/
+	gbl_cbk.vis = vis;
+	gbl_cbk.representation_id = sc_representation_id;
 	
 	// read reference timestamp and load images after returning from AJAX
 	read_reference_timestamp0_map(sc_runset_id, sc_model1_id, sc_model2_id, sc_representation_id, GLB_ifisrain_callback.prototype.call);

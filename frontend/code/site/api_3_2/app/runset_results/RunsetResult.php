@@ -1,9 +1,11 @@
 <?php
 
   namespace Results;
+  use Exception;
   
   class RunsetResult{
     
+	const REALTIME_RUNSET_ID = "realtime"; // TODO - send to the config.
     const ROOT_ATTR = "sc_runset";  // must-have
     public $attr;                   // must-have
     private static $app;            // must-have
@@ -58,6 +60,51 @@
       return($made);
     }
     
+    /**
+     * Save realtime status as an snapshot
+	 * $attributes: Dictionary with 
+     */
+    public static function saveRealtimeSnapshot($attributes){
+      
+      $runset_id = $attributes['id'];
+	  $root_l_folder_path = self::$app->fss->runsets_result_folder_path;
+	  $root_t_folder_path = self::$app->fss->runsets_result_target_folder_path;
+	  
+	  // define folders
+	  $source_folder_path = $root_t_folder_path.self::REALTIME_RUNSET_ID;
+      $destin_folder_path = $root_l_folder_path.$runset_id;
+	  
+	  /*
+	  // check if destination folder already exists
+      if (file_exists($destin_folder_path))
+        exec("rm -r ".$destin_folder_path);
+	    // throw new Exception('Folder '.$destin_folder_path.' already exists.');
+		// throw new Exception('Runset '.$runset_id.' already exists.');
+	  
+	  // copy entire folder
+	  exec("cp -r ".$source_folder_path." ".$destin_folder_path);
+	  */
+	  exec("chmod -R ugo+wrx ".$destin_folder_path);
+	  
+	  //echo("Copyied '".$source_folder_path."' to '".$destin_folder_path."'.");
+	  
+	  // read, change and save runset file content
+	  $destin_runset_file_path = $root_t_folder_path.$runset_id;
+	  $destin_runset_file_path .= RunsetResult::SUB_FILE_PATH;
+	  $json_content = json_decode(file_get_contents($destin_runset_file_path));
+	  $json_content->sc_runset->id = $runset_id;
+	  $json_content->sc_runset->title = $attributes['name'];
+	  $json_content->sc_runset->description = $attributes['about'];
+	  $json_content->sc_runset->timestamp_ini = $attributes['timestamp_ini'];
+	  $json_content->sc_runset->timestamp_end = $attributes['timestamp_end'];
+	  $json_content = json_encode($json_content);
+	  $written = @file_put_contents($destin_runset_file_path, $json_content);
+	  if(!$written)
+        throw new Exception("Unable to write file '$destin_runset_file_path'.");
+
+	  return(true);
+    }
+    
     // ///////////////////// GENERAL ///////////////////// //
     
     /**
@@ -106,9 +153,9 @@
      */
     public static function concurrentlyTo($runset_id){
       $TIME_INI = "timestamp_ini";
-	  $TIME_END = "timestamp_end";
-	  
-	  // retrieve initial and final timestamps
+      $TIME_END = "timestamp_end";
+      
+      // retrieve initial and final timestamps
       $reference_runset = RunsetResult::where("id", $runset_id);
       if(count($reference_runset) == 0) return(array());
       $timestamp_ini = $reference_runset[0]->attr[$TIME_INI];
@@ -119,10 +166,10 @@
       $all_return = array();
       foreach($all_objects as $cur_object){
         if(!isset($cur_object->attr[$TIME_INI])){ continue; }
-		if(!isset($cur_object->attr[$TIME_END])){ continue; }
-		if($cur_object->attr["id"] == $runset_id){ continue; }
-		if (($cur_object->attr[$TIME_INI] == $timestamp_ini) && 
-		    ($cur_object->attr[$TIME_END] == $timestamp_end)){
+        if(!isset($cur_object->attr[$TIME_END])){ continue; }
+        if($cur_object->attr["id"] == $runset_id){ continue; }
+        if (($cur_object->attr[$TIME_INI] == $timestamp_ini) && 
+            ($cur_object->attr[$TIME_END] == $timestamp_end)){
           $cur_object->fill_object();
           array_push($all_return, $cur_object);
         }
@@ -133,40 +180,40 @@
     // ///////////////////// SPECIFIC //////////////////// //
   
     /**
-	 * 
-	 * $scopes : Array of strings. Expected values like 'main', 'sandbox'
-	 * RETURN : TRUE if able to update, FALSE otherwise
-	 */
+     * 
+     * $scopes : Array of strings. Expected values like 'main', 'sandbox'
+     * RETURN : TRUE if able to update, FALSE otherwise
+     */
     public function show_main($scopes){
       // basic check
-	  if(!is_array($scopes)) return(false);
-	  
-	  if (($this->attr['show_main'] == "T")||(is_null($this->attr['show_main']))){
-		$this->attr['show_main'] = array("main", "sandbox");
+      if(!is_array($scopes)) return(false);
+      
+      if (($this->attr['show_main'] == "T")||(is_null($this->attr['show_main']))){
+        $this->attr['show_main'] = array("main", "sandbox");
       }
-	  
-	  $this->attr['show_main'] = array_merge($this->attr['show_main'], 
-	                                         $scopes);
+      
+      $this->attr['show_main'] = array_merge($this->attr['show_main'], 
+                                             $scopes);
       $this->attr['show_main'] = array_unique($this->attr['show_main']);
-	  $this->update_runset_file();
-	}
-	
-	/**
-	 * 
-	 * $scopes : Array of strings. Expected values like 'main', 'sandbox'
-	 */
+      $this->update_runset_file();
+    }
+    
+    /**
+     * 
+     * $scopes : Array of strings. Expected values like 'main', 'sandbox'
+     */
     public function hide_main($scopes){
       // basic check
-	  if(!is_array($scopes)) return(false);
-	  
-	  if ($this->attr['show_main'] == "T"){
-		$this->attr['show_main'] = array("main", "sandbox");
+      if(!is_array($scopes)) return(false);
+      
+      if ($this->attr['show_main'] == "T"){
+        $this->attr['show_main'] = array("main", "sandbox");
       }
-	  
-	  $this->attr['show_main'] = array_diff($this->attr['show_main'],
-	                                        $scopes);
+      
+      $this->attr['show_main'] = array_diff($this->attr['show_main'],
+                                            $scopes);
       $this->update_runset_file();
-	}
+    }
   
     /**
      * Fill the content of the object
@@ -176,7 +223,7 @@
       ini_set('display_errors', 1);
 
       $runset_id = $this->attr['id'];
-	
+    
       // read sc_models
       ModelResult::setApp(RunsetResult::$app);
       $this->attr['sc_model'] = ModelResult::all($runset_id);
@@ -186,39 +233,39 @@
       $this->attr['sc_reference'] = ReferenceResult::all($runset_id);
     
       // read sc_evaluation
-	  MetaFile::set_app(RunsetResult::$app);
-	  $this->attr['sc_representation'] = RepresentationResult::all($runset_id);
-	  $this->attr['sc_model_combination'] = ModelCombinationResult::all($runset_id);
-	  $this->attr['sc_evaluation'] = EvaluationResult::all($runset_id);
-	  $this->attr['forecast_set'] = ForecastSet::get_base($runset_id);
+      MetaFile::set_app(RunsetResult::$app);
+      $this->attr['sc_representation'] = RepresentationResult::all($runset_id);
+      $this->attr['sc_model_combination'] = ModelCombinationResult::all($runset_id);
+      $this->attr['sc_evaluation'] = EvaluationResult::all($runset_id);
+      $this->attr['forecast_set'] = ForecastSet::get_base($runset_id);
       $this->attr['comp_mtx'] = ComparisonResult::get_base($runset_id);
       $this->attr['web_menu'] = Menu::get_base($runset_id);
     }
-	
-	/**
+    
+    /**
      * 
      */
-	private function update_runset_file(){
+    private function update_runset_file(){
       
-	  // filter data
-	  $new_obj = array();
-	  $copied_keys = array("id", "title", "description", "timestamp_ini", 
-	                       "timestamp_end", "show_main");
-	  foreach($copied_keys as $cur_key){
+      // filter data
+      $new_obj = array();
+      $copied_keys = array("id", "title", "description", "timestamp_ini", 
+                           "timestamp_end", "show_main");
+      foreach($copied_keys as $cur_key){
         if(array_key_exists($cur_key, $this->attr)){
           $new_obj[$cur_key] = $this->attr[$cur_key];
-		}
-	  }
-	  $new_obj = array("sc_runset" => $new_obj);
-	  $out_json = json_encode($new_obj, JSON_PRETTY_PRINT);
-	  
-	  // define main file
-	  $out_path = self::$app->fss->runsets_result_folder_path;
-	  $out_path .= $this->attr['id'] . RunsetResult::SUB_FILE_PATH;
-	  
-	  // write it
-	  file_put_contents($out_path, $out_json);
-	}
+        }
+      }
+      $new_obj = array("sc_runset" => $new_obj);
+      $out_json = json_encode($new_obj, JSON_PRETTY_PRINT);
+      
+      // define main file
+      $out_path = self::$app->fss->runsets_result_folder_path;
+      $out_path .= $this->attr['id'] . RunsetResult::SUB_FILE_PATH;
+      
+      // write it
+      file_put_contents($out_path, $out_json);
+    }
   }
 
 ?>

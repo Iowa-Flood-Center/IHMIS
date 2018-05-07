@@ -4,7 +4,7 @@
 
 GLB_vars_settings = function(){};
 GLB_vars_settings.prototype.delete_url = modelplus.url.proxy + modelplus.url.base_webservice + "ws_delete_runset.php";      // TODO - move to API
-GLB_vars_settings.prototype.settings_base_url = modelplus.url.base_frontend_sandbox + "index_3_1/settings/";
+GLB_vars_settings.prototype.settings_base_url = modelplus.url.base_frontend_sandbox + "index_3_2/settings/";
 GLB_vars_settings.prototype.evaluations_list_url = modelplus.url.proxy + GLB_vars_settings.prototype.settings_base_url + "ws_list_evaluations_possible.php";
 GLB_vars_settings.prototype.evaluations_delete_url = modelplus.url.proxy + GLB_vars_settings.prototype.settings_base_url + "ws_delete_evaluation_possible.php";
 
@@ -225,6 +225,38 @@ var modelplus = modelplus || {};
       }
   }
   
+  /**
+   *
+   * RETURN :
+   */
+  modelplus.settings.create_runset_snapshot = function(){
+	var url_dict;
+  
+    // get args from form
+    url_dict = {
+      id: $("#snap_id").val(),
+      name: $("#snap_name").val(),
+      about: $("#snap_about").val(),
+      timestamp_ini: $("#runset_beg").val(),
+      timestamp_end: $("#runset_end").val()
+    };
+
+    // basic check
+    if ((url_dict.runset_id == "") || (url_dict.runset_name == "")){
+      $('#saving_status').html("Both runset id and runset name must be provided.");
+      return;
+    } else {
+      $('#saving_status').html("Saving runset...");
+    }
+	
+	// perform API call
+	modelplus.api.save_runset_snapshot(url_dict)
+      .then(function(data){
+        console.log(JSON.stringify(data));
+        $('#saving_status').html("Runset saved!");
+      });
+  }
+  
 })();
 
 /**************************************************************************************/
@@ -265,56 +297,6 @@ function delete_evaluation(evaluation_id){
  */
 function two_digits(number){
     return number > 9 ? "" + number: "0" + number;
-}
-
-/**
- *
- * RETURN :
- */
-function create_system_snapshot(){
-  var runset_id, runset_name, runset_about, runset_beg, runset_end;
-  var ws_url, ws_page;
-  
-  // get args from form
-  runset_id = $("#snap_id").val();
-  runset_name = $("#snap_name").val();
-  runset_about = $("#snap_about").val();
-  runset_beg = $("#runset_beg").val();
-  runset_end = $("#runset_end").val();
-  
-  // basic check
-  if ((runset_id == "") || (runset_name == "")){
-    alert("Both runset id and runset name must be provided.");
-    return;
-  }
-  
-  // build url
-  ws_page = "ws_create_snapshot.php";
-  ws_page += "?runsetid="+runset_id;
-  ws_page += "&runsetname="+runset_name;
-  ws_page += "&runsetabout="+runset_about;
-  ws_page += "&runsetstart="+runset_beg;
-  ws_page += "&runsetend="+runset_end;
-  ws_url = GLB_vars_settings.prototype.settings_base_url + ws_page;
-  
-  console.log("Accessing '" + ws_url + "'.");
-  
-  // work with result
-  $.ajax({
-    url: ws_url,
-    success: function(data) {
-      json_obj = JSON.parse(data);
-      if (json_obj["Saved"] !== undefined){
-        alert("Saved snapshot.");
-        $("#snap_id").val = "";
-        $("#snap_name").val = "";
-      }else if (json_obj["error"] !== undefined) {
-        alert("ERROR: " + json_obj["error"]);
-      } else {
-        alert("Got:" + JSON.stringify(json_obj));
-      }
-    }
-  });
 }
 
 /**
@@ -367,7 +349,9 @@ function create_save_menu(){
   the_html_save += "<div class='save_snapshot_right'>" + current_str + "</div>";
   the_html_save += "<input type='hidden' id='runset_end' value='" + current_round_timestamp + "' ></div>";
   
-  the_html_save += "<div style='text-align:center; width:325px'><input type='button' value='Submit' onclick='create_system_snapshot();' /></div>";
+  the_html_save += "<div class='save_snapshot_center'><input type='button' value='Submit' onclick='modelplus.settings.create_runset_snapshot();' /></div>";
+  
+  the_html_save += "<div class='save_snapshot_center status' id='saving_status'></div>";
   
   return (the_html_save);
 }

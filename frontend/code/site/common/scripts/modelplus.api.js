@@ -18,12 +18,13 @@ var modelplus = modelplus || {};
   var api_url = modelplus.url.proxy + modelplus.url.api;
   
   modelplus.api = modelplus.api || {};
+  var mpa = modelplus.api;
   
   // 
   // forcing_id : 
   // timestamp_ini : 
   // timestamp_end : 
-  modelplus.api.get_forcing_options = function(forcing_id, timestamp_ini, timestamp_end){
+  mpa.get_forcing_options = function(forcing_id, timestamp_ini, timestamp_end){
     var ws_url;
     ws_url = api_url + "forcing_sources";
     ws_url += "%i%from_type=" + forcing_id;
@@ -34,7 +35,7 @@ var modelplus = modelplus || {};
   
   //
   // hlm_id : expected values such as 190, 254, ...
-  modelplus.api.get_forcing_types_for_hlm = function(hlm_id){
+  mpa.get_forcing_types_for_hlm = function(hlm_id){
     var ws_url;
     ws_url = api_url + 'forcing_types%i%from_hlmodel='+hlm_id;
     return ($.getJSON(ws_url));
@@ -42,14 +43,14 @@ var modelplus = modelplus || {};
   
   //
   // hlm_id : expected values such as 190, 254, ...
-  modelplus.api.get_global_parameters_for_models = function(hlm_id){
+  mpa.get_global_parameters_for_models = function(hlm_id){
     var ws_url;
 	ws_url = 'hl_models_global_parameters%i%from_hlmodel='+hlm_id;
 	return ($.getJSON(ws_url));
   }
   
   // 
-  modelplus.api.get_hlm_options = function(timestamp_ini, timestamp_end){
+  mpa.get_hlm_options = function(timestamp_ini, timestamp_end){
     var ws_url;
     ws_url = api_url +'hl_models';
 	ws_url += '%i%timestamp_ini=' + timestamp_ini;
@@ -60,7 +61,7 @@ var modelplus = modelplus || {};
   // 
   // hlm_id : expected values such as 190, 254, ...
   // references_ids : array of reference ids
-  modelplus.api.get_evaluations_for_hlm = function(hlm_id, references_ids){
+  mpa.get_evaluations_for_hlm = function(hlm_id, references_ids){
     var ws_url;
     ws_url = api_url + 'sc_evaluations%i%for_hlmodel=' + hlm_id;
 	ws_url += '%e%from_references=' + (references_ids.join(","));
@@ -69,7 +70,7 @@ var modelplus = modelplus || {};
   
   // Retrieves all representations that can be obtained from an hlm model
   // hlm_id : expected values such as 190, 254, ...
-  modelplus.api.get_representations_for_hlm = function(hlm_id){
+  mpa.get_representations_for_hlm = function(hlm_id){
     var ws_url;
 	ws_url = api_url + "sc_representations";
     ws_url += '%i%from_hlmodel=' + hlm_id;
@@ -78,7 +79,7 @@ var modelplus = modelplus || {};
   
   // Get all possible combined representations
   // repres_acronym : expected array of Strings
-  modelplus.api.get_representations_from_combining = function(repres_acronym){
+  mpa.get_representations_from_combining = function(repres_acronym){
     var ws_url;
 	ws_url = api_url + "sc_representations%i%from_combining=";
 	ws_url += repres_acronym.join(",");
@@ -88,7 +89,7 @@ var modelplus = modelplus || {};
   // Retrieves all common representations for two hlm models
   // hlm_id_1 : expected values such as 190, 254, ...
   // hlm_id_2 : expected values such as 190, 254, ...
-  modelplus.api.get_common_representations_for_hlms = function(hlm_id_1, hlm_id_2){
+  mpa.get_common_representations_for_hlms = function(hlm_id_1, hlm_id_2){
     var ws_url;
 	ws_url = api_url + "sc_representations";
     ws_url += '%i%from_hlmodel=' + hlm_id_1;
@@ -97,28 +98,28 @@ var modelplus = modelplus || {};
   }
   
   // Retrieves basic information from available Runset Results
-  modelplus.api.get_runset_results = function(){
+  mpa.get_runset_results = function(){
     var ws_url;
 	ws_url = api_url + "sc_runset_results";
 	return ($.getJSON(ws_url));
   }
   
   // Retrieves information from a specific Runset Result
-  modelplus.api.get_runset_result = function(runset_id){
+  mpa.get_runset_result = function(runset_id){
     var ws_url;
     ws_url = api_url + "sc_runset_results%i%id=" + runset_id;
     return ($.getJSON(ws_url));
   }
   
   // 
-  modelplus.api.get_runset_result_with_title = function(runset_title){
+  mpa.get_runset_result_with_title = function(runset_title){
     var ws_url;
     ws_url = api_url + "sc_runset_results%i%title=" + runset_title;
     return ($.getJSON(ws_url));
   }
   
   // Retrieves information from all Runset Result concurrently to another
-  modelplus.api.get_concurrently_runset_results = function(runset_id){
+  mpa.get_concurrently_runset_results = function(runset_id){
     var ws_url;
 	ws_url = api_url + "sc_runset_results%i%concurrently_id=" + runset_id;
     return ($.getJSON(ws_url));
@@ -127,7 +128,7 @@ var modelplus = modelplus || {};
   // 
   // runset_id: String. Runset ID.
   // main_visibility: Boolean. TRUE if visible in main, FALSE otherwise.
-  modelplus.api.change_runset_result_main_visibility = function(runset_id, main_visibility){
+  mpa.change_runset_result_main_visibility = function(runset_id, main_visibility){
     var post_url, ws_args, ws_parm;
 	post_url = api_url + "sc_runset_results";
 	ws_args = {"runset_id": runset_id};
@@ -137,14 +138,14 @@ var modelplus = modelplus || {};
   }
   
   // Tries to reserve a runset id
-  modelplus.api.reserve_runset_id = function(runset_id){
+  mpa.reserve_runset_id = function(runset_id){
     var post_url;
     post_url = api_url + "sc_runset_results";
     return($.post(post_url, {"runset_id": runset_id}));
   }
   
   // Retrieves a Runset id that can be used for new Runsets
-  modelplus.api.get_auto_runset_id = function(){
+  mpa.get_auto_runset_id = function(){
 	var get_url;
 	get_url = api_url + "sc_runsets";
 	get_url += "%i%do=get_new_runset_id";
@@ -166,24 +167,32 @@ var modelplus = modelplus || {};
           return (PREFIX + max_num_str);
         }));
   }
+
+  // Sace current realtime runset as a snapshot
+  // post_dictionary : expects dictionary with 'runset_id', 'runset_name', 'runset_about', 'timestamp_ini', 'timestamp_end'
+  mpa.save_runset_snapshot = function(post_dictionary){
+    var ws_url;
+    ws_url = api_url + "sc_runset_snapshot/new";
+    return ($.post(ws_url, post_dictionary));
+  }
   
   // Submit a request for new runset
   // post_dictionary : expects dictionary with 'runset_name', 'timestamp_ini', 'reference_ids', ... keys
-  modelplus.api.request_new_runset = function(post_dictionary){
+  mpa.request_new_runset = function(post_dictionary){
     var ws_url;
 	ws_url = api_url + "sc_runset_requests/new";
 	return ($.post(ws_url, post_dictionary));
   }
   
   // Submit a request for a runset merge
-  modelplus.api.request_new_runset_merge = function(post_dictionary){
+  mpa.request_new_runset_merge = function(post_dictionary){
     var ws_url;
 	ws_url = api_url + "sc_runset_merge_requests/new";
 	return ($.post(ws_url, post_dictionary));
   }
   
   // 
-  modelplus.api.get_runset_merge_in_waiting_room = function(){
+  mpa.get_runset_merge_in_waiting_room = function(){
     var ws_url;
 	ws_url = api_url + "sc_runset_merge_requests";
 	ws_url += "%i%from=waitingroom"
@@ -193,7 +202,7 @@ var modelplus = modelplus || {};
   // 
   // runset_id : String.
   // model_id : String.
-  modelplus.api.get_model_result = function(runset_id, model_id){
+  mpa.get_model_result = function(runset_id, model_id){
     var ws_url;
 	ws_url = api_url + "sc_model_results";
 	ws_url += "%i%runset_id=" + runset_id;
@@ -204,7 +213,7 @@ var modelplus = modelplus || {};
   // 
   // runset_id : String.
   // model_title : String.
-  modelplus.api.get_model_result_with_title = function(runset_id, model_title){
+  mpa.get_model_result_with_title = function(runset_id, model_title){
     var ws_url;
 	ws_url = api_url + "sc_model_results";
 	ws_url += "%i%runset_id=" + runset_id;
@@ -215,7 +224,7 @@ var modelplus = modelplus || {};
   //
   // runset_id : String.
   // model_ids : Array of Strings.
-  modelplus.api.delete_model_from_runset_result = function(runset_id, model_id){
+  mpa.delete_model_from_runset_result = function(runset_id, model_id){
     var ws_url;
 	ws_url = api_url + "sc_runset_model_results";
 	ws_url += "/" + runset_id;
@@ -226,7 +235,7 @@ var modelplus = modelplus || {};
   //  
   // types : Array of Integers.
   // clean_description: Boolean.
-  modelplus.api.get_gages_by_type = function(types, clean_description, with_link_id){
+  mpa.get_gages_by_type = function(types, clean_description, with_link_id){
     var ws_url;
 	var clean_sub_url, connected_to_sub_url;
 
@@ -262,7 +271,7 @@ var modelplus = modelplus || {};
   // runset_id : String.
   // model_id : String.
   // result_id : String.
-  modelplus.api.get_timestamp_ref0 = function(runset_id,
+  mpa.get_timestamp_ref0 = function(runset_id,
                                               model_id,
                                               result_id){
     var ws_url;

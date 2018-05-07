@@ -103,3 +103,12 @@ div.save_snapshot_right {
   display:block;
   float:left;
 }
+
+div.save_snapshot_center {
+  text-align:center; 
+  width:325px;
+}
+
+div.status {
+  background-color:#DEDEDE;
+}

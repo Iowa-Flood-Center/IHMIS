@@ -2,6 +2,7 @@ function custom_display(){
 	"use strict";
 	var runset_id, modelcomb_id, reprcomp_id;
 	var all_links_dict, gages_location_dict;
+	var glb_v = GLB_visual.prototype;
 	
 	/**
 	 *
@@ -85,7 +86,9 @@ function custom_display(){
 		url: ws_data_url
 	}).success(function(data){
 		all_links_dict = JSON.parse(data);
-		if (all_links_dict == null){ console.log("hydrographmultiplesdot: got null for all links."); }
+		if (all_links_dict == null){ 
+			console.log("hydrographmultiplesdot: got null for all links.");
+		}
 		display_when_possible();
 	});
 	
@@ -95,7 +98,9 @@ function custom_display(){
 		url: ws_gages_location_url
 	}).success(function(data){
 		gages_location_dict = JSON.parse(data);
-		if (all_links_dict == null){ console.log("hydrographmultiplesdot: got null for gages location."); }
+		if (all_links_dict == null){
+			console.log("hydrographmultiplesdot: got null for gages location.");
+		}
 		display_when_possible();
 	});
 	
@@ -110,8 +115,8 @@ function custom_display(){
 		if ((all_links_dict == null) || (gages_location_dict == null)){ return; }
 		
 		// create reference list for icon in global var if necessary
-		if(typeof(GLB_visual.prototype.polygons[reprcomp_id]) === 'undefined'){
-			GLB_visual.prototype.polygons[reprcomp_id] = [];
+		if(typeof(glb_v.polygons[reprcomp_id]) === 'undefined'){
+			glb_v.polygons[reprcomp_id] = [];
 		}
 		
 		// debug
@@ -166,7 +171,7 @@ function custom_display(){
 			google.maps.event.addListener(cur_marker, "click", on_icon_click);
 			
 			// add polygon to the reference list
-			GLB_visual.prototype.polygons[reprcomp_id].push(cur_marker);
+			glb_v.polygons[reprcomp_id].push(cur_marker);
 		}
 		
 		modelplus.scripts.load(chart_lib_url, function(){});
@@ -188,8 +193,6 @@ function custom_display(){
 		json_reader_ws += "%e%link_id="+link_id;
 		
 		modelplus.hydrograph.create_tmp();
-		
-		console.log("hydrographmultiplesdot: Loaded '"+json_reader_ws+"'.");
 		
 		// configure for module loader
 		require.config({
@@ -640,4 +643,29 @@ function custom_display(){
 			}
 		);
 	}
+}
+
+function custom_search(search_txt){
+  "use strict";
+  var i, desc, searched_txt_lc;
+  var glb_v = GLB_visual.prototype;
+  
+  var reprcomp_id = "hydrographmultiplesdot";
+  
+  // is it a 'show-all' search?
+  if((search_txt == "") || (search_txt == null)){
+    for(i = 0; i < glb_v.polygons[reprcomp_id].length; i++)
+      glb_v.polygons[reprcomp_id][i].setMap(map);
+	return;
+  }
+  
+  // nope, so lets filter it
+  searched_txt_lc = search_txt.toLowerCase();
+  for(i = 0; i < glb_v.polygons[reprcomp_id].length; i++){
+    title = glb_v.polygons[reprcomp_id][i].title.toLowerCase();
+    if(title.indexOf(searched_txt_lc) == -1)
+      glb_v.polygons[reprcomp_id][i].setMap(null);
+    else
+      glb_v.polygons[reprcomp_id][i].setMap(map);
+  }
 }

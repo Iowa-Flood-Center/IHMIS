@@ -465,7 +465,6 @@ richhydroforecast01.onSlideUpdateLabel = function(issue_timestamp){
       spanObj.innerHTML = lead_time + " hours ago (around " + lead_label + ")";
     }
   }
-  console.log("...hours ago.");
 }
 
 /**

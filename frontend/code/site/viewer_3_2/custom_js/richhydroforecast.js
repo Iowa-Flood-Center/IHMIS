@@ -178,7 +178,6 @@ function custom_display(){
 			});
 			
 			// build hydrograph
-			console.log(JSON.stringify(modelplus.custom_display.selected_models));
 			richhydroforecast01.ajaxCall(null, false, null, cb_build_hydrograph, modelplus.custom_display.selected_models);  // change to null
 		};
 		

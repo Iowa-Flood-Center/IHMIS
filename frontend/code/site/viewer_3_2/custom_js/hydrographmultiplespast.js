@@ -166,7 +166,6 @@ function custom_display(){
 					
 			function (ec) {
 		
-				console.log("hydrographmultiplespast: Calling '" + json_reader_ws + "'.");
 				$.ajax({
 					url: json_reader_ws
 				}).done(function(data){
@@ -249,7 +248,6 @@ function custom_display(){
 						});
 						counter_mdls = counter_mdls + 1;
 					}
-					console.log("Found " + Object.keys(json_data["sref"]).length + " tags of 'sref'.");
 					for(var k in json_data["sref"]){
 						max_sref_idx = -1;
 						max_sref_stg = -1;
@@ -289,9 +287,6 @@ function custom_display(){
 						correct_title = json_data["sref"][k]["sc_reference_title"];
 						false_title = "Reference";
 						contole_lenght = json_data["sref"][k]["stage_obs"].length;
-						console.log("Adding reference with size " + contole_lenght);
-						// console.log("Adding reference with size " + contole_lenght + " from " + json_data["sref"][k]["stage_obs"][0][0] + " to " + json_data["sref"][k]["stage_obs"][contole_lenght-1][0] + ".");
-						// console.log("        from " + json_data["sref"][k]["stage_obs"][0][0] + " to " + json_data["sref"][k]["stage_obs"][contole_lenght-1][0] + ".");
 						if (json_data["sref"][k]["stage_obs"].length > 0){
 							legend_array.push(correct_title);
 							series_obj.push({

@@ -588,3 +588,28 @@ function custom_display(){
 		modelplus.scripts.load(chart_lib_url, function(){});
 	}
 }
+
+function custom_search(search_txt){
+  "use strict";
+  var i, desc, searched_txt_lc;
+  var glb_v = GLB_visual.prototype;
+  
+  var reprcomp_id = "hydrographmultiplesdotraw";
+  
+  // is it a 'show-all' search?
+  if((search_txt == "") || (search_txt == null)){
+    for(i = 0; i < glb_v.polygons[reprcomp_id].length; i++)
+      glb_v.polygons[reprcomp_id][i].setMap(map);
+	return;
+  }
+  
+  // nope, so lets filter it
+  searched_txt_lc = search_txt.toLowerCase();
+  for(i = 0; i < glb_v.polygons[reprcomp_id].length; i++){
+    title = glb_v.polygons[reprcomp_id][i].title.toLowerCase();
+    if(title.indexOf(searched_txt_lc) == -1)
+      glb_v.polygons[reprcomp_id][i].setMap(null);
+    else
+      glb_v.polygons[reprcomp_id][i].setMap(map);
+  }
+}

@@ -43,6 +43,8 @@ function custom_display(){
 			cur_latlng = {lat:parseFloat(cur_gage["lat"]),
 			              lng:parseFloat(cur_gage["lng"])};
 			
+            if(data_values[cur_linkid] == null)
+              continue;
 			cur_best_model_id = find_best_model_id(data_values[cur_linkid]);
 			if (cur_best_model_id == null)
               cur_best_model_idx = null;
@@ -94,23 +96,25 @@ function custom_display(){
 	 * RETURN: Dictionary in the form of {model_a:0, model_b:1, ...}
 	 */
 	var set_models_id = function(data_values){
-		var cur_models, cur_model, i, count;
-		var all_models = {};
+      var cur_models, cur_model, i, count;
+      var all_models = {};
 		
-		// build pre-dictionary
-		for(i in data_values){
-			for(cur_model in data_values[i]['models']){
-				all_models[cur_model] = null;
-		}}
+      // build pre-dictionary
+      for(i in data_values){
+        if(data_values[i] == null)
+          continue;
+        for(cur_model in data_values[i]['models']){
+          all_models[cur_model] = null;
+      }}
 		
-		// build last dictionary
-		count = 0;
-		for(cur_model in all_models){
-			all_models[cur_model] = count;
-			count += 1;
-		}
-		
-		return(all_models);
+      // build last dictionary
+      count = 0;
+      for(cur_model in all_models){
+        all_models[cur_model] = count;
+        count += 1;
+      }
+
+      return(all_models);
 	}
 	
 	/**

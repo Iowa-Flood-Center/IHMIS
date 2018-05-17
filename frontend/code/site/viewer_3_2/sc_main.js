@@ -511,10 +511,8 @@ function sc_np_links(type, vis) {
 				modelplus.dom.uncheck_other_evaluations(type);
 				
 				// if it is hydrograph, clean others
-				if((is_hydrograph(type))||(is_comparison_modelcomb(type))){
-					console.log("Unchecking all '"+type+"'.");
+				if((is_hydrograph(type))||(is_comparison_modelcomb(type)))
 					modelplus.dom.uncheck_all_other_custom_displays(type);
-				}
 				
 				// manage custom display
 				if ($("#np" + type).hasClass("npact")){

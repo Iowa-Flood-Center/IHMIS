@@ -10,10 +10,10 @@ Just access the page ```clean_tmp.php``` and all Runset Request-related files wi
 
 ## Publishing the code
 
-Before publishing a web code, it is considered a good practice to use minimize (it is: uglify) the *javascript* code.
+Before publishing a web code, it is considered a good practice to 'minimize' (it is: uglify) the *javascript* code.
 
 For doing it, one can call the *python* script:
 
     $ python publish.py
 
-This script will read the copy all the files in the ``SETTINGS:dev_code_folder_path`` and copy to the ``SETTINGS:dst_code_folder_path``, keeping the same folder structure and minimizing all non-minified *javascript* files found.
+This script will read all the files in the ``SETTINGS:dev_code_folder_path`` and copy to the ``SETTINGS:dst_code_folder_path``, keeping the same folder structure and minimizing all non-minified *javascript* files found.

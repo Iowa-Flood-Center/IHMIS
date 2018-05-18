@@ -1609,8 +1609,11 @@ function load_ifis_rain(the_id, vis){
 	// set up calendar type, design, 
 	gbl_cbk.id = the_id;
 	if (json_repr_obj.calendar_type == "daily"){
-		gbl_cbk.type = 10118;
-		gbl_cbk.design = null;
+		gbl_cbk.type = 10118;   // WHY IS THAT?
+		
+		gbl_cbk.array_init = 0;
+		gbl_cbk.array_end = 8;
+		
 	} else {
 		gbl_cbk.type = the_id;
 		runset_time_interval = GLB_vars.prototype.get_runset_timediff();
@@ -1900,8 +1903,9 @@ function is_menu_id_single_repr(repr_id){
  * RETURN -
  */
 function is_menu_id_comparison_repr(repr_id){
-	var prefix;
-	prefix = repr_id.substring(0, 2);
+	var prefix, r;
+	r = (isNaN(repr_id) ? repr_id : repr_id.toString());
+	prefix = r.substring(0, 2);
 	if(prefix == "92"){ return (true);} else { return (false); }
 }
 

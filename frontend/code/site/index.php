@@ -27,10 +27,26 @@
     <title>IHMIS - Iowa Hydrologic Model Information System</title>
     
     <script type="text/javascript" src="common/vendor/jquery-3.1.1.min.js"></script>
-	<script type="text/javascript" src="common/scripts/modelplus.url.js"></script>
+	<script type="text/javascript" src="common/scripts/modelplus.util.js"></script>
+    <script type="text/javascript" src="common/scripts/modelplus.url.js"></script>
+    <script type="text/javascript" src="common/scripts/modelplus.api.js"></script>
     <script type="text/javascript" src="index_3_2/base_lib.js"></script>
-    
-	<link rel="stylesheet" href="index_3_2/main.css" media="screen" />
+    <script type="text/javascript" src="modelplus.index.js"></script>
+    <script type="text/javascript">
+      // update landing image after page is loaded
+      window.addEventListener('load', function() {
+    	modelplus.index.update_landing_image({
+          dom_img_id: null,
+          dom_label_id: null,
+          sc_runset_id: 'realtime',
+		  sc_model_id: 'fc254mrm01da',
+          sc_result_id: 'pa03hdflicih',
+          sc_result_title: null
+		});
+      });
+    </script>
+
+    <link rel="stylesheet" href="index_3_2/main.css" media="screen" />
 	
   </head>
   <body id="central">
@@ -41,8 +57,12 @@
 		</div>
 	    <div id="main-feature">
 		  <div id="launchifis">
-            <img src="index_3_2/imgs/launchviewer.png" alt="Map of Iowa-USA" style="display:block" />
-            <br />
+            <div class="intro_maps_div">
+			  <img src="index_3_2/imgs/launchviewer_background.png" alt="Background Map of Iowa-USA" class="background" id="intro_map_background" />
+			  <img src="" alt="State Map of Iowa-USA" id="intro_map_view" class="frontmap" />
+			</div>
+			<div id="intro_date_view"></div>
+			<br />
 			<a href="index.php?sc=open" class="btnmain btnwht">
 			  &nbsp;&nbsp;&nbsp;Viewer&nbsp;&nbsp;&nbsp;
 			</a>
@@ -55,10 +75,10 @@
 		  </div>
           <div id="banner" style="width:100%; height:200px; display:block" >
 			<div style="width:900px; display:block-inline; text-align:left">
-				<img src="index_3_2/imgs/img_request.png" style="width:128px; height:128px; padding-left:60px" />
+				<img src="index_3_2/imgs/img_request.png"  style="width:128px; height:128px; padding-left:60px" />
 				<img src="index_3_2/imgs/img_question.png" style="width:128px; height:128px; padding-left:100px" />
-				<img src="index_3_2/imgs/img_config.png" style="width:128px; height:128px; padding-left:90px" />
-				<img src="index_3_2/imgs/img_report.png" style="width:128px; height:128px; padding-left:90px" />
+				<img src="index_3_2/imgs/img_config.png"   style="width:128px; height:128px; padding-left:90px" />
+				<img src="index_3_2/imgs/img_report.png"   style="width:128px; height:128px; padding-left:90px" />
 			</div>
 			<div style="width:900px; display:block-inline; text-align:left">
 				<div class="video" onclick="location.href='index_3_2/requester.html'">

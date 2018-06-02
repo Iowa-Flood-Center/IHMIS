@@ -468,12 +468,10 @@
           var timestamp_ini, timestamp_end;
           timestamp_ini = glb.get_runset_ini();
           timestamp_end = glb.get_runset_end();
-          if((timestamp_ini != null) && (timestamp_end != null)){
+          if((timestamp_ini != null) && (timestamp_end != null))
             return(timestamp_end - timestamp_ini);
-          } else {
-            console.log("Someone is null: " + timestamp_ini + " or " + timestamp_end);
+          else
             return(null);
-          }
         }
 
         // basic check
@@ -1090,7 +1088,7 @@
 	
 	// close dialogues possible (if open)
 	modelplus.main.hide_message_block();
-	modelplus.dom.close_model_hidrograph_desc();
+	mpd.close_model_hidrograph_desc();
 	
 	// clean div content and abort if necessary
 	div_obj.empty();
@@ -1212,7 +1210,7 @@
    * type: Menu id
    * RETURN - True if the type is related to an evaluation, False otherwise
    */
-  modelplus.dom.uncheck_other_evaluations = function(type){
+  mpd.uncheck_other_evaluations = function(type){
 	var div_eval_obj, div_eval_children;
 	var clicked_element_id, displayed;
 	var cur_removed_type;
@@ -1240,14 +1238,47 @@
    * group_a_id -
    * RETURN -
    */
-  modelplus.dom.onchange_representation_select_option = function(group_a_id){
-	GLB_ifisrain_callback.prototype.was_sel_change = true;
-	if($("#"+group_a_id).hasClass("npact")){
-      $("#"+group_a_id).click();
-      $("#"+group_a_id).click();
+  mpd.onchange_representation_select_option = function(group_a_id){
+	var gbl_cbk = GLB_ifisrain_callback.prototype;
+	gbl_cbk.was_sel_change = true;
+	var click_obj = $("#"+group_a_id);
+	
+	if(click_obj.hasClass("npact")){
+      click_obj.click();
+	  
+	  // only re-clicks when possible
+	  if(all_rain_arr != null){
+		click_obj.click();
+      } else {
+		gbl_cbk.try_count = 0;
+        console.log("Retry: " + gbl_cbk.try_count);
+		gbl_cbk.try_obj = click_obj;
+		gbl_cbk.try_reclick();
+	  }
 	}
   }
-  
+
+  /**
+   *
+   */
+  GLB_ifisrain_callback.prototype.try_reclick = function(){
+    var gbl_cbk = GLB_ifisrain_callback.prototype;
+    var MAX_TRIES = 20;
+
+    // if ready to go, go
+    if(all_rain_arr != null){
+      gbl_cbk.try_obj.click();
+      return;
+    }
+
+    // else, sleep and try again
+    gbl_cbk.try_count++;
+	if(gbl_cbk.try_count <= MAX_TRIES){
+      console.log("Retry: " + gbl_cbk.try_count);
+      setTimeout(gbl_cbk.try_reclick, 100);
+	}
+  }
+
   /**
    * Removes from exhibition all elements from place calling hide_custom_display.
    * type - Element clicked. Expected to start with 'np'.
@@ -1547,10 +1578,6 @@ function load_ifis_rain(the_id, vis){
 	gbl_cbk.design_rt = 5;                                                             // TODO - make it come from meta files
 	
 	// get parameter id that is going to be shown
-	/*
-	value_element_id = "np"+the_id+"_sel";
-	sc_representation_id = $("#"+value_element_id).val();
-	*/
 	sc_representation_id = screpresentationid_from_scmenuid(the_id);
 	
 	prefix = the_id.substring(0, 2);
@@ -1572,7 +1599,11 @@ function load_ifis_rain(the_id, vis){
 		
 		gbl_cbk.ref_timestamp0 = last_timestamp;
 		check_before = $("#np" + gbl_cbk.id).hasClass("npact");
-		ifis_rain_maps(gbl_cbk.vis, gbl_cbk.type);
+		try{
+			ifis_rain_maps(gbl_cbk.vis, gbl_cbk.type);
+		} catch(err){
+			console.log("Ops:" + err.message);
+		}
 		check_after = $("#np" + gbl_cbk.id).hasClass("npact");
 		
 		if (check_before != check_after){
@@ -1581,7 +1612,6 @@ function load_ifis_rain(the_id, vis){
 	}
 	gbl_cbk.url1 = build_folder_path(prefix, sc_representation_id, sc_runset_id);
 	gbl_cbk.url2 = sc_representation_id + '.png';
-	//GLB_ifisrain_callback.prototype.legend = GLB_urls.prototype.base_image_folder + 'cscale_qindexn.png';  // TODO - make it come from meta files
 	
 	// get JSON object
 	json_repr_obj = get_json_representation(sc_representation_id);
@@ -1609,8 +1639,8 @@ function load_ifis_rain(the_id, vis){
 	// set up calendar type, design, 
 	gbl_cbk.id = the_id;
 	if (json_repr_obj.calendar_type == "daily"){
+		gbl_cbk.design = undefined;
 		gbl_cbk.type = 10118;   // WHY IS THAT?
-		
 		gbl_cbk.array_init = 0;
 		gbl_cbk.array_end = 8;
 		

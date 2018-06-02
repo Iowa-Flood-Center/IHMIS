@@ -267,13 +267,31 @@ var modelplus = modelplus || {};
 	return($.getJSON(ws_url));
   }
   
+  //
+  // runset_id: String.
+  // model_id: String.
+  // result_id: String.
+  // time: String.
+  mpa.get_result_url = function(runset_id,
+                                model_id,
+								result_id,
+								time){
+    var ws_url;
+	ws_url = api_url + "result_url";
+	ws_url += "%i%sc_runset_id=" + runset_id;
+	ws_url += "%e%sc_model_id=" + model_id;
+	ws_url += "%e%sc_result_id=" + result_id;
+	ws_url += "%e%time=" + time;
+	return($.getJSON(ws_url));
+  }
+  
   // 
   // runset_id : String.
   // model_id : String.
   // result_id : String.
   mpa.get_timestamp_ref0 = function(runset_id,
-                                              model_id,
-                                              result_id){
+                                    model_id,
+                                    result_id){
     var ws_url;
 	ws_url = api_url + "timestamp_ref0";
 	ws_url += "%i%sc_runset_id=" + runset_id;

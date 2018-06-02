@@ -87,6 +87,13 @@ $app->get('/forcing_sources',
 	return(process_get_request($app, $req, $res));
 });
 
+// 
+$app->get('/result_url', 
+          function(Request $req, Response $res, $args = []) use ($app){
+	require './ws/sc_result_url.php';
+	return(process_get_request($app, $req, $res));
+});
+
 // request forcing precipitations
 // TODO - remove it - replace by generic ForcingSources one
 $app->get('/forcing_precipitations', function() use ($app){

@@ -133,7 +133,7 @@ ul{
 #slogan{
 	margin:30px 15px 0 0;border:0 solid #000;
 	width:620px;
-	height:280px;
+	height:310px;
 	line-height:1.7em;
 	padding:15px 0 25px;
 	font-style:normal;
@@ -226,7 +226,7 @@ ul{
 	margin:25px 10px 0 0;
 	border:0 solid #000;
 	width:230px;
-	height:280px;
+	height:310px;
 	padding:30px 30px 0 30px;
 	float:right;
 	background:#E7F2F9;
@@ -257,7 +257,28 @@ button.punch{
 	text-shadow:2px 2px 2px #480000;
 	width:180px;
 	-webkit-background-clip:padding-box}
-	
+div.intro_maps_div{
+	width: 228px;
+	height: 188px;}
+div.intro_maps_div img.background{
+	width: 228px;
+	height: 188px;
+	display:block;
+	position:relative;
+	border-color: #000000;
+	border-style: solid;
+	border-width: 1px;
+	z-index:5}
+div.intro_maps_div img.frontmap{
+	width: 228px;
+	height: 188px;
+	display:block;
+	position:relative;
+	top: -184px;
+	z-index: 6}
+#intro_date_view{
+	width: 228px;
+	text-align:center;}
 	
 a.btnmain{
 	color:#FFF;

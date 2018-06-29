@@ -34,7 +34,7 @@ function custom_display(){
 	
 	// load all required data
 	$.when($.getJSON(ws_all_images_url),
-	       modelplus.api.get_gages_by_type([2, 3], true, true))
+	       modelplus.api.get_gages_by_type([2, 3, 4], true, true))
 	  .then(function(data_1, data_2){
         all_images_dict = data_1[0];
 		var gages_location_dict = data_2[0];
@@ -337,8 +337,8 @@ function custom_display(){
 					}
 					
 					// 
-					max_y_label = Math.ceil(max_data * 1.1);
-					min_y_label = Math.floor(min_data * 0.9);
+					max_y_label = Math.ceil(max_data + ((max_data - min_data) * 0.1));
+					min_y_label = Math.floor(min_data - ((max_data - min_data) * 0.1));
 					max_x_label = new Date(max_timestamp);
 					min_x_label = new Date(min_timestamp);
 					
@@ -348,10 +348,10 @@ function custom_display(){
 					} else {
 						title_str = "Station: " + "[UNDEFINED]";
 					}
-					if((typeof json_data.up_area != 'undefined')||(json_data.up_area == "")){
+					try{
 						subtitle_str = "Drainage Area: " + json_data.up_area.toFixed(2) + "km^2";
-					} else {
-						subtitle_str = "Drainage Area: " + "[UNDEFINED]";
+					}catch(err){
+						subtitle_str = "";
 					}
 			
 					// Initialize after dom ready

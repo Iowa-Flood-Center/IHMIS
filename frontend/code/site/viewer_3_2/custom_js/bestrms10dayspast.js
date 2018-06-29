@@ -151,6 +151,7 @@ function custom_display(){
 	var show_message = function(){
       var cur_model_id, cur_rmse, cur_model_title, msg_txt;
       var cur_high, cur_obj;
+	  var mpu = modelplus.util;
 
       if (this.details['success']){
         msg_txt = this.title + "<br >";
@@ -170,6 +171,8 @@ function custom_display(){
         }
         msg_txt += "</table>";
         msg_txt += "Number of points: " + this.details['num_points'];
+		msg_txt += ", from " + mpu.timestamp_to_datetimestr(this.details.timestamp_min) + " to ";
+		msg_txt += " to " + mpu.timestamp_to_datetimestr(this.details.timestamp_max) + ".";
       } else {
         msg_txt = this.title + "<br >";
         msg_txt += "Unable to calculate: " + this.details.diagnosis.comment + "<br>";

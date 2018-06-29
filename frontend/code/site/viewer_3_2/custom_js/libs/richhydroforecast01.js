@@ -150,6 +150,12 @@ richhydroforecast01.buildHydroforecast = function(){
  * Returns a 'series element'
  */
 richhydroforecast01.createThresholdSeries = function(the_id, the_name, y_value, the_color, specs){
+  // TODO - this is ugly and needs to be changed:
+  var y_val_ft = y_value;
+  if ((y_value > 480)&&(y_value < 1670)){  // Iowa min. and max. altitudes
+    y_val_ft *= 0.08333;
+  }
+
   return ({
     id: the_id,
 	name: the_name,
@@ -162,8 +168,8 @@ richhydroforecast01.createThresholdSeries = function(the_id, the_name, y_value, 
         color: the_color
 	  }
 	},
-    data: [[specs.metadata["min_x"], y_value], 
-	       [specs.metadata["max_x"], y_value]],
+    data: [[specs.metadata["min_x"], y_val_ft], 
+	       [specs.metadata["max_x"], y_val_ft]],
     markPoint: {
       itemStyle: {
         normal: {
@@ -184,7 +190,7 @@ richhydroforecast01.createThresholdSeries = function(the_id, the_name, y_value, 
         }
       },
       data: [{
-        coord: [specs.metadata["max_x"], y_value]
+        coord: [specs.metadata["max_x"], y_val_ft]
       }]
     }
   });

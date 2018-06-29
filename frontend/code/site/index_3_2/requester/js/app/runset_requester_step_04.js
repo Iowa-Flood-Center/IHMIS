@@ -345,7 +345,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 	label_obj = $("<label>"+forcing_title+":</label>");
 	select_obj = $("<select id='"+dom_id+"'>");
 	option_obj = $('<option>', {
-      value: -1,
+      value: 0,
       text: modelplus.requester.constant.labels.NONE
     });
 	select_obj.append(option_obj);

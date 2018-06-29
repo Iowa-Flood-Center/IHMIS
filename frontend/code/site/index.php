@@ -40,7 +40,7 @@
           dom_label_id: null,
           sc_runset_id: 'realtime',
 		  sc_model_id: 'fc254mrm01da',
-          sc_result_id: 'pa03hdflicih',
+          sc_result_id: 'dcufldicupd',
           sc_result_title: null
 		});
       });
@@ -57,8 +57,9 @@
 		</div>
 	    <div id="main-feature">
 		  <div id="launchifis">
-            <div class="intro_maps_div">
+            <div class="intro_maps_div" >
 			  <img src="index_3_2/imgs/launchviewer_background.png" alt="Background Map of Iowa-USA" class="background" id="intro_map_background" />
+			  <img src="index_3_2/imgs/icons/loading.gif" alt="Loading gif" id="intro_map_loading" class="loadingicon" />
 			  <img src="" alt="State Map of Iowa-USA" id="intro_map_view" class="frontmap" />
 			</div>
 			<div id="intro_date_view"></div>

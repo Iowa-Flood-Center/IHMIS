@@ -1,4 +1,8 @@
 <?php
+	ini_set('display_startup_errors',1);
+	ini_set('display_errors',1);
+	error_reporting(-1);
+
 	header("Content-Type: application/json");
 	date_default_timezone_set('America/Chicago');
 	
@@ -143,8 +147,11 @@
 
 				for($cur_i = 0; $cur_i < count($cur_file_content["disch_mdl"]); $cur_i++){
 					$last_timestamp_before = $cur_file_content["stage_mdl"][$cur_i][0];
-					$cur_stg = floatval(number_format($cur_file_content["stage_mdl"][$cur_i][1], 2));
-					$cur_dsc = floatval(number_format($cur_file_content["disch_mdl"][$cur_i][1], 2));
+					$cur_stg = floatval(number_format($cur_file_content["stage_mdl"][$cur_i][1], 2, ".", ""));
+					if (($cur_stg > 480)&&($cur_stg < 1670)){  // Iowa min. and max. altitudes
+						$cur_stg *= 0.08333;
+					}
+					$cur_dsc = floatval(number_format($cur_file_content["disch_mdl"][$cur_i][1], 2, ".", ""));
 					$cur_stg_timeseries[] = [$last_timestamp_before, $cur_stg];
 					$cur_dsc_timeseries[] = [$last_timestamp_before, $cur_dsc];
 				}
@@ -206,23 +213,35 @@
 		
 		// set thresholds values
 		if(array_key_exists("stage_threshold_act", $file_content)){
-			consider_min_max_y($resume_obj, $file_content["stage_threshold_act"]);
-			$resume_obj["metadata"]["thresholds_stg"]["action"] = $file_content["stage_threshold_act"];}
-		if(array_key_exists("stage_threshold_act", $file_content)){
-			consider_min_max_y($resume_obj, $file_content["stage_threshold_fld"]);
-			$resume_obj["metadata"]["thresholds_stg"]["flood"] = $file_content["stage_threshold_fld"];}
-		if(array_key_exists("stage_threshold_act", $file_content)){
-			consider_min_max_y($resume_obj, $file_content["stage_threshold_mod"]);
-			$resume_obj["metadata"]["thresholds_stg"]["moderate"] = $file_content["stage_threshold_mod"];}
-		if(array_key_exists("stage_threshold_act", $file_content)){
-			consider_min_max_y($resume_obj, $file_content["stage_threshold_maj"]);
-			$resume_obj["metadata"]["thresholds_stg"]["major"] = $file_content["stage_threshold_maj"];}
+			$tmp_ft = $file_content["stage_threshold_act"];
+			if (($tmp_ft > 480)&&($tmp_ft < 1670))  // Iowa min. and max. altitudes
+				$tmp_ft *= 0.08333;
+			consider_min_max_y($resume_obj, $tmp_ft);
+			$resume_obj["metadata"]["thresholds_stg"]["action"] = $tmp_ft;}
+		if(array_key_exists("stage_threshold_fld", $file_content)){
+			$tmp_ft = $file_content["stage_threshold_fld"];
+			if (($tmp_ft > 480)&&($tmp_ft < 1670))  // Iowa min. and max. altitudes
+				$tmp_ft *= 0.08333;
+			consider_min_max_y($resume_obj, $tmp_ft);
+			$resume_obj["metadata"]["thresholds_stg"]["flood"] = $tmp_ft;}
+		if(array_key_exists("stage_threshold_mod", $file_content)){
+			$tmp_ft = $file_content["stage_threshold_mod"];
+			if (($tmp_ft > 480)&&($tmp_ft < 1670))  // Iowa min. and max. altitudes
+				$tmp_ft *= 0.08333;
+			consider_min_max_y($resume_obj, $tmp_ft);
+			$resume_obj["metadata"]["thresholds_stg"]["moderate"] = $tmp_ft;}
+		if(array_key_exists("stage_threshold_maj", $file_content)){
+			$tmp_ft = $file_content["stage_threshold_maj"];
+			if (($tmp_ft > 480)&&($tmp_ft < 1670))  // Iowa min. and max. altitudes
+				$tmp_ft *= 0.08333;
+			consider_min_max_y($resume_obj, $tmp_ft);
+			$resume_obj["metadata"]["thresholds_stg"]["major"] = $tmp_ft;}
 	}
 	
 	/**
 	 *
 	 */
-	function &create_empty_forecast(&$resume_obj, $forecast_id, $forecast_title){
+	function create_empty_forecast(&$resume_obj, $forecast_id, $forecast_title){
 		// TODO - check prior to add
 		$added_obj = array("id" => $forecast_id,
                            "title" => $forecast_title,
@@ -305,28 +324,32 @@
 	/**
 	 * Gets the respective reference id
 	 */
-	function define_stageref_reference($stgref_folder_path){
-		$scanned_files = array_diff(scandir($stgref_folder_path), array('..', '.'));
+	function define_stageref_reference($stgref_folder_path, $link_id){
+		$scanned_folders = array_diff(scandir($stgref_folder_path), array('..', '.'));
 		$cur_folder_path = null;
-		foreach($scanned_files as $cur_scanned_file){
-			$cur_folder_path = $stgref_folder_path . DIRECTORY_SEPARATOR . $cur_scanned_file;
-			if (is_dir($cur_folder_path)){ 
-				return($cur_scanned_file);
+		foreach($scanned_folders as $cur_scanned_folder){
+			$cur_folder_path = $stgref_folder_path . DIRECTORY_SEPARATOR . $cur_scanned_folder;
+			if (!is_dir($cur_folder_path)) continue;
+			$scanned_files = array_diff(scandir($cur_folder_path), array('..', '.'));
+			foreach($scanned_files as $cur_scanned_file){
+				$re = "/[0-9]+_".$link_id."\.json/";
+				if (preg_match($re, $cur_scanned_file)){
+					return($cur_scanned_folder);
+				}
 			}
-		}
+		};
 		return(null);
 	}
 	
 	/*********************************************** CALL **********************************************/
 	
 	// 1 - define stage_ref ref
-	$ref_id = define_stageref_reference($stageref_folder_path);
+	$ref_id = define_stageref_reference($stageref_folder_path, $link_id);
 	$ref_folder_path = $stageref_folder_path.$ref_id."/";
 	// echo("Ref: ".$ref_id."\n");
 	
 	// 2 - define current timestamp
 	$timestamp_cur = define_current_timestamp($ref_folder_path, $link_id);
-	// echo("Cur: ".$timestamp_cur."\n");
 	
 	// 3 - create receiving object
 	$resume_obj = create_empty_resume($timestamp_cur, $before_days, $after_days);

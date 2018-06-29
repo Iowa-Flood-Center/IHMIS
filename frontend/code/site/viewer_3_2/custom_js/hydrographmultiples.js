@@ -83,7 +83,7 @@ function custom_display(){
 	
 	// perform web services calls
 	$.when($.getJSON(ws_data_url),
-	       modelplus.api.get_gages_by_type([2, 3], true, true))
+	       modelplus.api.get_gages_by_type([2, 3, 4], true, true))
       .then(function(data_1, data_2){
 		display_when_possible(data_1[0], data_2[0]);
       });
@@ -190,7 +190,11 @@ function custom_display(){
 							json_data = JSON.parse(data);
 							
 							title_str = "Station: " + json_data["common"]["description"];
-							subtitle_str = "Drainage Area: " + json_data["common"]["up_area"].toFixed(2) + "km^2";
+							try{
+								subtitle_str = "Drainage Area: " + json_data["common"]["up_area"].toFixed(2) + "km^2";
+							}catch(err){
+								subtitle_str = "";
+							}
 							
 							// define legend, y-min, y-max
 							var series_obj = [];

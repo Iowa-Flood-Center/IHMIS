@@ -272,9 +272,15 @@ div.intro_maps_div img.background{
 div.intro_maps_div img.frontmap{
 	width: 228px;
 	height: 188px;
-	display:block;
+	display: none;
 	position:relative;
 	top: -184px;
+	z-index: 6}
+div.intro_maps_div img.loadingicon{
+	display:block;
+	position:relative;
+	left: 90px;
+	top: -100px;
 	z-index: 6}
 #intro_date_view{
 	width: 228px;

@@ -80,7 +80,7 @@ function custom_display(){
 	
 	// load all links available and locations	
 	$.when($.getJSON(ws_data_url),
-	       modelplus.api.get_gages_by_type([2, 3], true, true))
+	       modelplus.api.get_gages_by_type([2, 3, 4], true, true))
 	  .then(function(data_1, data_2){
         all_links_dict = data_1[0];
 		var gages_location_dict = data_2[0];

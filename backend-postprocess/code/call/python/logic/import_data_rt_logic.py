@@ -48,7 +48,7 @@ def import_data(sc_runset_id, sc_model_id='all',  unix_timestamp=None, debug_lvl
         cur_script_hydroforecast = meta_file_manager.get_binaries_generator_script_hydroforecast_of_scmodel(
             cur_sc_model_id, debug_lvl=debug_lvl)
         if cur_script_hydroforecast is not None:
-            sys_call = " ".join([cur_script_hydroforecast, cur_sc_model_id, cur_unix_timestamp, cur_runset_arg])
+            sys_call = " ".join([cur_script_hydroforecast, cur_sc_model_id, cur_unix_timestamp, sc_runset_id])
             Debug.dl("create_binaries_lib: Running '{0}' for sc model '{1}'".format(sys_call, cur_sc_model_id),
                      2, debug_lvl)
             try:
@@ -81,11 +81,12 @@ def import_data(sc_runset_id, sc_model_id='all',  unix_timestamp=None, debug_lvl
                                                                                     debug_lvl=debug_lvl)
 
         if cur_script is not None:
-            sys_call = " ".join([cur_script, cur_sc_reference_id, cur_unix_timestamp, cur_runset_arg])
+            sys_call = " ".join([cur_script, cur_sc_reference_id, cur_unix_timestamp, sc_runset_id])
             Debug.dl("create_binaries_lib: Running '{0}' for sc reference '{1}'".format(sys_call, cur_sc_reference_id),
                      2, debug_lvl)
             try:
-                print("CALL: {0}".format(sys_call))
+                Debug.dl("create_binaries_lib: CALL: '{0}'".format(sys_call),
+                         2, debug_lvl)
                 # os.system(sys_call)
             except OSError:
                 Debug.dl("create_binaries_lib: Failed running '{0}'.".format(sys_call), 1, debug_lvl)

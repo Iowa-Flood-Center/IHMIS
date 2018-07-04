@@ -18,6 +18,4 @@ args = parser.parse_args()
 
 # ####################################### CALL ###################################### #
 
-print("Imported: {0}".format(logic.import_data(args.runset_id,
-                                               sc_model_id=args.model_sing_id,
-                                               debug_lvl=debug_lvl)))
+logic.import_data(args.runset_id, sc_model_id=args.model_sing_id, debug_lvl=debug_lvl)

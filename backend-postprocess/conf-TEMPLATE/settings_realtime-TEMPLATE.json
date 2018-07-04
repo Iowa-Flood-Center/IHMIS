@@ -1,0 +1,12 @@
+{
+  "sc_models":{
+    "SC_MODEL_IS_1":{
+      "input_folder_path":"/...",
+      "input_file_prefix":"..."
+    },
+    "SC_MODEL_IS_2":{
+      "input_folder_path":"/...",
+      "input_file_prefix":"..."
+    }
+  }
+}

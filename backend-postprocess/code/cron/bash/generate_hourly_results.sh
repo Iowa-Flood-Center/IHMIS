@@ -3,25 +3,26 @@
 # head to the file directory
 cd "$(dirname "$0")"
 
-# ########################################## DEFS ########################################## #
+# ###################################### DEFS ###################################### #
 
 # define config file reader
-JQ="./third_party/jq-linux64"                                               # JSON reader tool
+JQ="./../../../../third-party/jq-linux64"                           # JSON reader tool
 CFG_FILE="../../../conf/settings.json"
 
-RUNSET_ID="realtime"
+SC_RUNSET_ID="realtime"
 LOCAL_PY_FOLDER="../../call/python/"
 
-# ########################################## CALL ########################################## #
+# ###################################### CALL ###################################### #
 
 echo "Started at: "$(date)
 
 echo ""
-echo "#######################################################################################"
-echo "SH: Generating binary files."
-python ${LOCAL_PY_FOLDER}create_binaries.py all -runsetid realtime
+echo "###############################################################################"
+echo "SH: Importing data..."
+CMD="python "${LOCAL_PY_FOLDER}"import_data_rt.py all -runsetid "${SC_RUNSET_ID}
+echo "SH: Executing: "${CMD}
 
 echo ""
-echo "#######################################################################################"
+echo "###############################################################################"
 echo ""
 echo "Ended at: "$(date)

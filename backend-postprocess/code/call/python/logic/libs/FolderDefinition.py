@@ -1,5 +1,6 @@
 from SettingsRealtime import SettingsRealtime
 from FileDefinition import FileDefinition
+from BinDefinition import BinDefinition
 from Settings import Settings
 from Debug import Debug
 import os

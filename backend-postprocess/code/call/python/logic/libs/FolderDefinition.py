@@ -1,4 +1,5 @@
 from SettingsRealtime import SettingsRealtime
+from ImageDefinition import ImageDefinition
 from FileDefinition import FileDefinition
 from BinDefinition import BinDefinition
 from Settings import Settings

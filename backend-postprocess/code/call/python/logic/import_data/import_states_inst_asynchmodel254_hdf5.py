@@ -67,6 +67,10 @@ def update_local_bins_from_hdf5(model_id, runset_id, timestamp=None, flextime=No
     # get reference timestamp
     if timestamp is None:
         higher_timestamp = get_current_timestamp_from_hdf5_files(model_output_folder, model_id, debug_lvl=debug_lvl)
+        if higher_timestamp is None:
+            Debug.dl("import_states_inst_asynchmodel254_hdf5: Unable to retrieve a timestamp for {0}.{1}".format(
+                runset_id, model_id), 1, debug_lvl)
+            return
         the_timestamp_rounded = GeneralUtils.round_timestamp_hour(higher_timestamp)
         filename_prefix = SettingsRealtime.get("input_file_prefix", sc_model_id=model_id)
         cur_timestamp = FolderDefinition.retrive_closest_timestamp_in_dist_folder(model_output_folder,

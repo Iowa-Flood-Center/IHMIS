@@ -48,9 +48,9 @@ class MetaScModel(MetaFile):
 
         # debugging
         if not bg_script:
-            Debug.dl("def_metafiles: '{0}' not found in {1}".format(bingen_tag, self._json_object.keys()), 2, debug_lvl)
+            Debug.dl("MetaScModel: '{0}' not found in {1}".format(bingen_tag, self._json_object.keys()), 2, debug_lvl)
         else:
-            Debug.dl("def_metafiles: '{0}' found in {1}".format(bingen_tag, self._json_object.keys()), 2, debug_lvl)
+            Debug.dl("MetaScModel: '{0}' found in {1}".format(bingen_tag, self._json_object.keys()), 2, debug_lvl)
 
         '''
         # second try: bingen related to asynch_model
@@ -63,9 +63,9 @@ class MetaScModel(MetaFile):
                         asynchmodel = asynchmodel_dict[asynch_model_id]
                         bg_script = str(asynchmodel.get_binary_generator_script())
                     else:
-                        Debug.dl("def_metafiles: Asynch method {0} not found.".format(asynch_model_id), 1, debug_lvl)
+                        Debug.dl("MetaScModel: Asynch method {0} not found.".format(asynch_model_id), 1, debug_lvl)
                 else:
-                    Debug.dl("def_metafiles: Missing Asynch dictionary.", 1, debug_lvl)
+                    Debug.dl("MetaScModel: Missing Asynch dictionary.", 1, debug_lvl)
         '''
 
         return bg_script
@@ -84,9 +84,9 @@ class MetaScModel(MetaFile):
 
         # debugging
         if not bg_script:
-            Debug.dl("def_metafiles: '{0}' not found in {1}".format(bingen_tag, self._json_object.keys()), 2, debug_lvl)
+            Debug.dl("MetaScModel: '{0}' not found in {1}".format(bingen_tag, self._json_object.keys()), 2, debug_lvl)
         else:
-            Debug.dl("def_metafiles: '{0}' found in {1}".format(bingen_tag, self._json_object.keys()), 2, debug_lvl)
+            Debug.dl("MetaScModel: '{0}' found in {1}".format(bingen_tag, self._json_object.keys()), 2, debug_lvl)
 
         return bg_script
 

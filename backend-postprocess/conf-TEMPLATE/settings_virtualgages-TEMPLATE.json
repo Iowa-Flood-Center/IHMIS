@@ -1,0 +1,8 @@
+{
+  "sc_models_equivalence":{
+       "MODEL_ID_VIRTGAGE": "MODEL_ID_ASYNCHMODEL",
+       "MODEL_ID_VIRTGAGE": "MODEL_ID_ASYNCHMODEL"
+  },
+  "sc_models_instant": ["MODEL_ID_VIRTGAGE"],
+  "sc_references":     ["REFERENCE_ID_VIRTGAGE"]
+}

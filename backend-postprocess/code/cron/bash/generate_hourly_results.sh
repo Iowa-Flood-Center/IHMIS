@@ -18,8 +18,22 @@ echo "Started at: "$(date)
 
 echo ""
 echo "###############################################################################"
+
 echo "SH: Importing data..."
+echo "SH: Now it is "$(date)
+
 CMD="python "${LOCAL_PY_FOLDER}"import_data_rt.py -model_sing_id all -runset_id "${SC_RUNSET_ID}
+## echo "SH: Executing: "${CMD}
+## eval ${CMD}
+echo "SH: Would execute: "${CMD}
+
+echo ""
+echo "###############################################################################"
+
+echo "SH: Plotting single models representations..."
+echo "SH: Now it is "$(date)
+
+CMD="python "${LOCAL_PY_FOLDER}"plot_modelsing_representations.py -model_sing_id all -runset_id "${SC_RUNSET_ID}
 echo "SH: Executing: "${CMD}
 eval ${CMD}
 

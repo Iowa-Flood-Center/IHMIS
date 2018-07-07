@@ -1,8 +1,10 @@
-from FolderDefinition import FolderDefinition
-from metafiles.MetaScModel import MetaScModel
-from metafiles.MetaScReference import MetaScReference
 from Debug import Debug
 import os
+
+from FolderDefinition import FolderDefinition
+from metafiles.MetaScRepresentation import MetaScRepresentation
+from metafiles.MetaScReference import MetaScReference
+from metafiles.MetaScModel import MetaScModel
 
 
 class MetaFileManager:

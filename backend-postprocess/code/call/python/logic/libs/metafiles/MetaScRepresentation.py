@@ -1,3 +1,5 @@
+from MetaFile import MetaFile
+
 
 class MetaScRepresentation(MetaFile):
 

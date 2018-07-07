@@ -18,7 +18,7 @@ class H5FileReader:
 
         # basic check - file must exist
         if (hdf5_file_path is None) or (not os.path.exists(hdf5_file_path)):
-            Debug.dl("bin_lib: File '{0}' does not exist.".format(hdf5_file_path), 1, debug_lvl)
+            Debug.dl("H5FileReader: File '{0}' does not exist.".format(hdf5_file_path), 1, debug_lvl)
             return None, None
 
         # import data into matrix
@@ -38,7 +38,7 @@ class H5FileReader:
 
         # basic check - file must exist
         if (hdf5_file_path is None) or (not os.path.exists(hdf5_file_path)):
-            Debug.dl("bin_lib: File '{0}' does not exist.".format(hdf5_file_path), 1, debug_lvl)
+            Debug.dl("H5FileReader: File '{0}' does not exist.".format(hdf5_file_path), 1, debug_lvl)
             return None, None
 
         # import data into matrix
@@ -55,7 +55,7 @@ class H5FileReader:
 
         # basic check - file must exist
         if (hdf5_file_path is None) or (not os.path.exists(hdf5_file_path)):
-            Debug.dl("bin_lib: File '{0}' does not exist.".format(hdf5_file_path), 1, debug_lvl)
+            Debug.dl("H5FileReader: File '{0}' does not exist.".format(hdf5_file_path), 1, debug_lvl)
             return None, None
 
         # import data into matrix
@@ -64,7 +64,7 @@ class H5FileReader:
             # basic check
             if 'linkid_index' in hdf_file.keys():
                 if not force:
-                    Debug.dl("bin_lib: Dataset 'linkid_index' already exists in '{0}' file.".format(hdf5_file_path), 1,
+                    Debug.dl("H5FileReader: Dataset 'linkid_index' already exists in '{0}' file.".format(hdf5_file_path), 1,
                              debug_lvl)
                     return
                 else:
@@ -93,7 +93,7 @@ class H5FileReader:
             link_index_numpy = np.asarray(link_index, dtype=np.uint32)
             hdf_file.create_dataset('linkid_index', data=link_index_numpy)
 
-        Debug.dl("bin_lib: Created index for '{0}' file.".format(hdf5_file_path), 1, debug_lvl)
+        Debug.dl("H5FileReader: Created index for '{0}' file.".format(hdf5_file_path), 1, debug_lvl)
 
     def __init__(self):
         return

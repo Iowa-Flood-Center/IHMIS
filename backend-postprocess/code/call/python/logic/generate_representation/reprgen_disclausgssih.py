@@ -1,12 +1,17 @@
-from def_system import FolderDefinition, BinDefinition, Debug
-from reprgen_interface import ReprGenInterface
 import pickle
 import json
 import sys
 import os
 
+sys.path.append("{0}/..".format(os.path.dirname(os.path.realpath(__file__))))
+from libs.BinAncillaryDefinition import BinAncillaryDefinition
+from libs.FolderDefinition import FolderDefinition
+from libs.ReprGenInterface import ReprGenInterface
+from libs.BinDefinition import BinDefinition
+from libs.Debug import Debug
+
+
 debug_level_arg = 1
-# reference_id = "usgsgagesdischclass"
 representation_id = "disclausgssih"
 product_id = "isdc"
 

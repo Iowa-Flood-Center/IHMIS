@@ -2,7 +2,10 @@ from Debug import Debug
 import os
 
 from FolderDefinition import FolderDefinition
+from FileDefinition import FileDefinition
 from metafiles.MetaScRepresentation import MetaScRepresentation
+from metafiles.MetaEvaluationMatrix import MetaEvaluationMatrix
+from metafiles.MetaScEvaluation import MetaScEvaluation
 from metafiles.MetaScReference import MetaScReference
 from metafiles.MetaScModel import MetaScModel
 

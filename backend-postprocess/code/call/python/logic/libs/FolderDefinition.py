@@ -1,6 +1,6 @@
 from SettingsRealtime import SettingsRealtime
 from ImageDefinition import ImageDefinition
-from FileDefinition import FileDefinition
+from FilenameDefinition import FilenameDefinition
 from BinDefinition import BinDefinition
 from Settings import Settings
 from Debug import Debug
@@ -296,7 +296,7 @@ class FolderDefinition:
 
         raw_data_folder_path = Settings.get("raw_data_folder_path")
         base_folder = os.path.join(raw_data_folder_path,
-                                   FolderDefinition._base_folder_path_runset,
+                                   os.path.join(raw_data_folder_path, FolderDefinition._base_folder_name_runset),
                                    runset_id,
                                    cls._runset_file_folder_name)
 
@@ -511,7 +511,7 @@ class FolderDefinition:
         """
 
         # for each subfolder, evaluate if model folder exists and if each parameters folder exist
-        Debug.dl("def_system: Creating folder for parameter {0}, model {1}".format(all_products_id, sc_model_id),
+        Debug.dl("FolderDefinition: Creating folder for parameter {0}, model {1}".format(all_products_id, sc_model_id),
                  1, debug_lvl)
 
         '''
@@ -543,7 +543,7 @@ class FolderDefinition:
             for cur_parameter in all_parameters_id:
                 cur_subfolder = os.path.join(subfolder_path, cur_parameter)
                 if not os.path.exists(cur_subfolder):
-                    Debug.dl("def_system: Creating folder '{0}'".format(cur_subfolder), 2, debug_lvl)
+                    Debug.dl("FolderDefinition: Creating folder '{0}'".format(cur_subfolder), 2, debug_lvl)
                     os.makedirs(cur_subfolder)
 
     @staticmethod
@@ -590,7 +590,7 @@ class FolderDefinition:
             return None
 
         all_file_names.sort(reverse=True)
-        return FileDefinition.obtain_hist_file_timestamp(all_file_names[0])
+        return FilenameDefinition.obtain_hist_file_timestamp(all_file_names[0])
 
     @staticmethod
     def retrive_earliest_timestamp_in_hist_folder(folder_path):
@@ -605,7 +605,7 @@ class FolderDefinition:
             return None
 
         all_file_names.sort(reverse=False)
-        return FileDefinition.obtain_hist_file_timestamp(all_file_names[0])
+        return FilenameDefinition.obtain_hist_file_timestamp(all_file_names[0])
 
     @staticmethod
     def retrive_closest_timestamp_in_hist_folder(folder_path, ref_timestamp, accept_range=None, debug_lvl=0):
@@ -626,7 +626,7 @@ class FolderDefinition:
         all_file_names.sort(reverse=True)
         all_timestamps = []
         for cur_filename in all_file_names:
-            tm = FileDefinition.obtain_hist_file_timestamp(cur_filename)
+            tm = FilenameDefinition.obtain_hist_file_timestamp(cur_filename)
             if tm is not None:
                 all_timestamps.append(tm)
 
@@ -649,7 +649,7 @@ class FolderDefinition:
             else:
                 min_value = max_value = ref_timestamp
 
-            Debug.dl("def_system: Closest timestamp {0} must be between {1} and {2}.".format(closer_tm,
+            Debug.dl("FolderDefinition: Closest timestamp {0} must be between {1} and {2}.".format(closer_tm,
                                                                                              min_value,
                                                                                              max_value),
                      1, debug_lvl)
@@ -675,7 +675,7 @@ class FolderDefinition:
             return None
 
         # get the absolutely closest timestamp
-        all_timestamps = [FileDefinition.obtain_hist_file_timestamp(tm) for tm in all_file_names]
+        all_timestamps = [FilenameDefinition.obtain_hist_file_timestamp(tm) for tm in all_file_names]
 
         # separates the ones of our interest
         return_list = []
@@ -698,13 +698,13 @@ class FolderDefinition:
         # list all files
         all_file_names = FolderDefinition.retrieve_all_file_names(folder_path)
         if (all_file_names is None) or (len(all_file_names) == 0):
-            Debug.dl("def_system: Not a single file at folder '{0}'.".format(folder_path), 2, debug_lvl)
+            Debug.dl("FolderDefinition: Not a single file at folder '{0}'.".format(folder_path), 2, debug_lvl)
             return None
 
         # basic check: file must have an extension
         one_file_name = all_file_names[0]
         if '.' not in one_file_name:
-            Debug.dl("def_system: File '{0}' at '{1}': no extension.".format(one_file_name, folder_path), 2, debug_lvl)
+            Debug.dl("FolderDefinition: File '{0}' at '{1}': no extension.".format(one_file_name, folder_path), 2, debug_lvl)
             return None
 
         return one_file_name.split(".")[-1]
@@ -728,14 +728,14 @@ class FolderDefinition:
 
         # get the absolutely closest timestamp
         all_file_names.sort(reverse=True)
-        all_timestamps = [FileDefinition.obtain_dist_file_timestamp(tm) for tm in all_file_names]
+        all_timestamps = [FilenameDefinition.obtain_dist_file_timestamp(tm) for tm in all_file_names]
 
         all_dists = [abs(cur_tm - ref_timestamp) for cur_tm in all_timestamps]
 
         closer_tm_idx = all_dists.index(min(all_dists))
         closer_tm = all_timestamps[closer_tm_idx]
 
-        Debug.dl("def_system: Closest timestamp found: {0} (dist: {1} from {2}) at '{3}'.".format(closer_tm,
+        Debug.dl("FolderDefinition: Closest timestamp found: {0} (dist: {1} from {2}) at '{3}'.".format(closer_tm,
                                                                                                   all_dists[
                                                                                                       closer_tm_idx],
                                                                                                   ref_timestamp,
@@ -753,7 +753,7 @@ class FolderDefinition:
             else:
                 min_value = max_value = ref_timestamp
 
-            Debug.dl("def_system: Closest timestamp {0} must be between {1} and {2}.".format(closer_tm,
+            Debug.dl("FolderDefinition: Closest timestamp {0} must be between {1} and {2}.".format(closer_tm,
                                                                                              min_value,
                                                                                              max_value),
                      1, debug_lvl)
@@ -805,11 +805,11 @@ class FolderDefinition:
                                                                               unix_timestamp, runset_id=runset_id)
 
         if file1_exists and file2_exists:
-            Debug.dl("def_system: files for both {0} and {1} representation of model {2} exist for at {3}".format(
+            Debug.dl("FolderDefinition: files for both {0} and {1} representation of model {2} exist for at {3}".format(
                 sc_representation_id1, sc_representation_id2, sc_model_id, unix_timestamp), 2, debug_lvl)
             return True
         else:
-            Debug.dl("def_system: no common files for representation {0} and {1} for model {2} at {3}".format(
+            Debug.dl("FolderDefinition: no common files for representation {0} and {1} for model {2} at {3}".format(
                 sc_representation_id1, sc_representation_id2, sc_model_id, unix_timestamp), 2, debug_lvl)
             return False
 

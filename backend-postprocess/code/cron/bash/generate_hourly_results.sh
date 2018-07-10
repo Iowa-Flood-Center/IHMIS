@@ -36,6 +36,29 @@ echo "SH: Now it is "$(date)
 CMD="python "${LOCAL_PY_FOLDER}"plot_modelsing_representations.py -model_sing_id all -runset_id "${SC_RUNSET_ID}
 echo "SH: Executing: "${CMD}
 eval ${CMD}
+## echo "SH: Would execute: "${CMD}
+
+echo ""
+echo "###############################################################################"
+
+echo "SH: Plotting reference representations..."
+echo "SH: Now it is "$(date)
+
+CMD="python "${LOCAL_PY_FOLDER}"plot_reference_representations.py -reference_id all -runset_id "${SC_RUNSET_ID}
+echo "SH: Executing: "${CMD}
+eval ${CMD}
+## echo "SH: Would execute: "${CMD}
+
+echo ""
+echo "###############################################################################"
+
+echo "SH: Plotting evaluations..."
+echo "SH: Now it is "$(date)
+
+CMD="python "${LOCAL_PY_FOLDER}"plot_evaluations_inst.py -model_sing_id all -evaluation_id all -runset_id "${SC_RUNSET_ID}
+echo "SH: Executing: "${CMD}
+eval ${CMD}
+## echo "SH: Would execute: "${CMD}
 
 echo ""
 echo "###############################################################################"

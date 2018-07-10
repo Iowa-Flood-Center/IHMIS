@@ -10,6 +10,7 @@ class BinAncillaryDefinition:
     _bin_params_folder_path = os.path.join(_bin_ancillary_files_folder_path, "params")
     _bin_masks_folder_path = os.path.join(_bin_ancillary_files_folder_path, "masks")
     _bin_links_folder_path = os.path.join(_bin_ancillary_files_folder_path, "links")
+    _bin_pois_folder_path = os.path.join(_bin_ancillary_files_folder_path, "pois")
 
     _bin_qunit_subfolder_path = os.path.join(_bin_thresholds_folder_path, "qunit")
 
@@ -18,10 +19,19 @@ class BinAncillaryDefinition:
     _bin_linkid_linksslopes_filename = "hillslopes_mask_webmerc.npy"
     _bin_linkid_missi_missu_filename = "linkids_missi_missu.npy"
     _bin_linkid_latlng_filename = "links_latlng.p"
+    _bin_usgsid_linkid_filename = "usgsid_linkid.p"
 
     @staticmethod
     def get_bin_ancillary_files_folder_path():
         return BinAncillaryDefinition._bin_ancillary_files_folder_path
+
+    @staticmethod
+    def get_bin_thresholds_file_path(file_name):
+        return os.path.join(BinAncillaryDefinition._bin_thresholds_folder_path, file_name)
+
+    @staticmethod
+    def get_bin_pois_file_path(file_name):
+        return os.path.join(BinAncillaryDefinition._bin_pois_folder_path, file_name)
 
     @staticmethod
     def get_linksbuffer_file_path():
@@ -41,7 +51,12 @@ class BinAncillaryDefinition:
     @staticmethod
     def get_linkids_latlng_file_path():
         return os.path.join(BinAncillaryDefinition._bin_links_folder_path,
-                            BinAncillaryDefinition._bin_linkid_missi_missu_filename)
+                            BinAncillaryDefinition._bin_linkid_latlng_filename)
+
+    @staticmethod
+    def get_usgsid_linkid_file_path():
+        return os.path.join(BinAncillaryDefinition._bin_links_folder_path,
+                            BinAncillaryDefinition._bin_usgsid_linkid_filename)
 
     @staticmethod
     def get_flood_index_thresholds_file_path():

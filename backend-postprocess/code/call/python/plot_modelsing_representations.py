@@ -68,5 +68,5 @@ else:
 # debug info
 d_time = time.time()-start_time
 Debug.dl("plot_modelsing_representations: update_local_bins_from_hdf5({0}) function took {1} seconds ".format(model_id,
-                                                                                                             d_time),
+                                                                                                              d_time),
          1, debug_lvl)

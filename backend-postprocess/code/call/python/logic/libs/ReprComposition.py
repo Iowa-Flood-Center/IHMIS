@@ -34,7 +34,7 @@ class ReprComposition:
                 return the_timestamp_2
             else:
                 c_max = min([the_timestamp_1, the_timestamp_2])
-                return c_max if check_both_exists(sc_model_id, repr_id1, repr_id2, c_max, debug_lvl=debug_lvl) else None
+                return c_max if ReprComposition.check_both_exists(sc_model_id, repr_id1, repr_id2, c_max, debug_lvl=debug_lvl) else None
 
         # if something is missing, Debug it and return None
         if the_timestamp_1 is None:
@@ -59,9 +59,17 @@ class ReprComposition:
         :return:
         """
 
-        # TODO - implement it properly
         repr1_img_path = FolderDefinition.get_historical_img_file_path(sc_model_id, repr1_id, unix_timestamp)
+        if repr1_img_path is None:
+            Debug.dl("ReprComposition: Unable to get file path for {0}{1} at {2}".format(
+                sc_model_id, repr1_id, unix_timestamp), 1, debug_lvl)
+            return False
+
         repr2_img_path = FolderDefinition.get_historical_img_file_path(sc_model_id, repr2_id, unix_timestamp)
+        if repr2_img_path is None:
+            Debug.dl("ReprComposition: Unable to get file path for {0}{1} at {2}".format(
+                sc_model_id, repr2_id, unix_timestamp), 1, debug_lvl)
+            return False
 
         return True if os.path.exists(repr1_img_path) and os.path.exists(repr2_img_path) else False
 
@@ -83,7 +91,7 @@ class ReprComposition:
 
         # define the timestamp
         if unix_timestamp is not None:
-            if check_both_exists(sc_model_id, abv_par, blw_par, unix_timestamp, debug_lvl=0):
+            if ReprComposition.check_both_exists(sc_model_id, abv_par, blw_par, unix_timestamp, debug_lvl=0):
                 the_timestamp = unix_timestamp
             else:
                 the_timestamp = None

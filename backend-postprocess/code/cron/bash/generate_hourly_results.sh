@@ -23,8 +23,8 @@ echo "SH: Importing data..."
 echo "SH: Now it is "$(date)
 
 CMD="python "${LOCAL_PY_FOLDER}"import_data_rt.py -model_sing_id all -runset_id "${SC_RUNSET_ID}
-## echo "SH: Executing: "${CMD}
-## eval ${CMD}
+echo "SH: Executing: "${CMD}
+eval ${CMD}
 echo "SH: Would execute: "${CMD}
 
 echo ""

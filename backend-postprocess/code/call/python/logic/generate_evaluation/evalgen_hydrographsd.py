@@ -432,8 +432,10 @@ def write_it(link_id, obs_timeseries_dict, mdl_timeseries_dict, out_file_path, r
         if d > 100:
             Debug.dl("evalgen_hydrographsd: SKIPPING link {0} (delta mdl x obs: {1}).".format(link_id, d),
                      1, debug_lvl)
+            return
     except TypeError:
         Debug.dl("evalgen_hydrographsd: SKIPPING link: {0} (unable to calculate delta).".format(link_id), 1, debug_lvl)
+        return
 
     # plot thresholds
     if thresholds is not None:

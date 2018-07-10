@@ -117,7 +117,7 @@ class FolderDefinition:
         """
         folder_path = cls.get_historical_img_folder_path(model_id, parameter_id, runset_id=runset_id)
         file_name = ImageDefinition.define_historical_file_name(timestamp, parameter_id)
-        return os.path.join(folder_path, file_name)
+        return None if None in (folder_path, file_name) else os.path.join(folder_path, file_name)
 
     @classmethod
     def get_historical_file_path(cls, sc_model_id, representation_id, file_extension, timestamp, runset_id=None):

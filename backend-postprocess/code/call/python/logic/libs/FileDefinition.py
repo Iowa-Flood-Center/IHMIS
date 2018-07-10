@@ -9,29 +9,6 @@ class FileDefinition:
     _comparison_set_file_name = "Comparison_matrix.json"
     _evaluation_matrix_file_name = "Evaluation_matrix.json"
 
-    def __init__(self):
-        return
-
-    @staticmethod
-    def obtain_hist_file_linkid(historical_file_name):
-        """
-        Obtain linkid from distributed historical file
-        :param historical_file_name: Just the file name, starting by a unix timestamp
-        :return: Integer if it was possible to retrieve linkid, None otherwise
-        """
-        if historical_file_name is not None:
-            file_basename = historical_file_name.split(".")[0]
-            splited_underline = file_basename.split("_")
-            if len(splited_underline) > 1:
-                try:
-                    return int(splited_underline[1])
-                except ValueError:
-                    return None
-            else:
-                return None
-        else:
-            return None
-
     @staticmethod
     def obtain_dist_file_timestamp(distribution_file_name):
         """
@@ -110,3 +87,6 @@ class FileDefinition:
         return os.path.join(
             FolderDefinition.get_meta_crossmatrices_folder(runset_id=runset_id, folder_flag=folder_flag),
             FileDefinition._evaluation_matrix_file_name)
+
+    def __init__(self):
+        return

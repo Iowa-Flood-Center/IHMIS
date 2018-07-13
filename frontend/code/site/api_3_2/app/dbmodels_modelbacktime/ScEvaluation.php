@@ -29,7 +29,7 @@ class ScEvaluation extends Eloquent{
 		                              'model_backtime')*/
         $sel_query = DB::connection(ScEvaluation::get_connection())
 		                    ->table('static_modelplus_definitions.scproduct_screference',
-		                              'model_backtime')
+		                            'model_backtime')
 						    ->join('static_modelplus_definitions.scevaluation_scproduct', 
 						           'static_modelplus_definitions.scproduct_screference.id_scproduct', 
 							       '=',

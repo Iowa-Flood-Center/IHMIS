@@ -55,7 +55,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
         $(this).prop('disabled', false);
       });
       sm.next_step_button();
-      if(go_next) modelplus.requester.state_machine.next_step_go();
+      if(go_next) sm.next_step_go();
     };
     
     return(lock_fields()
@@ -94,7 +94,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
 
   //
   function show_date_mid_span(){
-    var date_obj = new Date(modelplus.requester.state_machine.post_dict["timestamp_mid"] * 1000);
+    var date_obj = new Date(sm.post_dict["timestamp_mid"] * 1000);
     var month = date_obj.getMonth() + 1;
 	var day = date_obj.getDate();
 	var year = date_obj.getFullYear();

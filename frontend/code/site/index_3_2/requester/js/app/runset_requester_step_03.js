@@ -97,8 +97,8 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   
   //
   function show_date_iniend_span(){
-    var date_ini_obj = new Date(modelplus.requester.state_machine.post_dict["timestamp_ini"] * 1000);
-	var date_end_obj = new Date(modelplus.requester.state_machine.post_dict["timestamp_end"] * 1000);
+    var date_ini_obj = new Date(sm.post_dict["timestamp_ini"] * 1000);
+	var date_end_obj = new Date(sm.post_dict["timestamp_end"] * 1000);
 	var month_ini = date_ini_obj.getMonth() + 1;
 	var month_end = date_end_obj.getMonth() + 1;
 	var date_ini_str = month_ini + "/"+date_ini_obj.getDate() + "/"+date_ini_obj.getFullYear();

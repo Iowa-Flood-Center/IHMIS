@@ -1,5 +1,6 @@
 {
   "raw_data_folder_path":"[RAW_FOLDER_PATH]",
+  "raw_data_url":"[RAW_URL]",
   "data_subfolder":"dev/",
   "anci_subfolder":"dev/",
   "logs_subfolder":"dev/",

@@ -1,3 +1,7 @@
+from MetaFile import MetaFile
+from ..Debug import Debug
+
+
 class MetaScModelComb(MetaFile):
 
     _root_object_tag = "sc_modelcombination"

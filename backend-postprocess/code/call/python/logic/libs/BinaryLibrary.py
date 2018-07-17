@@ -1,3 +1,4 @@
+import time
 import os
 
 from FolderDefinition import FolderDefinition

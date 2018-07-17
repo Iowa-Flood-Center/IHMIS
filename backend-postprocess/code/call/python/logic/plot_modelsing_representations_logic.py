@@ -57,6 +57,14 @@ def generate_singsimp_representations(sc_models_ids, sc_runset_id, unix_timestam
         for cur_repr_id in cur_repr_ids:
             Debug.dl("plot_modelsing_representations_logic: Getting genscript for representation '{0}'.".format(cur_repr_id), 2, debug_lvl)
             reprgen_script = meta_mng.get_genscript_of_representation_sing(cur_repr_id)
+            if reprgen_script is None:
+                Debug.dl("plot_modelsing_representations_logic: Skipping plotting for {0} - None script".format(
+                    cur_repr_id), 2, debug_lvl)
+                continue
+            elif reprgen_script.strip() == "":
+                Debug.dl("plot_modelsing_representations_logic: Skipping plotting for {0} - '' script".format(
+                    cur_repr_id), 2, debug_lvl)
+                continue
 
             call_command = "{0} {1} {2} {3}".format(reprgen_script, cur_sc_model_id, the_timestamp_arg, cur_runset_arg)
 

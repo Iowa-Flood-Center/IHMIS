@@ -3,11 +3,15 @@ import os
 
 from FolderDefinition import FolderDefinition
 from FileDefinition import FileDefinition
+from metafiles.MetaScRepresentationComp import MetaScRepresentationComp
 from metafiles.MetaScRepresentation import MetaScRepresentation
 from metafiles.MetaEvaluationMatrix import MetaEvaluationMatrix
+from metafiles.MetaComparisonSet import MetaComparisonSet
 from metafiles.MetaScEvaluation import MetaScEvaluation
 from metafiles.MetaScReference import MetaScReference
+from metafiles.MetaScModelComb import MetaScModelComb
 from metafiles.MetaScModel import MetaScModel
+from metafiles.MetaRunset import MetaRunset
 
 
 class MetaFileManager:

@@ -1,3 +1,6 @@
+from MetaFile import MetaFile
+from ..Debug import Debug
+
 
 class MetaScRepresentationComp(MetaFile):
 

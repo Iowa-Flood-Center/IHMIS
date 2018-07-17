@@ -21,6 +21,37 @@ class FilenameDefinition:
             return None
 
     @staticmethod
+    def obtain_dist_file_timestamp(distribution_file_name):
+        """
+
+        :param distribution_file_name:
+        :return:
+        """
+        if distribution_file_name is not None:
+            # remove extension
+            clean_name = ".".join(distribution_file_name.split(".")[0:-1])
+            last_part_from_underlines = clean_name.split("_")[-1]
+            try:
+                return int(last_part_from_underlines)
+            except Exception as e:
+                return None
+        else:
+            return None
+
+    @staticmethod
+    def obtain_fore_file_timestamp(forecast_file_name):
+        """
+        Obtain timestamp from forecast file name
+        :param forecast_file_name: Just the file name, starting by a unix timestamp
+        :return: Integer if it was possible to retrieve timestamp, None otherwise
+        """
+        if forecast_file_name is not None:
+            splited = re.split("[^0123456789]", forecast_file_name)
+            return None if ((splited[0] == '') or (len(splited) < 2)) else int(splited[0]) + (int(splited[1]) * 3600)
+        else:
+            return None
+
+    @staticmethod
     def obtain_hist_file_linkid(historical_file_name):
         """
         Obtain linkid from distributed historical file

@@ -1,6 +1,7 @@
 from ..Debug import Debug
 import string
 import json
+import os
 
 
 class MetaFile:
@@ -13,6 +14,9 @@ class MetaFile:
 
     def load_json(self, file_path, debug_lvl=0):
 
+        if not os.path.exists(file_path):
+            Debug.dl("MetaFile: File not found: '{0}'.".format(file_path), 3, debug_lvl)
+            return
         with open(file_path, 'r') as json_file:
             try:
                 Debug.dl("MetaFile: Reading file '{0}'.".format(file_path), 3, debug_lvl)

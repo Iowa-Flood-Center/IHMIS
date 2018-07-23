@@ -706,6 +706,8 @@ class MetaFileManager:
         """
 
         folder_path = FolderDefinition.get_meta_screpresentations_folder_path(runset_id=self._runsetid)
+        if not os.path.exists(folder_path):
+            return None
         all_files_path = [os.path.join(folder_path, f) for f in os.listdir(folder_path)]
 
         self._screpresentation_meta_infos = {}
@@ -953,6 +955,8 @@ class MetaFileManager:
 
         folder_path = FolderDefinition.get_meta_scevaluations_folder_path(runset_id=self._runsetid,
                                                                           folder_flag=self._folder_flag)
+        if not os.path.exists(folder_path):
+            return None
         all_files_path = [os.path.join(folder_path, f) for f in os.listdir(folder_path)]
 
         self._scevaluation_meta_infos = {}

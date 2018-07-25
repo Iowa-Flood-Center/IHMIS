@@ -1,14 +1,21 @@
-from def_system import FolderDefinition, BinDefinition, LinksDefinition, Debug
-from reprgen_cmpr_lib import determine_timestamp_for_model, get_data_vector
-from reprgen_lib import build_data_matrix, save_image_file, clean_folder
-from reprgen_interface import ReprGenInterface
-from def_onDemand import AncillaryOnDemand
-from def_utils import GeneralUtils
 import numpy as np
 import datetime
 import time
 import sys
 import os
+
+sys.path.append("{0}/..".format(os.path.dirname(os.path.realpath(__file__))))
+from reprgen_cmpr_lib import determine_timestamp_for_model, get_data_vector
+from reprgen_lib import build_data_matrix, save_image_file, clean_folder
+from libs.BinAncillaryDefinition import BinAncillaryDefinition
+from libs.AncillaryOnDemand import AncillaryOnDemand
+from libs.FolderDefinition import FolderDefinition
+from libs.ReprGenInterface import ReprGenInterface
+from libs.LinksDefinition import LinksDefinition
+from libs.MetaFileManager import MetaFileManager
+from libs.BinDefinition import BinDefinition
+from libs.GeneralUtils import GeneralUtils
+from libs.Debug import Debug
 
 debug_level_arg = 1
 

@@ -14,7 +14,6 @@ from libs.BinDefinition import BinDefinition
 from libs.GeneralUtils import GeneralUtils
 from libs.Debug import Debug
 
-
 debug_level_arg = 1
 
 # ####################################################### ARGS ####################################################### #

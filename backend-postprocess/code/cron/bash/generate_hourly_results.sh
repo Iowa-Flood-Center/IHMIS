@@ -12,14 +12,15 @@ CFG_FILE="../../../conf/settings.json"
 SC_RUNSET_ID="realtime"
 LOCAL_PY_FOLDER="../../call/python/"
 
-CALL_IMPORT_DATA=false
-CALL_PLOT_SINGREPR=false
-CALL_PLOT_REFRREPR=false
-CALL_PLOT_EVALUAT=false
-CALL_PLOT_CMPDREPR=false
-CALL_UPDATE_DISPLAY=false
-CALL_CLEAN_IMPORT=false
-CALL_CLEAN_HIST=true
+CALL_IMPORT_DATA=true      # Step 01: Import data
+CALL_PLOT_SINGREPR=true    # Step 02: Plot single model representations
+CALL_PLOT_REFRREPR=true    # Step 03: Plot references representation
+CALL_PLOT_CMPRREPR=true    # Step 04: Plot model comparisons
+CALL_PLOT_EVALUAT=true     # Step 05: Plot evaluations
+CALL_PLOT_CMPDREPR=true    # Step 06: Plot compound representations
+CALL_UPDATE_DISPLAY=true   # Step 07: Upldate images to be displayed
+CALL_CLEAN_IMPORT=true     # Step 08: Clean imported files
+CALL_CLEAN_HIST=true       # Step 09: Clean historical files
 
 H_LINE="\n###############################################################################"
 
@@ -51,8 +52,14 @@ will_call "${CMD}" ${CALL_IMPORT_DATA}
 echo -e ${H_LINE}  # ---------------------------------------------------
 
 echo "SH: Plotting single models representations..."
-CMD="python "${LOCAL_PY_FOLDER}"plot_modelsing_representations.py -model_sing_id all -runset_id "${SC_RUNSET_ID}
+CMD="python "${LOCAL_PY_FOLDER}"plot_modelsing_representations_inst.py -model_sing_id all -runset_id "${SC_RUNSET_ID}
 will_call "${CMD}" ${CALL_PLOT_SINGREPR}
+
+echo -e ${H_LINE}  # ---------------------------------------------------
+
+echo "SH: Plotting model comparison representations..."
+CMD="python "${LOCAL_PY_FOLDER}"plot_modelcomp_representations_inst.py -runset_id"${SC_RUNSET_ID}
+will_call "${CMD}" ${CALL_PLOT_CMPRREPR}
 
 echo -e ${H_LINE}  # ---------------------------------------------------
 

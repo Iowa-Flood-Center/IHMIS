@@ -1,12 +1,17 @@
-from def_system import FolderDefinition, BinDefinition, LinksDefinition, Debug
-from reprgen_lib import build_data_matrix, save_image_file, clean_folder
-from reprgen_interface import ReprGenInterface
-from def_onDemand import AncillaryOnDemand
-from def_utils import GeneralUtils
 import numpy as np
 import time
 import sys
 import os
+
+sys.path.append("{0}/..".format(os.path.dirname(os.path.realpath(__file__))))
+from reprgen_lib import build_data_matrix, save_image_file, clean_folder
+from libs.AncillaryOnDemand import AncillaryOnDemand
+from libs.FolderDefinition import FolderDefinition
+from libs.ReprGenInterface import ReprGenInterface
+from libs.LinksDefinition import LinksDefinition
+from libs.BinDefinition import BinDefinition
+from libs.GeneralUtils import GeneralUtils
+from libs.Debug import Debug
 
 debug_level_arg = 10
 
@@ -78,8 +83,6 @@ def generate_representation(sc_comparison_id, timestamp, flextime=None, runset_i
                                                     debug_lvl=debug_lvl)
     timestamp24_2 = determine_timestamp24_for_model(sc_model_2, timestamp00_2, requiered_product, runset_id=runset_id,
                                                     debug_lvl=debug_lvl)
-
-    print("Set {0} -> {1}, and {2} -> {3}.".format(timestamp00_1, timestamp24_1, timestamp00_2, timestamp24_2))
 
     # determine all file paths
     timestamp_00_1_filepath = os.path.join(hist_folder_path_1,

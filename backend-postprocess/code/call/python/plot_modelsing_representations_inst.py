@@ -35,22 +35,22 @@ meta_mng.load_all_scmodel_meta_info(debug_lvl=debug_lvl)
 # check model id argument
 model_id = ConsoleCall.get_arg_str("-model_sing_id", sys.argv)
 if model_id is None:
-    Debug.dl("plot_modelsing_representations: Must provide at least one model id, or 'all'.", 0, debug_lvl)
+    Debug.dl("plot_modelsing_representations_lib: Must provide at least one model id, or 'all'.", 0, debug_lvl)
     any_error = True
 elif model_id == 'all':
     model_id = None
 elif not meta_mng.scmodel_exists(model_id):
-    Debug.dl("plot_modelsing_representations: Provided model id ({0}) not accepted.".format(model_id), 0, debug_lvl)
+    Debug.dl("plot_modelsing_representations_lib: Provided model id ({0}) not accepted.".format(model_id), 0, debug_lvl)
     any_error = True
 
 # check timestamp argument
 try:
     unix_timestamp = ConsoleCall.get_arg_int('-t', sys.argv)
     if (unix_timestamp is not None) and (unix_timestamp < 0):
-        Debug.dl("plot_modelsing_representations: Provided timestamp ({0}) is negative.".format(sys.argv[2]), 0, debug_lvl)
+        Debug.dl("plot_modelsing_representations_lib: Provided timestamp ({0}) is negative.".format(sys.argv[2]), 0, debug_lvl)
         any_error = True
 except ValueError:
-    Debug.dl("plot_modelsing_representations: Provided timestamp ({0}) is not an integer.".format(sys.argv[2]), 0, debug_lvl)
+    Debug.dl("plot_modelsing_representations_lib: Provided timestamp ({0}) is not an integer.".format(sys.argv[2]), 0, debug_lvl)
     any_error = True
 
 # ####################################################### CALL ####################################################### #
@@ -67,6 +67,6 @@ else:
 
 # debug info
 d_time = time.time()-start_time
-Debug.dl("plot_modelsing_representations: update_local_bins_from_hdf5({0}) function took {1} seconds ".format(model_id,
+Debug.dl("plot_modelsing_representations_lib: update_local_bins_from_hdf5({0}) function took {1} seconds ".format(model_id,
                                                                                                               d_time),
          1, debug_lvl)

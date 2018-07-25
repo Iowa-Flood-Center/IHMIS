@@ -1,6 +1,11 @@
-from def_system import FolderDefinition, BinDefinition, Debug
 import numpy as np
+import sys
 import os
+
+sys.path.append("{0}/..".format(os.path.dirname(os.path.realpath(__file__))))
+from libs.FolderDefinition import FolderDefinition
+from libs.BinDefinition import BinDefinition
+from libs.Debug import Debug
 
 
 def determine_timestamp_for_model(sc_model_id, timestamp, flextime, runset_id=None, debug_lvl=0):

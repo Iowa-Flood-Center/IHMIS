@@ -122,21 +122,27 @@ function custom_display(){
 		
 		// for each link available, looks for a respective gauge location
 		var json_gage = gages_location_dict["gauge"];
+		console.log("Setting " + json_gage.length + " gages.");
 		for(var idx=0; idx<json_gage.length; idx++){
 			cur_linkid = json_gage[idx]["link_id"].toString();
 			
 			// basic check - gage location and alert was found
 			if(typeof(all_links_dict[cur_linkid]) === 'undefined'){ 
-				// console.log("hydrographmultiplesalert: Not found link id " + cur_linkid + " in alert flags.");
+				console.log("hydrographmultiplesalert: ("+ idx +") Not found link id " + cur_linkid + " in alert flags.");
 				continue;
 			}
 			
 			// define icon image
 			if (all_links_dict[cur_linkid] == 0){
 				cur_icon_address = icon_root_address + "gauge_wtf.png";
+			} else if (all_links_dict[cur_linkid] == -5){
+				cur_icon_address = icon_root_address + "virtual_dot.png";
+			} else if (all_links_dict[cur_linkid] == -6){
+				cur_icon_address = icon_root_address + "gauge_dot.png";
 			} else {
 				cur_icon_address = icon_root_address + "wa" + all_links_dict[cur_linkid] + ".png";
-			}
+			} 
+			console.log("hydrographmultiplesalert: ("+ idx +") Set icon: " + cur_icon_address + ".");
 			
 			// define marker position
 			cur_latlng = {lat:parseFloat(json_gage[idx]["lat"]),

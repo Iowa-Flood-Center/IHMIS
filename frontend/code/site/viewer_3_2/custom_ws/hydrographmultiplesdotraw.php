@@ -60,6 +60,10 @@
 		
 		$links_array[] = (" \"".$cur_common_linkid."\":".$cur_common_file_json["fld_level"]);
 	}
-	echo(implode(",\n", $links_array));
+	if(count($links_array) > 0){
+		echo(implode(",\n", $links_array));
+	} else {
+		echo('"ERROR":"No files at '.$common_files_folder_path.'."');
+	}
 	echo("\n}");
 ?>

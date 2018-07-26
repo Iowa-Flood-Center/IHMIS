@@ -1,5 +1,6 @@
 <?php
 	header("Content-Type: text/plain");
+	include_once("../../common/libs/settings.php");
 	
 	/*********************************************** ARGS **********************************************/
 	
@@ -53,7 +54,10 @@
 	 * RETURN - 
 	 */
 	function get_desc_area($link_id){
-		$loc_file = "/local/iihr/demir/test1/modelplus_3_1_git/frontend/viewer_3_1/ancillary_files/gauges_location_20170328.csv";
+		$anci_folder_path = Settings::get_property("raw_data_folder_path");
+        $anci_folder_path .= "anci/gauges_location/";
+        $anci_file_name = "gauges_location_20170328.csv";
+        $loc_file = $anci_folder_path.$anci_file_name;
 		$f_handle = fopen($loc_file, "r");
 		$read_header = false;
 		if($f_handle){

@@ -1723,7 +1723,7 @@ function build_folder_path(prefix, parameter_acronym, runset_id){
 	var models_displayed;
 	var cur_http;
 	
-	cur_http = modelplus.url.base_realtime_folder + runset_id + '/repres_displayed/';
+	cur_http = modelplus.url.base_runsets + runset_id + '/repres_displayed/';
 	
 	model1_id = $("#"+modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 	switch(prefix){

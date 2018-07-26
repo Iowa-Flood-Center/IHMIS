@@ -1,4 +1,6 @@
 <?php
+  error_reporting(E_ALL | E_STRICT );
+  ini_set("display_errors", 1);
 
   require_once("settings.php");
   
@@ -6,20 +8,30 @@
     private static $data_server_url = NULL;
     const DATA_FILES_FOLDER = "files";
     const META_FILES_FOLDER = "metafiles";
+    const RUNSETS_FOLDER = "runsets_tmp";
 
     //
     // 
     // $file_direction: can be both a relative file path or an array of directories/filename.
     // RETURN:
-    //
     public static function get_datafile_content($file_direction, 
                                                 $runset_id){
       // build target data file URL and perform HTTP request
-      if(!DataAccess::_load_settings_if_needed()) return(NULL);
-      $base_url = DataAccess::$data_server_url."runsets/";
-      $base_url .= $runset_id."/".DataAccess::DATA_FILES_FOLDER."/";
+      $base_url = DataAccess::_get_base_url($runset_id);
+      if(is_null($base_url)) return(NULL);
+      $base_url .= DataAccess::DATA_FILES_FOLDER."/";
       $fi_url = DataAccess::_build_url($base_url, $file_direction);
       return(DataAccess::_http_request($fi_url));
+    }
+    
+    //
+    // $file_direction: 
+    // RETURN: Boolean.
+    public static function check_datafile_exists($file_direction, 
+                                                 $runset_id){
+      $file_content = DataAccess::get_datafile_content($file_direction,
+                                                       $runset_id);
+      return(($file_content == "" ? FALSE : TRUE));
     }
 
     //
@@ -29,12 +41,14 @@
     // RETURN:
     public static function list_datafolder_content($folder_direction, 
                                                    $runset_id,
-                                                   $file_ext){
+                                                   $file_ext,
+                                                   $echo_url=FALSE){
       // build target data folder URL and perform HTTP request
-      if(!DataAccess::_load_settings_if_needed()) return(NULL);
-      $base_url = DataAccess::$data_server_url."runsets/";
-      $base_url .= $runset_id."/".DataAccess::DATA_FILES_FOLDER."/";
+      $base_url = DataAccess::_get_base_url($runset_id);
+      if(is_null($base_url)) return(NULL);
+      $base_url .= DataAccess::DATA_FILES_FOLDER."/";
       $fd_url = DataAccess::_build_url($base_url, $folder_direction);
+      if($echo_url) echo($fd_url."<br />");
       $fd_html = DataAccess::_http_request($fd_url);
       return(DataAccess::_get_file_list($fd_html, $file_ext));
     }
@@ -47,11 +61,21 @@
     public static function get_metafile_content($file_direction, 
                                                 $runset_id){
       // build target data file URL and perform HTTP request
-      if(!DataAccess::_load_settings_if_needed()) return(NULL);
-      $base_url = DataAccess::$data_server_url."runsets/";
-      $base_url .= $runset_id."/".DataAccess::META_FILES_FOLDER."/";
+      $base_url = DataAccess::_get_base_url($runset_id);
+      if(is_null($base_url)) return(NULL);
+      $base_url .= DataAccess::META_FILES_FOLDER."/";
       $fi_url = DataAccess::_build_url($base_url, $file_direction);
       return(DataAccess::_http_request($fi_url));
+    }
+
+    //
+    // $file_direction: 
+    // RETURN: Boolean.
+    public static function check_metafile_exists($file_direction, 
+                                                 $runset_id){
+      $file_content = DataAccess::get_metafile_content($file_direction,
+                                                       $runset_id);
+      return(($file_content == "" ? FALSE : TRUE));
     }
 
     //
@@ -63,15 +87,26 @@
                                                    $runset_id,
                                                    $file_ext){
       // build target data folder URL and perform HTTP request
-      if(!DataAccess::_load_settings_if_needed()) return(NULL);
-      $base_url = DataAccess::$data_server_url."runsets/";
-      $base_url .= $runset_id."/".DataAccess::META_FILES_FOLDER."/";
+      $base_url = DataAccess::_get_base_url($runset_id);
+      if(is_null($base_url)) return(NULL);
+      $base_url .= DataAccess::META_FILES_FOLDER."/";
       $fd_url = DataAccess::_build_url($base_url, $folder_direction);
       $fd_html = DataAccess::_http_request($fd_url);
       return(DataAccess::_get_file_list($fd_html, $file_ext));
     }
     
     // ////////////////////////// PRIV ////////////////////////////// //
+
+    //
+    // $runset_id:
+    // RETURN:
+    private static function _get_base_url($runset_id){
+      if(!DataAccess::_load_settings_if_needed()) return(NULL);
+      $base_url = DataAccess::$data_server_url;
+      $base_url .= DataAccess::RUNSETS_FOLDER."/";
+      $base_url .= $runset_id."/";
+      return($base_url);
+    }
     
     // Changes content of $data_server_url parameter if it is null
     // RETURN: Boolean. TRUE if able to load, FALSE otherwise
@@ -109,6 +144,15 @@
       for($i = 0; $i < count($matches); $i++){
         $matches[$i] = str_replace('href="', '', $matches[$i]);
         $matches[$i] = str_replace('"', '', $matches[$i]);
+        if(DataAccess::_endsWith($matches[$i], '/')){
+		  $matches[$i] = substr($matches[$i], 0, -1);
+		}
+		$matches[$i] = explode('/', $matches[$i]);
+        $matches[$i] = end($matches[$i]);
+      }
+      // if listing directories, remove the first one (parent dir)
+      if($file_ext == "\/"){
+        $matches = array_splice($matches, 1, count($matches)-1);
       }
       return($matches);
     }
@@ -124,18 +168,30 @@
         ),
       );  
       $context = stream_context_create($context);
-
-      return(@file_get_contents($url, false, $context));
+      $content = @file_get_contents($url, false, $context);
+      return($content);
+    }
+    
+    // return tru if $str ends with $sub
+    private static function _endsWith($str, $sub) {
+      return(substr( $str, strlen( $str ) - strlen( $sub ) ) == $sub);
     }
   }
   
   // TODO: remove this test
   // DATA:
+  // $file1 = "repres_displayed/mdl1/hydrographsd_usgsgagesdischarge/1527220800_79118.json";
+  // $file2 = "repres_displayed/mdl1/hydrographsd_usgsgagesdischarge/1527220800_791181.json";
+  // echo("Files existance: ".DataAccess::check_datafile_exists($file1, "rset000122")." and ".DataAccess::check_datafile_exists($file2, "rset000122")."<br />");
+  
   /*
-  echo(DataAccess::get_datafile_content("eval_historical/fc254mrm01da/nashsutcliffe_usgsgagesstage/1530979200nashsutcliffe.json", "realtime"));
+  $file_content = DataAccess::get_datafile_content($file1, "rset000122");
+  echo($file_content);
+  echo("<br />...Is null? ".is_null($file_content)."<br />");
   echo("<br />...<br />");
-  print_r(DataAccess::list_datafolder_content("imgs_historical/fc254ifc01et/podwacih", "realtime", ".png"));
+  print_r(DataAccess::list_datafolder_content("repres_displayed/mdl1/podwacih", "rset000122", ".png"));
   */
+  
   // META:
   /*
   echo(DataAccess::get_metafile_content("sc_menu/Menu.json", "realtime"));

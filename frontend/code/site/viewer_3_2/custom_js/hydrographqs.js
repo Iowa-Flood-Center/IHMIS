@@ -28,7 +28,7 @@ function custom_display(){
 	icon_address =                modelplus.url.base_frontend_webservices+"imgs/map_icons/hidrog.png";
 	ws_all_images_url =           GLB_webservices.prototype.http + "custom_ws/"+sc_evaluation_id+".php%i%sc_runset_id="+sc_runset_id+"%e%sc_model_id="+sc_model_id+"%e%sc_reference_id="+reference_id;
 	ws_gages_location_url =       GLB_webservices.prototype.http + "ws_gages_location.php";
-	single_image_folder_address = modelplus.url.base_realtime_folder+sc_runset_id+"/repres_displayed/"+sc_model_id+"/"+sc_evaluation_id+"_"+reference_id+"/";
+	single_image_folder_address = modelplus.url.base_runsets+sc_runset_id+"/repres_displayed/"+sc_model_id+"/"+sc_evaluation_id+"_"+reference_id+"/";
 	
 	// load all images available
 	$.ajax({

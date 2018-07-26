@@ -50,7 +50,7 @@ function custom_display(){
 	
 	// build relevant http addressees
 	url_root_open = modelplus.url.base_frontend_webservices;
-	url_root_files = modelplus.url.base_realtime_folder + sc_runset_id + "/";
+	url_root_files = modelplus.url.base_runsets + sc_runset_id + "/";
 	icon_address = url_root_open + "imgs/map_icons/gauge_ifc.png";
 	ws_all_images_url = GLB_webservices.prototype.http + "custom_ws/hydroforecast.php%i%sc_model_id="+sc_model_id+"%e%sc_reference_id="+reference_id+"%e%sc_runset_id="+sc_runset_id;
 	ws_gages_location_url = GLB_webservices.prototype.http + "ws_gages_location.php";

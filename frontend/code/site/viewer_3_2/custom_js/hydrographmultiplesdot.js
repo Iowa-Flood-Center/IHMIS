@@ -93,7 +93,6 @@ function custom_display(){
 	});
 	
 	// load all locations
-	console.log("hydrographmultiplesdot: calling '"+ws_gages_location_url+"'.");
 	$.ajax({
 		url: ws_gages_location_url
 	}).success(function(data){

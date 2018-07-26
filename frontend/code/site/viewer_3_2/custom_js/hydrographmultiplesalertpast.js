@@ -609,7 +609,7 @@ function custom_display(){
 						series : series_obj
 					};
 					
-					// Load data into the ECharts instance 
+					// Load data into the ECharts instance
 					myChart.setOption(option);
 					
 					modelplus.hydrograph.addHeader({

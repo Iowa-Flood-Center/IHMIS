@@ -1,6 +1,7 @@
 <?php
 header("Content-Type: text/plain");
 include_once("ws_metainfo_lib.php");
+include_once("../common/libs/settings.php");
 
 /************************************* ARGS *************************************/	
 	
@@ -8,7 +9,10 @@ $file_date = get_arg("filedate");
 if ($file_date == null){ $file_date = "20160628"; }
 
 /************************************* DEFS *************************************/
-$gages_csv_file_path = "/local/iihr/demir/test1/modelplus_3_1_git/frontend/viewer_3_1/ancillary_files/gauges_location_".$file_date.".csv";
+
+$anci_folder_path = Settings::get_property("raw_data_folder_path");
+$anci_folder_path .= "anci/gauges_location/";
+$gages_csv_file_path = $anci_folder_path."gauges_location_".$file_date.".csv";
 $has_header = true;
 	
 /************************************* CALL *************************************/

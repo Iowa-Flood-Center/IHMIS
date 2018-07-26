@@ -395,7 +395,7 @@ modelplus.requester.state_machine = modelplus.requester.state_machine || {};
   // create evaluations DOM inputs
   function create_evaluations_input_objects(eval_obj, mdl_num){
     var div_object, input_obj, label_obj, dom_id, label_text;
-	dom_id = "model_evaluation_"+mdl_num+"_"+eval_obj.id+"_"+eval_obj.id;
+	dom_id = "model_evaluation_"+mdl_num+"_"+eval_obj.id+"_"+eval_obj.screference_acronym;
 	div_object = $("<div>");
 	input_obj = $("<input type='checkbox' id='"+dom_id+"'>");
 	input_obj.val(eval_obj.acronym+"_"+eval_obj.screference_acronym);

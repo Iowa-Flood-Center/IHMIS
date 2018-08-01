@@ -195,7 +195,10 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
                                                                                                represcomb_id=sc_reprcomp_id,
                                                                                                frame_id="modelforestg",
                                                                                                model_id=cur_modelforestg_model_id)
-        all_modelforestg_hist_files = os.listdir(modelforestg_source_folder_path)
+        if os.path.exists(modelforestg_source_folder_path):
+            all_modelforestg_hist_files = os.listdir(modelforestg_source_folder_path)
+        else:
+            all_modelforestg_hist_files = []
         for cur_modelforestg_hist_file_name in all_modelforestg_hist_files:
             cur_modelforestg_hist_file_timestamp = FilenameDefinition.obtain_hist_file_timestamp(cur_modelforestg_hist_file_name)
             if (cur_modelforestg_hist_file_timestamp >= min_timestamp_limit) and \

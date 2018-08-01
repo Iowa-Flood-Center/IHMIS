@@ -1,14 +1,21 @@
-from def_system import FolderDefinition, BinDefinition, LinksDefinition, ImageDefinition, Debug
-from reprgen_disclausgsih_sing import WeightedMonths, build_exclusion_vector
-from reprgen_lib import build_data_matrix, save_image_file, clean_folder
-from reprgen_interface import ReprGenInterface
-from def_onDemand import AncillaryOnDemand
 import numpy as np
 import datetime
 import time
 import sys
 import csv
 import os
+
+sys.path.append("{0}/..".format(os.path.dirname(os.path.realpath(__file__))))
+from libs.AncillaryOnDemand import AncillaryOnDemand
+from libs.ReprGenInterface import ReprGenInterface
+from libs.FolderDefinition import FolderDefinition
+from libs.LinksDefinition import LinksDefinition
+from libs.ImageDefinition import ImageDefinition
+from libs.BinDefinition import BinDefinition
+from libs.Debug import Debug
+
+from reprgen_disclausgsih_sing import WeightedMonths, build_exclusion_vector
+from reprgen_lib import build_data_matrix, save_image_file, clean_folder
 
 debug_level_arg = 1
 

@@ -13,7 +13,7 @@ class MetaComparisonSet(MetaFile):
         :param debug_lvl:
         :return:
         """
-        return self._json_object.keys()
+        return self._json_object.keys() if self._json_object is not None else []
 
     def get_representation_list(self, composition_acronym=None, sc_model1_acronym=None, sc_model2_acronym=None, debug_lvl=0):
         """

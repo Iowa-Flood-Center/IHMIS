@@ -1,6 +1,6 @@
+from FilenameDefinition import FilenameDefinition
 from SettingsRealtime import SettingsRealtime
 from ImageDefinition import ImageDefinition
-from FilenameDefinition import FilenameDefinition
 from BinDefinition import BinDefinition
 from Settings import Settings
 from Debug import Debug
@@ -591,6 +591,27 @@ class FolderDefinition:
 
         all_file_names.sort(reverse=True)
         return FilenameDefinition.obtain_hist_file_timestamp(all_file_names[0])
+
+    @staticmethod
+    def retrive_most_recent_timestamps_in_hist_folder(folder_path):
+        """
+
+        :param folder_path:
+        :return:
+        """
+        ret_dict = {}
+        tmp_dict = {}
+
+        for cur_file_name in os.listdir(folder_path):
+            cur_file_timestamp = FilenameDefinition.obtain_hist_file_timestamp(cur_file_name)
+            cur_file_linkid = FilenameDefinition.obtain_hist_file_linkid(cur_file_name)
+
+            if (cur_file_linkid in tmp_dict) and (tmp_dict[cur_file_linkid] > cur_file_timestamp):
+                continue
+            tmp_dict[cur_file_linkid] = cur_file_timestamp
+            ret_dict[cur_file_linkid] = cur_file_name
+
+        return ret_dict
 
     @staticmethod
     def retrive_earliest_timestamp_in_hist_folder(folder_path):

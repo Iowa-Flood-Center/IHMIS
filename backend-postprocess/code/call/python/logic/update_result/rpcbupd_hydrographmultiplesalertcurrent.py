@@ -33,7 +33,7 @@ def update_display_files(modelcomb_id, runset_id, timestamp, debug_lvl=0):
     :return:
     """
 
-    sc_reprcomp = "hydrographmultiplesdotraw"
+    sc_reprcomp = "hydrographmultiplesalertcurrent"
     ref0_frame = "modelpaststg"
 
     # defining effective 0-ref timestamp
@@ -45,6 +45,8 @@ def update_display_files(modelcomb_id, runset_id, timestamp, debug_lvl=0):
         else:
             modelpaststg_model_ids = modelpaststg_model_id
         ref0_timestamp = None
+        if modelpaststg_model_ids is None:
+            print("--- Got 'None' for 'modelpaststg_model_ids'.")
         for cur_modelpaststg_model_id in modelpaststg_model_ids:
             cur_modelpaststg_folder_path = FolderDefinition.get_historical_reprcomb_folder_path(runset_id,
                                                                                                 represcomb_id=sc_reprcomp,
@@ -54,9 +56,9 @@ def update_display_files(modelcomb_id, runset_id, timestamp, debug_lvl=0):
             if (ref0_timestamp is None) or (cur_ref0_timestamp > ref0_timestamp):
                 ref0_timestamp = cur_ref0_timestamp
             if ref0_timestamp is None:
-                Debug.dl("rpcbupd_hydrographmultiplesdotraw: No file at '{0}'.".format(cur_modelpaststg_folder_path), 2, debug_lvl)
+                Debug.dl("rpcbupd_hydrographmultiples: No file at '{0}'.".format(cur_modelpaststg_folder_path), 2, debug_lvl)
             else:
-                Debug.dl("rpcbupd_hydrographmultiplesdotraw: Most recent timestamp in '{0}' is {1}.".format(cur_modelpaststg_folder_path,
+                Debug.dl("rpcbupd_hydrographmultiples: Most recent timestamp in '{0}' is {1}.".format(cur_modelpaststg_folder_path,
                                                                                                       ref0_timestamp),
                          2, debug_lvl)
 
@@ -82,7 +84,7 @@ def get_frame_model_ids(modelcomb_id, runset_id, represcomb_id, frame, debug_lvl
     # get entire model comb file
     modelcomb_file_path = FileDefinition.obtain_modelcomb_file_path(modelcomb_id, runset_id, debug_lvl=debug_lvl)
     if (modelcomb_file_path is None) or (not os.path.exists(modelcomb_file_path)):
-        Debug.dl("rpcbupd_hydrographmultiplesdotraw: File '{0}' not found.".format(modelcomb_file_path), 0, debug_lvl)
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: File '{0}' not found.".format(modelcomb_file_path), 0, debug_lvl)
         return None
 
     # read file content
@@ -93,12 +95,13 @@ def get_frame_model_ids(modelcomb_id, runset_id, represcomb_id, frame, debug_lvl
     try:
         represcomb_set = modelcomb_json["sc_modelcombination"]["sc_represcomb_set"]
     except KeyError:
-        Debug.dl("rpcbupd_hydrographmultiplesdotraw: File '{0}' is incomplete.".format(modelcomb_file_path), 0, debug_lvl)
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: File '{0}' is incomplete.".format(modelcomb_file_path), 0,
+                 debug_lvl)
         return None
 
     #
     if represcomb_id not in represcomb_set:
-        Debug.dl("rpcbupd_hydrographmultiplesdotraw: Modelcomb '{0}.{1}' has no representation comb. '{2}'.".format(
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Modelcomb '{0}.{1}' has no representation comb. '{2}'.".format(
             runset_id, modelcomb_id, represcomb_id), 0, debug_lvl)
         return None
 
@@ -133,7 +136,9 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
 
     # define models
     modelpaststg_model_ids = get_frame_model_ids(sc_modelcomb_id, sc_runset_id, sc_reprcomp_id, "modelpaststg",
-                                                debug_lvl=debug_lvl)
+                                                 debug_lvl=debug_lvl)
+    modelpaststgalert_model_ids = get_frame_model_ids(sc_modelcomb_id, sc_runset_id, sc_reprcomp_id, "modelpaststgalert",
+                                                      debug_lvl=debug_lvl)
     modelforestg_model_ids = get_frame_model_ids(sc_modelcomb_id, sc_runset_id, sc_reprcomp_id, "modelforestg",
                                                  debug_lvl=debug_lvl)
     modelforestgalert_model_ids = get_frame_model_ids(sc_modelcomb_id, sc_runset_id, sc_reprcomp_id,
@@ -141,13 +146,19 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
 
     # basic check
     if modelpaststg_model_ids is None:
-        Debug.dl("rpcbupd_hydrographmultiplesdotraw: Needs at least one 'modelpaststg' model.", 0, debug_lvl)
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Needs at least one 'modelpaststg' model.", 0, debug_lvl)
         return
     elif isinstance(modelpaststg_model_ids, str) or isinstance(modelpaststg_model_ids, basestring):
         # ensure we have a list for 'modelforestg_model_ids' variable
         modelpaststg_model_ids = [modelpaststg_model_ids]
-    elif modelforestg_model_ids is None:
-        Debug.dl("rpcbupd_hydrographmultiplesdotraw: Needs at least one 'modelforestg' model.", 0, debug_lvl)
+    if modelpaststgalert_model_ids is None:
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Needs at least one 'modelpaststg' model.", 0, debug_lvl)
+        return
+    elif isinstance(modelpaststgalert_model_ids, str) or isinstance(modelpaststgalert_model_ids, basestring):
+        # ensure we have a list for 'modelforestg_model_ids' variable
+        modelpaststgalert_model_ids = [modelpaststgalert_model_ids]
+    if modelforestg_model_ids is None:
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Needs at least one 'modelforestg' model.", 0, debug_lvl)
         return
     elif isinstance(modelforestg_model_ids, str) or isinstance(modelforestg_model_ids, basestring):
         # ensure we have a list for 'modelforestg_model_ids' variable
@@ -166,10 +177,6 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
                                                                                                represcomb_id=sc_reprcomp_id,
                                                                                                frame_id="modelpaststg",
                                                                                                model_id=modelpaststg_model_id)
-        if not os.path.exists(modelpaststg_source_folder_path):
-            Debug.dl("rpcbupd_hydrographmultiplesdotraw: Folder '{0}' not found.".format(modelpaststg_source_folder_path),
-                     1, debug_lvl)
-            return
         all_modelpaststg_hist_files = os.listdir(modelpaststg_source_folder_path)
         for cur_modelpaststg_hist_file_name in all_modelpaststg_hist_files:
             cur_modelpaststg_hist_file_timestamp = FilenameDefinition.obtain_hist_file_timestamp(cur_modelpaststg_hist_file_name)
@@ -177,7 +184,29 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
                 cur_file_path = os.path.join(modelpaststg_source_folder_path, cur_modelpaststg_hist_file_name)
                 shutil.copy(cur_file_path, modelpaststg_dest_folder_path)
 
-        Debug.dl("rpcbupd_hydrographmultiplesdotraw: Filled '{0}' folder.".format(modelpaststg_dest_folder_path), 1, debug_lvl)
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Filled '{0}' folder.".format(modelpaststg_dest_folder_path), 1, debug_lvl)
+
+    # replace files for 'modelpaststgalert' frame
+    for modelpaststg_model_id in modelpaststgalert_model_ids:
+        modelpaststg_dest_folder_path = FolderDefinition.get_displayed_reprcomb_folder_path(sc_runset_id, sc_modelcomb_id,
+                                                                                            represcomb_id=sc_reprcomp_id,
+                                                                                            frame_id="modelpaststgalert",
+                                                                                            model_id=modelpaststg_model_id)
+        if clean_previous and os.path.exists(modelpaststg_dest_folder_path):
+            shutil.rmtree(modelpaststg_dest_folder_path)
+        os.makedirs(modelpaststg_dest_folder_path)
+        modelpaststg_source_folder_path = FolderDefinition.get_historical_reprcomb_folder_path(sc_runset_id,
+                                                                                               represcomb_id=sc_reprcomp_id,
+                                                                                               frame_id="modelpaststgalert",
+                                                                                               model_id=modelpaststg_model_id)
+        all_modelpaststg_hist_files = os.listdir(modelpaststg_source_folder_path)
+        for cur_modelpaststg_hist_file_name in all_modelpaststg_hist_files:
+            cur_modelpaststg_hist_file_timestamp = FileDefinition.obtain_hist_file_timestamp(cur_modelpaststg_hist_file_name)
+            if cur_modelpaststg_hist_file_timestamp == ref0_timestamp:
+                cur_file_path = os.path.join(modelpaststg_source_folder_path, cur_modelpaststg_hist_file_name)
+                shutil.copy(cur_file_path, modelpaststg_dest_folder_path)
+
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Filled '{0}' folder.".format(modelpaststg_dest_folder_path), 1, debug_lvl)
 
     # replace files for 'modelforestg' frame models
     min_timestamp_limit = ref0_timestamp - 3600
@@ -198,15 +227,16 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
         if os.path.exists(modelforestg_source_folder_path):
             all_modelforestg_hist_files = os.listdir(modelforestg_source_folder_path)
         else:
+            Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Missing folder '{0}' folder.".format(modelforestg_source_folder_path), 1, debug_lvl)
             all_modelforestg_hist_files = []
         for cur_modelforestg_hist_file_name in all_modelforestg_hist_files:
-            cur_modelforestg_hist_file_timestamp = FilenameDefinition.obtain_hist_file_timestamp(cur_modelforestg_hist_file_name)
+            cur_modelforestg_hist_file_timestamp = FileDefinition.obtain_hist_file_timestamp(cur_modelforestg_hist_file_name)
             if (cur_modelforestg_hist_file_timestamp >= min_timestamp_limit) and \
                     (cur_modelforestg_hist_file_timestamp <= max_timestamp_limit):
                 cur_file_path = os.path.join(modelforestg_source_folder_path, cur_modelforestg_hist_file_name)
                 shutil.copy(cur_file_path, modelforestg_dest_folder_path)
 
-        Debug.dl("rpcbupd_hydrographmultiplesdotraw: Filled '{0}' folder.".format(modelforestg_dest_folder_path), 1,
+        Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Filled '{0}' folder.".format(modelforestg_dest_folder_path), 1,
                  debug_lvl)
 
     if modelforestgalert_model_ids is not None:
@@ -235,7 +265,7 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
                     cur_file_path = os.path.join(modelforestg_source_folder_path, cur_modelforestg_hist_file_name)
                     shutil.copy(cur_file_path, modelforestg_dest_folder_path)
 
-            Debug.dl("rpcbupd_hydrographmultiplesdotraw: Filled '{0}' folder.".format(modelforestg_dest_folder_path), 1,
+            Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Filled '{0}' folder.".format(modelforestg_dest_folder_path), 1,
                      debug_lvl)
 
     # replace 'common' files
@@ -253,7 +283,7 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
         cur_file_path = os.path.join(common_source_folder_path, cur_common_hist_file_name)
         shutil.copy(cur_file_path, common_dest_folder_path)
 
-    Debug.dl("rpcbupd_hydrographmultiplesdotraw: Filled '{0}' folder.".format(common_dest_folder_path), 1, debug_lvl)
+    Debug.dl("rpcbupd_hydrographmultiplesalertcurrent: Filled '{0}' folder.".format(common_dest_folder_path), 1, debug_lvl)
 
 # ####################################################### CALL ####################################################### #
 

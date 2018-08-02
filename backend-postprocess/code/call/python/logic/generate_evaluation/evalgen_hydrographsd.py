@@ -391,6 +391,10 @@ def write_it(link_id, obs_timeseries_dict, mdl_timeseries_dict, out_file_path, r
         mdl_set.append([cur_mdl_tstamp, cur_stage])
     output_obj['stage_mdl'] = mdl_set
 
+    if len(mdl_set) == 0:
+        Debug.dl("evalgen_hydrographsd: No module data retrieved from model.", 2, debug_lvl)
+        return False
+
     # plot observed first
     all_obs_tstamp = obs_timeseries_dict.keys()
     all_obs_tstamp.sort()

@@ -42,7 +42,7 @@ def clean_historical_reprcomp(modelcomb_id, reprcomp_id, runset_id, timestamp, p
     # establishing folders (root and frames)
     hist_folder_path = FolderDefinition.get_historical_reprcomb_folder_path(runset_id, represcomb_id=reprcomp_id,
                                                                             model_id=modelcomb_id)
-    all_files = os.listdir(hist_folder_path)
+    all_files = os.listdir(hist_folder_path) if os.path.exists(hist_folder_path) else []
     all_folders = []
     for cur_file in all_files:
         cur_file_path = os.path.join(hist_folder_path, cur_file)

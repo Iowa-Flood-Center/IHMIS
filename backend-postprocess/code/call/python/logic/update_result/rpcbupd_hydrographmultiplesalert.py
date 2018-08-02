@@ -226,7 +226,10 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
                                                                                                    represcomb_id=sc_reprcomp_id,
                                                                                                    frame_id="modelforestgalert",
                                                                                                    model_id=cur_modelforestg_model_id)
-            all_modelforestg_hist_files = os.listdir(modelforestg_source_folder_path)
+            if os.path.exists(modelforestg_source_folder_path):
+                all_modelforestg_hist_files = os.listdir(modelforestg_source_folder_path)
+            else:
+                all_modelforestg_hist_files = []
             num_copy = 0
             for cur_modelforestg_hist_file_name in all_modelforestg_hist_files:
                 cur_modelforestg_hist_file_timestamp = FilenameDefinition.obtain_hist_file_timestamp(cur_modelforestg_hist_file_name)

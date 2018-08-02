@@ -18,7 +18,7 @@ CALL_PLOT_REFRREPR=true    # Step 03: Plot references representation
 CALL_PLOT_CMPRREPR=true    # Step 04: Plot model comparisons
 CALL_PLOT_EVALUAT=true     # Step 05: Plot evaluations
 CALL_PLOT_CMPDREPR=true    # Step 06: Plot compound representations
-CALL_UPDATE_DISPLAY=true   # Step 07: Upldate images to be displayed
+CALL_UPDATE_DISPLAY=true   # Step 07: Update images to be displayed
 CALL_CLEAN_IMPORT=true     # Step 08: Clean imported files
 CALL_CLEAN_HIST=true       # Step 09: Clean historical files
 

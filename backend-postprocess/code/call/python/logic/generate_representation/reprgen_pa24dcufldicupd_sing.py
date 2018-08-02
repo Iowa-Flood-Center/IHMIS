@@ -1,9 +1,13 @@
-from def_system import FolderDefinition, ImageDefinition, Debug
-from reprgen_interface import ReprGenInterface
-from reprgen_lib import ReprComposition
 import time
 import sys
 import os
+
+sys.path.append("{0}/..".format(os.path.dirname(os.path.realpath(__file__))))
+from libs.FolderDefinition import FolderDefinition
+from libs.ReprGenInterface import ReprGenInterface
+from libs.ImageDefinition import ImageDefinition
+from libs.ReprComposition import ReprComposition
+from libs.Debug import Debug
 
 debug_level_arg = 10
 

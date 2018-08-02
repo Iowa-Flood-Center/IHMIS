@@ -8,7 +8,16 @@
     private static $data_server_url = NULL;
     const DATA_FILES_FOLDER = "files";
     const META_FILES_FOLDER = "metafiles";
-    const RUNSETS_FOLDER = "runsets_tmp";
+    const RUNSETS_FOLDER = "runsets";
+
+    //
+	// $file_ext: 
+	// RETURN: 
+    public static function list_rootfolder_content($file_ext){
+      $base_url = DataAccess::_get_base_url(null);
+	  $fd_html = DataAccess::_http_request($base_url);
+      return(DataAccess::_get_file_list($fd_html, $file_ext));
+    }
 
     //
     // 
@@ -102,9 +111,9 @@
     // RETURN:
     private static function _get_base_url($runset_id){
       if(!DataAccess::_load_settings_if_needed()) return(NULL);
-      $base_url = DataAccess::$data_server_url;
-      $base_url .= DataAccess::RUNSETS_FOLDER."/";
-      $base_url .= $runset_id."/";
+      $base_url = DataAccess::$data_server_url.DataAccess::RUNSETS_FOLDER."/";
+      if (!is_null($runset_id))
+        $base_url .= $runset_id."/";
       return($base_url);
     }
     
@@ -125,8 +134,10 @@
     private static function _build_url($base_url, $file_direction){
       if(is_string($file_direction)){
         return($base_url.$file_direction);
-      }elseif(is_array($file_direction)){
-        return ($base_url.implode($file_direction, "/"));
+      } elseif(is_array($file_direction)) {
+        return($base_url.implode($file_direction, "/"));
+      } elseif(is_null($file_direction)) {
+        return($base_url);
       } else {
         return(NULL);
       }
@@ -198,4 +209,7 @@
   echo("<br />---<br />");
   print_r(DataAccess::list_metafolder_content("sc_modelcombinations", "realtime", ".json"));
   */
+  
+  // print_r(DataAccess::list_rootfolder_content("\/"));
+  
 ?>

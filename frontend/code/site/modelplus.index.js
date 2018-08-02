@@ -53,7 +53,7 @@ var modelplus = modelplus || {};
         } else {
           // 2: 'general case' image
 		  $('#intro_map_background').css('display', 'none');
-		  img_url = 'index_3_2/imgs/launchviewer.png';
+		  img_url = 'index/imgs/launchviewer.png';
 		  label_txt = "";
 		  dom_img.css("border-width", "0px");
 		  dom_img.css("top", "0px");

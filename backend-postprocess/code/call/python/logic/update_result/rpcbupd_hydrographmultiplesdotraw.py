@@ -180,8 +180,8 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
         Debug.dl("rpcbupd_hydrographmultiplesdotraw: Filled '{0}' folder.".format(modelpaststg_dest_folder_path), 1, debug_lvl)
 
     # replace files for 'modelforestg' frame models
-    min_timestamp_limit = ref0_timestamp - 3600
-    max_timestamp_limit = ref0_timestamp + 3600
+    min_timestamp_limit = ref0_timestamp - (3600 * 24)
+    max_timestamp_limit = ref0_timestamp + (3600 * 24)
     for cur_modelforestg_model_id in modelforestg_model_ids:
         modelforestg_dest_folder_path = FolderDefinition.get_displayed_reprcomb_folder_path(sc_runset_id,
                                                                                             sc_modelcomb_id,
@@ -196,15 +196,25 @@ def update_historical_representations_composition(sc_modelcomb_id, sc_reprcomp_i
                                                                                                frame_id="modelforestg",
                                                                                                model_id=cur_modelforestg_model_id)
         if os.path.exists(modelforestg_source_folder_path):
-            all_modelforestg_hist_files = os.listdir(modelforestg_source_folder_path)
+            all_modelforestg_hist_files = sorted(os.listdir(modelforestg_source_folder_path), reverse=True)
         else:
             all_modelforestg_hist_files = []
+        count_success, count_fail, count_older = 0, 0, 0
+        links_added = []
         for cur_modelforestg_hist_file_name in all_modelforestg_hist_files:
             cur_modelforestg_hist_file_timestamp = FilenameDefinition.obtain_hist_file_timestamp(cur_modelforestg_hist_file_name)
+            cur_modelforestg_hist_file_linkid = FilenameDefinition.obtain_hist_file_linkid(cur_modelforestg_hist_file_name)
             if (cur_modelforestg_hist_file_timestamp >= min_timestamp_limit) and \
                     (cur_modelforestg_hist_file_timestamp <= max_timestamp_limit):
+                if cur_modelforestg_hist_file_linkid in links_added:
+                    count_older += 1
+                    continue
                 cur_file_path = os.path.join(modelforestg_source_folder_path, cur_modelforestg_hist_file_name)
                 shutil.copy(cur_file_path, modelforestg_dest_folder_path)
+                links_added.append(cur_modelforestg_hist_file_linkid)
+                count_success += 1
+            else:
+                count_fail += 1
 
         Debug.dl("rpcbupd_hydrographmultiplesdotraw: Filled '{0}' folder.".format(modelforestg_dest_folder_path), 1,
                  debug_lvl)

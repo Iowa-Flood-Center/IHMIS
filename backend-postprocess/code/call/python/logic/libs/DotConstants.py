@@ -2,7 +2,7 @@ from libs.SettingsVirtualGages import SettingsVirtualGages
 
 
 class DotConstants:
-    _ws = "http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/modelplus_dot/ws_realtime_summary.php"
+    _ws = "http://s-iihr50.iihr.uiowa.edu/virtualgages/ws/summary.php"
     _scmodels_dict = None
 
     @staticmethod

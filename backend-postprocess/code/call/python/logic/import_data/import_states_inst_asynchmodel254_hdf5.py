@@ -75,7 +75,7 @@ def update_local_bins_from_hdf5(model_id, runset_id, timestamp=None, flextime=No
         filename_prefix = SettingsRealtime.get("input_file_prefix", sc_model_id=model_id)
         cur_timestamp = FolderDefinition.retrive_closest_timestamp_in_dist_folder(model_output_folder,
                                                                                   the_timestamp_rounded,
-                                                                                  accept_range=(29 * 60),
+                                                                                  accept_range=(30 * 60),
                                                                                   filename_prefix=filename_prefix,
                                                                                   debug_lvl=debug_lvl)
         Debug.dl("import_states_inst_asynchmodel254_hdf5: Current timestamp at {0} is {1}. Rounded to {2} (searched for {3}).".format(

@@ -272,8 +272,7 @@ def generate_modelpaststg_stuff(model_id, runset_id, all_usgs_rc, meta_mng, any_
     if alert_links is not None:
         for cur_link_id in data_dictionary.keys():
             if any_alert:
-                cur_flood_level = 0  # 0:no flood, 1:alert, 2:flood, 3:moderate, 4:major
-                cur_flood_level = define_flood_level(stage_thresholds, cur_link_id, model_id, cur_flood_level,
+                cur_flood_level = define_flood_level(stage_thresholds, cur_link_id, model_id,
                                                      any_alert, data_dictionary, debug_lvl=debug_lvl)
                 if cur_flood_level is not None:
                     alert_links[cur_link_id] = cur_flood_level
@@ -296,7 +295,7 @@ def generate_modelpaststg_stuff(model_id, runset_id, all_usgs_rc, meta_mng, any_
     return added_link_ids, alert_links
 
 
-def define_flood_level(stage_thresholds_dict, link_id, sc_model_id, current_flood_level, any_alert, data_dictionary,
+def define_flood_level(stage_thresholds_dict, link_id, sc_model_id, any_alert, data_dictionary,
                        debug_lvl=0):
     """
 
@@ -317,19 +316,19 @@ def define_flood_level(stage_thresholds_dict, link_id, sc_model_id, current_floo
             if stage_thresholds_dict["links"][link_id]["type"] == "elevation":
                 for cur_pair in data_dictionary[link_id]:
                     if (stage_thresholds_dict["links"][link_id]["thresholds"]["fld_action"] != -1) and \
-                            (current_flood_level <= 1) and \
+                            (flood_level <= 1) and \
                             (cur_pair[1] > stage_thresholds_dict["links"][link_id]["thresholds"]["fld_action"]):
                         flood_level = 1
                     if (stage_thresholds_dict["links"][link_id]["thresholds"]["fld_flood"] != -1) and \
-                            (current_flood_level <= 2) and \
+                            (flood_level <= 2) and \
                             (cur_pair[1] > stage_thresholds_dict["links"][link_id]["thresholds"]["fld_flood"]):
                         flood_level = 2
                     if (stage_thresholds_dict["links"][link_id]["thresholds"]["fld_moderate"] != -1) and \
-                            (current_flood_level <= 3) and \
+                            (flood_level <= 3) and \
                             (cur_pair[1] > stage_thresholds_dict["links"][link_id]["thresholds"]["fld_moderate"]):
                         flood_level = 3
                     if (stage_thresholds_dict["links"][link_id]["thresholds"]["fld_major"] != -1) and \
-                            (current_flood_level <= 4) and \
+                            (flood_level <= 4) and \
                             (cur_pair[1] > stage_thresholds_dict["links"][link_id]["thresholds"]["fld_major"]):
                         flood_level = 4
             else:

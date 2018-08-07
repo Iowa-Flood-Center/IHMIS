@@ -154,7 +154,7 @@
     $cur_subfolder_path = $modelpaststg_folder_path.$cur_scmodel_folder."/";
 	$all_inner_files = DataAccess::list_datafolder_content($cur_subfolder_path, 
                                                            $sc_runset_id,
-                                                           "\/");
+                                                           ".json");
     foreach($all_inner_files as $cur_inner_file){
       if (check_file_is_linkid($cur_inner_file, $link_id)){
         $cur_inner_file_path = $cur_subfolder_path.$cur_inner_file;

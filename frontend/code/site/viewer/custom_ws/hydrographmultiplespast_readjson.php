@@ -99,11 +99,16 @@
       if (($cur_scref_folder == ".") || ($cur_scref_folder == "..")){ continue; }
       
       $cur_subfolder_path = $dischref_folder_path.$cur_scref_folder."/";
-      $all_inner_files = scandir($cur_subfolder_path);
+      // $all_inner_files = scandir($cur_subfolder_path);
+	  $all_inner_files = DataAccess::list_datafolder_content($cur_subfolder_path,
+                                                             $sc_runset_id,
+                                                             ".json");
       foreach($all_inner_files as $cur_inner_file){
         if (check_file_is_linkid($cur_inner_file, $link_id)){
           $cur_inner_file_path = $cur_subfolder_path.$cur_inner_file;
-          $stageref_dict[$cur_scref_folder] = json_decode(file_get_contents($cur_inner_file_path), true);
+		  $cur_file_content = DataAccess::get_datafile_content($cur_inner_file_path,
+                                                               $sc_runset_id);
+          $stageref_dict[$cur_scref_folder] = json_decode($cur_file_content, true);
         }
       }
     }

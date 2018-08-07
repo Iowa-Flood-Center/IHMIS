@@ -1,3 +1,5 @@
+/* Modal styles */
+
 #modal_div, #modal_hidrograph_div {
     display: none;
     position: fixed;
@@ -84,24 +86,68 @@
     text-decoration: none;
     cursor: pointer;}
 
+/*** Special case right menu ***/
+
 .sbox {
-    outline:none; 
-    padding:3px; 
-    margin:4px; 
-    transition:border-color 0.2s; 
-    border: 1px solid #aaaaaa; 
-    border-radius:5px; 
-    background: #fff; 
-    color: #222; 
-    line-height: normal; 
-    font-family: inherit; 
-    font-size: 15px;}
+  outline:none; 
+  padding:3px; 
+  margin:4px; 
+  transition:border-color 0.2s; 
+  border: 1px solid #aaaaaa; 
+  border-radius:5px; 
+  background: #fff; 
+  color: #222; 
+  line-height: normal; 
+  font-family: inherit; 
+  font-size: 15px;}
 
 .qicon {
-    padding-top:10px; 
-    padding-right:10px;
-    display:block; float:right }
+  padding-top:10px; 
+  padding-right:10px;
+  display:block; 
+  float:right;}
 
+div.np_h2{
+  display:none;
+  width:150px;}
+
+div.np_h2 a{
+  color:#EEEEEE;}
+
+div.np_h2 a:hover{
+  color:#EEEEEE;}
+
+#main_loading_div{
+  display:none;}
+
+#main_runset_sbox_div{
+  display:none;
+  width:100%;}
+  
+#main_model_sbox_div{
+  display: none;
+  width:100%;}
+
+input[type="text"].ihmis_search_short{
+  border: 1px solid #555;
+  font-family: "PFDinTextCompProMedium","Segoe UI",Helvetica,Arial,sans-serif;
+  float: left;
+  width: 190px;}
+
+input[type="text"].ihmis_search_large{
+  border: 1px solid #555;
+  font-family: "PFDinTextCompProMedium","Segoe UI",Helvetica,Arial,sans-serif;
+  float: left;
+  width: 260px;}
+
+input[type="button"].ihmis_search{
+  font-family: "PFDinTextCompProMedium", "Segoe UI", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  float: left;
+  width: 70px;}
+
+/*** On the map ***/
+	
 #legend_top_div {
   display:block; 
   left:50%; 
@@ -152,24 +198,3 @@
     color:#FF2222;
     float:right;
     text-align:right}
-	
-input[type="text"].ihmis_search_short{
-  border: 1px solid #555;
-  font-family: "PFDinTextCompProMedium","Segoe UI",Helvetica,Arial,sans-serif;
-  float: left;
-  width: 190px;
-}
-
-input[type="text"].ihmis_search_large{
-  border: 1px solid #555;
-  font-family: "PFDinTextCompProMedium","Segoe UI",Helvetica,Arial,sans-serif;
-  float: left;
-  width: 260px;
-}
-
-input[type="button"].ihmis_search{
-  font-family: "PFDinTextCompProMedium", "Segoe UI", Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  float: left;
-  width: 70px;
-}

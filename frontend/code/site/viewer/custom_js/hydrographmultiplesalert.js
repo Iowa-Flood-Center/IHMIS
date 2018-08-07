@@ -202,7 +202,6 @@ function custom_display(){
 					
 			function (ec) {
 		
-				// alert("Calling " + json_reader_ws);
 				$.ajax({
 					url: json_reader_ws
 				}).done(function(data){
@@ -360,7 +359,12 @@ function custom_display(){
 						}
 						
 						// create graph line object
-						console.log("-->> Inserted '" + GLB_vars.prototype.get_model_name(k) + "'");
+						if (GLB_vars.prototype.get_model_name(k) == null){
+							console.log("-->> Ignoring '" + k + "'");
+							continue;
+						}
+						
+						console.log("-->> Inserting '" + GLB_vars.prototype.get_model_name(k) + "'");
 						legend_array.push(GLB_vars.prototype.get_model_name(k));  // TODO - convert to model title
 						cur_model_color = graph_color(counter_mdls, total_mdls);
 						series_obj.push({
@@ -416,7 +420,13 @@ function custom_display(){
 						}
 						
 						// create graph line object
-						console.log("->-> Inserted '" + GLB_vars.prototype.get_model_name(k) + "'");
+						if (GLB_vars.prototype.get_model_name(k) == null){
+							console.log("-->> Ignoring '" + k + "'");
+							continue;
+						}
+						
+						// create graph line object
+						console.log("->-> Inserting '" + GLB_vars.prototype.get_model_name(k) + "'");
 						legend_array.push(GLB_vars.prototype.get_model_name(k));  // TODO - convert to model title
 						cur_model_color = graph_color(counter_mdls, total_mdls);
 						series_obj.push({

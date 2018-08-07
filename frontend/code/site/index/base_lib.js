@@ -4,17 +4,19 @@
 
 GLB_lib = function(){};
 
-GLB_lib.prototype.api_url = modelplus.url.api;
-GLB_lib.prototype.base_url = modelplus.url.base_frontend_index;
-GLB_lib.prototype.base_viewer_url = modelplus.url.base_frontend_viewer;
+var glb = GLB_lib.prototype;
 
-GLB_lib.prototype.base_requester_url = GLB_lib.prototype.base_url + "requester/";
-GLB_lib.prototype.header_url = GLB_lib.prototype.base_url + "template_header.html";
-GLB_lib.prototype.footer_url = GLB_lib.prototype.base_url + "template_footer.html";
-GLB_lib.prototype.img_icon_url = GLB_lib.prototype.base_url + "imgs/icons/";
+glb.api_url = modelplus.url.api;
+glb.base_url = modelplus.url.base_frontend_index;
+glb.base_viewer_url = modelplus.url.base_frontend_viewer;
 
-console.log("Base URL: " + GLB_lib.prototype.base_url);
-console.log("Header URL: " + GLB_lib.prototype.header_url);
+glb.base_requester_url = glb.base_url + "requester/";
+glb.header_url = glb.base_url + "template_header.html";
+glb.footer_url = glb.base_url + "template_footer.html";
+glb.img_icon_url = glb.base_url + "imgs/icons/";
+
+console.log("Base URL: " + glb.base_url);
+console.log("Header URL: " + glb.header_url);
 
 /**************************************************************************************/
 /*********************************** HEADER/FOOTER ************************************/
@@ -24,19 +26,19 @@ $(document).ready(function() {
 	"use strict";
 
 	// change header
-	$.get(GLB_lib.prototype.header_url, function(html_content) {
+	$.get(glb.header_url, function(html_content) {
 		$("#header").html(html_content);
 	});
 
 	// change footer
-	$.get(GLB_lib.prototype.footer_url, function(html_content) {
+	$.get(glb.footer_url, function(html_content) {
 		var page_file;
 		$("#footer").html(html_content);
 		
 		// TODO - use constants
-		$("#uiowa-logo").attr('src', GLB_lib.prototype.img_icon_url + 'uiowa.png');
-		$("#iihr-logo").attr('src', GLB_lib.prototype.img_icon_url + 'iihr.png');
-		$("#ifc-logo").attr('src', GLB_lib.prototype.img_icon_url + 'ifc2.jpg');
+		$("#uiowa-logo").attr('src', glb.img_icon_url + 'uiowa.png');
+		$("#iihr-logo").attr('src', glb.img_icon_url + 'iihr.png');
+		$("#ifc-logo").attr('src', glb.img_icon_url + 'ifc2.jpg');
 	});
 });
 

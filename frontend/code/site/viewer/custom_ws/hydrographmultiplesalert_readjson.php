@@ -1,6 +1,7 @@
 <?php
   require_once("libs/debug.php");
   require_once("libs/headers.php");
+  require_once("../../common/libs/settings.php");
   
   /*********************************************** ARGS **********************************************/
   
@@ -54,7 +55,8 @@
    * RETURN - 
    */
   function get_desc_area($link_id){
-    $loc_file = "/local/iihr/demir/test1/modelplus_3_1_git/frontend/viewer_3_1/ancillary_files/gauges_location_20170328.csv";
+    $loc_file = Settings::get_property("raw_data_folder_path");
+	$loc_file .= "anci/gauges_location/gauges_location_20170328.csv";
     $f_handle = fopen($loc_file, "r");
     $read_header = false;
     if($f_handle){
@@ -120,7 +122,7 @@
   }
   
   // find respective forecast alert files
-  $all_scmodel_folders = DataAccess::list_datafolder_content($modelpaststg_folder_path, 
+  $all_scmodel_folders = DataAccess::list_datafolder_content($modelforestgalert_folder_path, 
                                                              $sc_runset_id,
                                                              "\/");
   foreach($all_scmodel_folders as $cur_scmodel_folder){
@@ -142,24 +144,32 @@
   }
   
   // find respective past files
-  $all_scmodel_folders = scandir($modelpaststg_folder_path);
+  $all_scmodel_folders = DataAccess::list_datafolder_content($modelpaststg_folder_path, 
+                                                             $sc_runset_id,
+                                                             "\/");
   foreach($all_scmodel_folders as $cur_scmodel_folder){
     // ignore back folders references
     if (($cur_scmodel_folder == ".") || ($cur_scmodel_folder == "..")){ continue; }
     
     $cur_subfolder_path = $modelpaststg_folder_path.$cur_scmodel_folder."/";
-    $all_inner_files = scandir($cur_subfolder_path);
+	$all_inner_files = DataAccess::list_datafolder_content($cur_subfolder_path, 
+                                                           $sc_runset_id,
+                                                           "\/");
     foreach($all_inner_files as $cur_inner_file){
       if (check_file_is_linkid($cur_inner_file, $link_id)){
         $cur_inner_file_path = $cur_subfolder_path.$cur_inner_file;
-        $modelpaststg_dict[$cur_scmodel_folder] = json_decode(file_get_contents($cur_inner_file_path), true);
+		$file_content = DataAccess::get_datafile_content($cur_inner_file_path,
+                                                         $sc_runset_id);
+        $modelpaststg_dict[$cur_scmodel_folder] = json_decode($file_content, true);
       }
     }
   }
   
   // load common information
   $common_file_path = $common_folder_path.$link_id.".json";
-  $common_dict = json_decode(file_get_contents($common_file_path), true);
+  $file_content = DataAccess::get_datafile_content($common_file_path,
+                                                   $sc_runset_id);
+  $common_dict = json_decode($file_content, true);
   $desc_area = get_desc_area($link_id);
   
   // build output object and print it

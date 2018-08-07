@@ -14,6 +14,7 @@
 (function () {
   "use strict";
   var mpd = modelplus.dom;
+  var mpi = modelplus.ids;
 
   /***------------------------------------------------- DOM FUNCS -------------------------------------------------***/
   
@@ -22,10 +23,14 @@
    * func_to_run - Function to be executed after loading data
    * RETURN - None. Changes are performed in GLB_vars prototype
    */
-  modelplus.dom.load_init_data = function(func_to_run){
+  mpd.load_init_data = function(func_to_run){
+    $('#'+mpi.MENU_RUNSET_SBOX_DIV).hide();
+    $('#'+mpi.MENU_MAIN_LOADING_DIV).show();
     modelplus.api.get_runset_results()
       .then(function(data){
         GLB_vars.prototype.sc_runsets = data;
+		$('#'+mpi.MENU_RUNSET_SBOX_DIV).show();
+        $('#'+mpi.MENU_MAIN_LOADING_DIV).hide();
         if ((typeof func_to_run !== 'undefined') && (func_to_run != null)){
           func_to_run();
         }
@@ -390,18 +395,19 @@
    */
   mpd.onchange_runset_main_sbox = function(){
     var main_runset_id, div_main_obj;
+    var mpi = modelplus.ids;
 	
-    main_runset_id = $('#'+modelplus.ids.MENU_RUNSET_SBOX).val();
+    main_runset_id = $('#'+mpi.MENU_RUNSET_SBOX).val();
 	
+	// if the selected runset is empty, hide everything
     if(main_runset_id == ''){
-      $("#" + modelplus.ids.MENU_RUNSET_ABOUT).hide();
-      $("#" + modelplus.ids.MENU_MODEL_ABOUT).hide();
-      div_main_obj = $("#" + modelplus.ids.MENU_MAIN_ALERT_DIV);
+      $("#" + mpi.MENU_RUNSET_ABOUT).hide();
+      $("#" + mpi.MENU_MODEL_ABOUT).hide();
+      div_main_obj = $("#" + mpi.MENU_MAIN_ALERT_DIV);
       div_main_obj.append(modelplus.labels.SELECT_MODEL);
       div_main_obj.show();
     } else {
-      // $("#" + modelplus.ids.MENU_RUNSET_ABOUT).show();
-      $("#" + modelplus.ids.MENU_RUNSET_ABOUT).hide();
+      $("#" + mpi.MENU_RUNSET_ABOUT).hide();
 	}
 	
     // close dialogues possible (if open)
@@ -413,13 +419,35 @@
       reclick_id = "#np" + GLB_map_type;
       $("#np" + GLB_map_type).click();
     }
+
+    // hide menu and show 'loading...' gif
+	$('#'+mpi.MENU_RUNSET_SBOX).attr("disabled", "disabled");
+    $('#'+mpi.MENU_MAIN_LOADING_DIV).show();
+    $('#'+mpi.MENU_MODEL_MAIN_RADIO_DIV).hide();
+    $('#'+mpi.MENU_MODEL_MAIN_SBOX_DIV).hide();
+	$('#'+mpi.MENU_MODEL_COMP_RADIO_DIV).hide();
+	$('#'+mpi.MENU_MODEL_EVAL_RADIO_DIV).hide();
+	$('#'+mpi.MENU_MODEL_COMB_RADIO_DIV).hide();
+	$('#'+mpi.MENU_MODEL_HYDR_RADIO_DIV).hide();
 	
+	// AJAX call for retrieving Runset Result data
     modelplus.api.get_runset_result(main_runset_id)
       .then(function(json_data){
         var div_main_obj;
         var parsed_json = json_data[0];
         var glb = GLB_vars.prototype;
 
+		$('#'+mpi.MENU_MAIN_LOADING_DIV).hide();
+		$('#'+mpi.MENU_MODEL_MAIN_SBOX_DIV).show();
+		/*
+		$('#'+mpi.MENU_MODEL_MAIN_RADIO_DIV).show();
+		$('#'+mpi.MENU_MODEL_COMP_RADIO_DIV).show();
+	    $('#'+mpi.MENU_MODEL_EVAL_RADIO_DIV).show();
+	    $('#'+mpi.MENU_MODEL_COMB_RADIO_DIV).show();
+	    $('#'+mpi.MENU_MODEL_HYDR_RADIO_DIV).show();
+		*/
+		$('#'+mpi.MENU_RUNSET_SBOX).removeAttr("disabled");
+		
         // parse JSON content
         try{
           if (parsed_json == undefined) return;
@@ -434,7 +462,7 @@
           };
 
         } catch(err) {
-          console.log("Unable to parse '"+ json_data +"'. Error: " + err);
+          console.log("Unable to parse '"+json_data+"'. Error: "+err);
           return;
         }
 
@@ -476,7 +504,7 @@
 
         // basic check
         if (Object.keys(glb.webmenu).length == 0){
-          if ($('#'+modelplus.ids.MENU_RUNSET_SBOX).val() !== ""){
+          if ($('#'+mpi.MENU_RUNSET_SBOX).val() !== ""){
             alert("Missing meta files for menu.");
           }
         }
@@ -485,7 +513,7 @@
 
         //
         if (this.runset_id == ''){
-          div_main_obj = $("#" + modelplus.ids.MENU_MAIN_ALERT_DIV);
+          div_main_obj = $("#" + mpi.MENU_MAIN_ALERT_DIV);
           div_main_obj.append(modelplus.labels.SELECT_RUNSET);
           div_main_obj.show();
         }
@@ -1723,7 +1751,8 @@ function build_folder_path(prefix, parameter_acronym, runset_id){
 	var models_displayed;
 	var cur_http;
 	
-	cur_http = modelplus.url.base_runsets + runset_id + '/repres_displayed/';
+	cur_http = modelplus.url.base_runsets + runset_id;
+	cur_http += '/files/repres_displayed/';
 	
 	model1_id = $("#"+modelplus.ids.MENU_MODEL_MAIN_SBOX).val();
 	switch(prefix){

@@ -78,49 +78,53 @@ function GLB_webservices(){};
 
 // 3.0 - all session variables
 function GLB_vars(){};
-GLB_vars.prototype.sc_runsets = null;
-GLB_vars.prototype.sc_runset = null;
-GLB_vars.prototype.sc_models = null;
-GLB_vars.prototype.sc_model_combinations = null;
-GLB_vars.prototype.sc_references = null;
-GLB_vars.prototype.sc_evaluation = null;
-GLB_vars.prototype.sc_representation = null;
-GLB_vars.prototype.comparison_matrix = null;
-GLB_vars.prototype.webmenu = null;
-GLB_vars.prototype.get_legend_title = function(menu_id){
-	var count_i, cur_obj, the_obj, title_str;
-	var select_id, checkbox_id, select_obj, checkbox_obj;
-	var div_leg_title_obj;
-	
+(function () {
+  "use strict";
+  var gbl_vars = GLB_vars.prototype;
+  gbl_vars.sc_runsets = null;
+  gbl_vars.sc_runset = null;
+  gbl_vars.sc_models = null;
+  gbl_vars.sc_model_combinations = null;
+  gbl_vars.sc_references = null;
+  gbl_vars.sc_evaluation = null;
+  gbl_vars.sc_representation = null;
+  gbl_vars.comparison_matrix = null;
+  gbl_vars.webmenu = null;
+  gbl_vars.get_legend_title = function(menu_id){
+    var count_i, cur_obj, the_obj, title_str;
+    var select_id, checkbox_id, select_obj, checkbox_obj;
+    var div_leg_title_obj;
+
 	// defining possible ids and checking what exists
 	checkbox_id = "np" + menu_id;
 	select_id = checkbox_id + "_sel";
 	checkbox_obj = $("#" + checkbox_id);
-	select_obj = $("#" + select_id);
+    select_obj = $("#" + select_id);
 	
 	title_str = "";
 	if ((checkbox_obj.length)&&(select_obj.length)){
-		title_str = checkbox_obj.html() + ": " + select_obj.find(":selected").text();
+      title_str = checkbox_obj.html() + ": " + select_obj.find(":selected").text();
 	} else if ((checkbox_obj.length)&&(select_obj.length == 0)) {
-		title_str = checkbox_id.html();
-	} else {
-		console.log("Unexpected situation: " + checkbox_id.length + " and " + select_id.length);
-	}
-	
-	return(title_str);
-}
-GLB_vars.prototype.is_model_unique = function(sc_model_id){
-	return $.inArray(sc_model_id, GLB_vars.prototype.sc_models);
-}
-GLB_vars.prototype.is_model_combination = function(sc_model_id){
-	var idx;
-	for(idx = 0; idx < GLB_vars.prototype.sc_model_combinations.length; idx++){
-		if (GLB_vars.prototype.sc_model_combinations[idx]["id"] == sc_model_id){
-			return(true);
-		}
-	}
-	return(false);
-}
+      title_str = checkbox_id.html();
+    } else {
+      console.log("Unexpected situation: " + checkbox_id.length + " and " + select_id.length);
+    }
+
+    return(title_str);
+  }
+  gbl_vars.is_model_unique = function(sc_model_id){
+    return $.inArray(sc_model_id, gbl_vars.sc_models);
+  }
+  gbl_vars.is_model_combination = function(sc_model_id){
+    var idx;
+    for(idx = 0; idx < gbl_vars.sc_model_combinations.length; idx++){
+      if (gbl_vars.sc_model_combinations[idx]["id"] == sc_model_id){
+        return(true);
+      }
+    }
+    return(false);
+  }
+})();
 
 // 3.1 - key press actions
 function GLB_keypress(){};
@@ -256,45 +260,50 @@ GLB_map_objects.prototype.kml_object = null;
 })();
 
 /************************************* IFIS FUNCTIONS ***************************************/
+
+// Build Special Case menu
 function sc_init() {
-	// read_reference_timestamp0();
-	// read_reference_timestamp0_map();
-	// 'single' starts selected
-	
-	var menu = new Array(
-		'<div class="np_title np_blue" style="clear: both; width:100%">IFIS MODEL-PLUS</div>',
-		'<div style="width:100%">Runset:' + 
-			'<select id="'+modelplus.ids.MENU_RUNSET_SBOX+'" class="sbox" ></select>' +
-			'<input id="'+modelplus.ids.MENU_RUNSET_ABOUT+'" type="button" value="About" onclick="modelplus.dom.load_runset_desc();" class="sbox" />' +
+  "use strict";	
+  
+  var mpi = modelplus.ids;
+  var gbi = GLB_opt_ids.prototype;
+  
+  // build html
+  var menu = new Array(
+		'<div class="np_title np_blue" style="clear: both; width:100%">IHMIS</div>',
+		'<div id="'+mpi.MENU_RUNSET_SBOX_DIV+'" >Runset:' + 
+			'<select id="'+mpi.MENU_RUNSET_SBOX+'" class="sbox" ></select>' +
+			'<input id="'+mpi.MENU_RUNSET_ABOUT+'" type="button" value="About" onclick="modelplus.dom.load_runset_desc();" class="sbox" />' +
 		'</div>',
-		'<div style="width:100%">Model:' + 
-			'<select id="'+modelplus.ids.MENU_MODEL_MAIN_SBOX+'" class="sbox" style="width:200px" ></select>' +
-			'<input id="'+modelplus.ids.MENU_MODEL_ABOUT+'" type="button" value="About" onclick="modelplus.dom.load_model_desc();" class="sbox" />' +
+		'<div id="'+mpi.MENU_MODEL_MAIN_SBOX_DIV+'">Model:' + 
+			'<select id="'+mpi.MENU_MODEL_MAIN_SBOX+'" class="sbox" style="width:200px" ></select>' +
+			'<input id="'+mpi.MENU_MODEL_ABOUT+'" type="button" value="About" onclick="modelplus.dom.load_model_desc();" class="sbox" />' +
 		'</div>',
-		'<div id="' + modelplus.ids.MENU_MAIN_ALERT_DIV + '" style="display:none" class="npsub" ></div>',
-		'<div class="np_title np_sep" id="'+modelplus.ids.MENU_MODEL_MAIN_RADIO_DIV+'" style="width:150px">' +
-				'<a href="#" id="np'+GLB_opt_ids.prototype.mono_group+'" style="color:#EEEEEE">Visualization</a></div>',
-			'<div id="'+modelplus.ids.MENU_MODEL_MAIN_SELEC_DIV+'" style="display:none" class="npsub" ></div>',
-		'<div class="np_title np_sep" id="'+modelplus.ids.MENU_MODEL_COMP_RADIO_DIV+'" style="width:150px" >' +
-				'<a href="#" id="np'+GLB_opt_ids.prototype.comp_group+'" style="color:#EEEEEE">Comparison</a></div>',
-			'<div id="' + modelplus.ids.MENU_MODEL_COMPMST_SELEC_DIV + '" style="display:none" class="npsub" >',
-				'Model 2:<select id="' + modelplus.ids.MENU_MODEL_COMP_SBOX + '" class="sbox"></select>',
-				'<div id="' + modelplus.ids.MENU_MODEL_COMP_SELEC_DIV + '" ></div>',
+		'<div id="'+mpi.MENU_MAIN_ALERT_DIV+'" style="display:none" class="npsub" ></div>',
+		'<div id="'+mpi.MENU_MAIN_LOADING_DIV+'" class="npsub" >Loading...</div>',
+		'<div class="np_title np_sep np_h2" id="'+mpi.MENU_MODEL_MAIN_RADIO_DIV+'" >',
+				'<a href="#" id="np'+gbi.mono_group+'" >Visualization</a></div>',
+			'<div id="'+mpi.MENU_MODEL_MAIN_SELEC_DIV+'" style="display:none" class="npsub" ></div>',
+		'<div class="np_title np_sep np_h2" id="'+mpi.MENU_MODEL_COMP_RADIO_DIV+'" >',
+				'<a href="#" id="np'+gbi.comp_group+'" >Comparison</a></div>',
+			'<div id="' + mpi.MENU_MODEL_COMPMST_SELEC_DIV + '" style="display:none" class="npsub" >',
+				'Model 2:<select id="' + mpi.MENU_MODEL_COMP_SBOX + '" class="sbox"></select>',
+				'<div id="' + mpi.MENU_MODEL_COMP_SELEC_DIV + '" ></div>',
 			'</div>',
-		'<div class="np_title np_sep" id="'+modelplus.ids.MENU_MODEL_EVAL_RADIO_DIV+'" style="width:150px" >' + 
-				'<a href="#" id="np'+GLB_opt_ids.prototype.eval_group+'" style="color:#EEEEEE">Evaluation</a></div>',
-			'<div id="'+modelplus.ids.MENU_MODEL_EVAL_SELEC_DIV+'" style="display:none" class="npsub" >',
+		'<div class="np_title np_sep np_h2" id="'+mpi.MENU_MODEL_EVAL_RADIO_DIV+'" >',
+				'<a href="#" id="np'+gbi.eval_group+'" >Evaluation</a></div>',
+			'<div id="'+mpi.MENU_MODEL_EVAL_SELEC_DIV+'" style="display:none" class="npsub" >',
 			'</div>',
-		'<div class="np_title np_sep" id="'+modelplus.ids.MENU_MODEL_COMB_RADIO_DIV+'" style="width:150px" >' + 
-				'<a href="#" id="np'+GLB_opt_ids.prototype.comb_group+'" style="color:#EEEEEE">Comparison</a></div>',
-			'<div id="'+modelplus.ids.MENU_MODEL_COMB_PARAM_DIV+'" style="display:none" class="npsub" >',
+		'<div class="np_title np_sep np_h2" id="'+mpi.MENU_MODEL_COMB_RADIO_DIV+'" >',
+				'<a href="#" id="np'+gbi.comb_group+'" >Comparison</a></div>',
+			'<div id="'+mpi.MENU_MODEL_COMB_PARAM_DIV+'" style="display:none" class="npsub" >',
 			'</div>',
-		'<div class="np_title np_sep" id="'+modelplus.ids.MENU_MODEL_HYDR_RADIO_DIV+'" style="width:150px" >' + 
-				'<a href="#" id="np'+GLB_opt_ids.prototype.hydr_group+'" style="color:#EEEEEE">Hydrographs</a></div>',
-			'<div id="'+modelplus.ids.MENU_MODEL_HYDR_PARAM_DIV+'" style="display:none" class="npsub" >',
+		'<div class="np_title np_sep np_h2" id="'+mpi.MENU_MODEL_HYDR_RADIO_DIV+'" >',
+				'<a href="#" id="np'+gbi.hydr_group+'" >Hydrographs</a></div>',
+			'<div id="'+mpi.MENU_MODEL_HYDR_PARAM_DIV+'" style="display:none" class="npsub" >',
 			'</div>',
-		'<div class="np_title np_sep" style="width:150px">' + 
-				'<a href="#" id="np'+GLB_opt_ids.prototype.tool_group+'" style="color:#EEEEEE">Tools</a></div>',
+		'<div class="np_title np_sep np_h2" style="display:block" >' + 
+				'<a href="#" id="np'+gbi.tool_group+'" >Tools</a></div>',
 			'<div id="sc_set_tools" style="display:none" class="npsub" >',
 				'<a href="#" id="np'+opt_tool_w_map+'" >White map layer</a>',
 				'<a href="#" id="np'+opt_tool_vec_rivers+'" class="npact" >Vector rivers</a>',

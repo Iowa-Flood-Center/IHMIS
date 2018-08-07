@@ -28,11 +28,8 @@ var modelplus = modelplus || {};
   mpu.settings = mpu.read_server_file("");
   
   // TODO - load the following lines from a config file somehow
-  // mpu.base_frontend_sandbox = 'http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/ihmis/dev/frontend/code/site/';
-  // mpu.base_frontend_distrib = 'http://s-iihr50.iihr.uiowa.edu/ifis/sc/test1/ihmis/dst/';
   mpu.base_frontend_deploy = 'http://ifis.iowafloodcenter.org/ifis/sc/modelplus/';
-  
-  mpu.base_runsets = 'http://s-iihr50.iihr.uiowa.edu/andre/model_3_1/';  // it was modelplus.url.base_realtime_folder
+  mpu.base_runsets = 'https://s-iihr54.iihr.uiowa.edu/ihmis_data/runsets/';
   mpu.base_api = mpu.base_frontend_sandbox;
   mpu.base_api = 'http://s-iihr50.iihr.uiowa.edu/ifis/sc/ihmis_dev/';
   mpu.base_proxy = 

@@ -12,36 +12,41 @@ var modelplus = modelplus || {};
   modelplus.ids = modelplus.ids || {};
   modelplus.labels = modelplus.labels || {};
   
+  var mpi = modelplus.ids;
+  
   // DOM ids - MENU - IFIS Specific
-  modelplus.ids.BACKGROUND_DARK = "darkenBackground";
+  mpi.BACKGROUND_DARK = "darkenBackground";
   
   // DOM ids - MENU - ModelPlus Specific
-  modelplus.ids.MENU_SELECT_CLASS = "npact";
-  modelplus.ids.MENU_MAIN_ALERT_DIV = "main_alert_div";
-  modelplus.ids.MENU_RUNSET_SBOX = "main_runset_sbox";
-  modelplus.ids.MENU_RUNSET_ABOUT = "about_runset";
-  modelplus.ids.MENU_MODEL_MAIN_SBOX = "main_model_sbox";
-  modelplus.ids.MENU_MODEL_ABOUT = "about_model";
-  modelplus.ids.MENU_MODEL_MAIN_RADIO_DIV = "model_main_radio_div";
-  modelplus.ids.MENU_MODEL_MAIN_SELEC_DIV = "model_main_param_div";
-  modelplus.ids.MENU_MODEL_COMP_SBOX = "comp_model_sbox"; // comp = comparison
-  modelplus.ids.MENU_MODEL_COMP_RADIO_DIV = "model_comp_radio_div";
-  modelplus.ids.MENU_MODEL_COMP_SELEC_DIV = "model_comp_param_div";
-  modelplus.ids.MENU_MODEL_COMPMST_SELEC_DIV = "model_compmst_param_div";
-  modelplus.ids.MENU_MODEL_EVAL_RADIO_DIV = "model_eval_radio_div";
-  modelplus.ids.MENU_MODEL_EVAL_SELEC_DIV = "model_eval_param_div";
-  modelplus.ids.MENU_MODEL_COMB_RADIO_DIV = "model_comb_radio_div";
-  modelplus.ids.MENU_MODEL_COMB_PARAM_DIV = "model_comb_param_div";
-  modelplus.ids.MENU_MODEL_HYDR_RADIO_DIV = "model_hydr_radio_div";
-  modelplus.ids.MENU_MODEL_HYDR_PARAM_DIV = "model_hydr_param_div";
+  mpi.MENU_SELECT_CLASS = "npact";
+  mpi.MENU_MAIN_ALERT_DIV = "main_alert_div";
+  mpi.MENU_MAIN_LOADING_DIV = "main_loading_div";
+  mpi.MENU_RUNSET_SBOX_DIV = "main_runset_sbox_div";
+  mpi.MENU_RUNSET_SBOX = "main_runset_sbox";
+  mpi.MENU_RUNSET_ABOUT = "about_runset";
+  mpi.MENU_MODEL_MAIN_SBOX_DIV = "main_model_sbox_div";
+  mpi.MENU_MODEL_MAIN_SBOX = "main_model_sbox";
+  mpi.MENU_MODEL_ABOUT = "about_model";
+  mpi.MENU_MODEL_MAIN_RADIO_DIV = "model_main_radio_div";
+  mpi.MENU_MODEL_MAIN_SELEC_DIV = "model_main_param_div";
+  mpi.MENU_MODEL_COMP_SBOX = "comp_model_sbox"; // comp = comparison
+  mpi.MENU_MODEL_COMP_RADIO_DIV = "model_comp_radio_div";
+  mpi.MENU_MODEL_COMP_SELEC_DIV = "model_comp_param_div";
+  mpi.MENU_MODEL_COMPMST_SELEC_DIV = "model_compmst_param_div";
+  mpi.MENU_MODEL_EVAL_RADIO_DIV = "model_eval_radio_div";
+  mpi.MENU_MODEL_EVAL_SELEC_DIV = "model_eval_param_div";
+  mpi.MENU_MODEL_COMB_RADIO_DIV = "model_comb_radio_div";
+  mpi.MENU_MODEL_COMB_PARAM_DIV = "model_comb_param_div";
+  mpi.MENU_MODEL_HYDR_RADIO_DIV = "model_hydr_radio_div";
+  mpi.MENU_MODEL_HYDR_PARAM_DIV = "model_hydr_param_div";
   
   // DOM ids - MENU AGGREGATION
-  modelplus.ids.MENU_CONTENTS = [modelplus.ids.MENU_MODEL_MAIN_SELEC_DIV, 
-							     modelplus.ids.MENU_MODEL_COMPMST_SELEC_DIV, 
-							     "sc_set_tools", 
-							     modelplus.ids.MENU_MODEL_EVAL_SELEC_DIV,
-							     modelplus.ids.MENU_MODEL_COMB_PARAM_DIV,
-							     modelplus.ids.MENU_MODEL_HYDR_PARAM_DIV];
+  mpi.MENU_CONTENTS = [mpi.MENU_MODEL_MAIN_SELEC_DIV, 
+					   mpi.MENU_MODEL_COMPMST_SELEC_DIV, 
+					   "sc_set_tools", 
+				       mpi.MENU_MODEL_EVAL_SELEC_DIV,
+					   mpi.MENU_MODEL_COMB_PARAM_DIV,
+					   mpi.MENU_MODEL_HYDR_PARAM_DIV];
   
   // DOM ids - MODALs
   modelplus.ids.MODAL_DIV = "modal_div";
